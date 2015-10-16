@@ -165,7 +165,17 @@ print args.echo
 现在我们来看一下相应的参数
 ```python
 ArgumentParser(prog=None, usage=None,description=None, epilog=None, parents=[],formatter_class=argparse.HelpFormatter, prefix_chars='-',fromfile_prefix_chars=None, argument_default=None,conflict_handler='error', add_help=True)
+
+add_argument(name or flags...[, action][, nargs][, const][, default][, type][, choices][, required][, help][, metavar][, dest])
 ```
+ArgumentParser()参数用的不多，一般只需要传递description参数。当调用parser.print_help()或者运行程序时由于参数不正确时，会打印这些描述信息。
+add_argument()
+name or flags：命令行参数名或者选项，如上面的address或者-p,--port.其中命令行参数如果没给定，且没有设置defualt，则出错。但是如果是选项的话，则设置为None
+nargs：命令行参数的个数，一般使用通配符表示，其中，'?'表示只用一个，'*'表示0到多个，'+'表示至少一个
+default：默认值
+store:参数的存储格式化。
+type：参数的类型，默认是字符串string类型，还有float、int等类型
+help：和ArgumentParser方法中的参数作用相似，出现的场合也一致
 ####进阶操作
 
 ##sys
