@@ -13,9 +13,17 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 非常基础的一个库，但是却实现了我一个想了很久了功能，识别目录下的所有文件。
 
 1. 取得当前目录--os.getcwd()
-5. 更改当前目录——os.chdir() 
+5. 更改当前目录——os.chdir()
+2. 创建一个目录--os.mkdir()
+3. 创建多级目录--os.makedirs()
 4. 删除一个目录,只能删除空目录--os.rmdir("path")
 5. 删除多个目录,删除目录及其下内容--os.removedirs（"path）
+1. 获取目录中的文件及子目录的列表——os.listdir("path")
+3. 删除一个文件--os.remove()
+4. 文件或者文件夹重命名--os.rename（old， new）
+6. 获取文件大小--os.path.getsize（filename）
+7. 获取文件属性--os.stat（file）
+8. 修改文件权限与时间戳--os.chmod（file）
 6. 将路径分解为目录名和文件名——os.path.split()
 7. 获得路径的路径名--os.path.dirname()
 8. 获得路径的文件名--os.path.basename()
@@ -24,24 +32,140 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 9. 判断一个文件是否存在或这否为文件——os.path.isfile("file")
 10. 判断一个路径（目录或文件）是否存在——os.path.exists()
 11. 判断一个路径是否是绝对路径--os.path.isabs()
-1. 获取目录中的文件及子目录的列表——os.listdir("path")
-2. 创建一个目录--os.makedir()
-3. 创建多级目录--os.makedirs()
-3. 删除一个文件--os.remove()
-4. 文件或者文件夹重命名--os.rename（old， new）
-6. 获取文件大小--os.path.getsize（filename）
-7. 获取文件属性--os.stat（file）
-8. 修改文件权限与时间戳--os.chmod（file）
 9. 读取和设置环境变量--os.getenv() 与os.putenv()
 10. 指示你正在使用的平台--os.name       对于Windows，它是'nt'，而对于Linux/Unix用户，它是'posix'
-11. 给出当前平台使用的行终止符--os.linesep    Windows使用'\r\n',Linux使用'\n',而Mac使用'\r'
+11. 给出当前平台使用的行终止符--os.linesep()    Windows使用'\r\n',Linux使用'\n',而Mac使用'\r'
 12. 运行shell命令-- os.system()
 13. 终止当前进程--os.exit（）
 
-##argparse
-向python中传入命令行参数
-####基本使用
+```python
+#coding=utf-8
+import os
 
+currentpath = os.getcwd()
+print currentpath
+changedpath = 'C:\\Users\\dell\\Desktop' 
+os.chdir(changedpath)
+currentpath = os.getcwd()
+print currentpath
+os.mkdir('hello')
+changedpath = changedpath + '\\hello'
+print changedpath
+os.chdir(changedpath)
+currentpath = os.getcwd()
+print currentpath
+os.makedirs('hello\\hello')
+changedpath = changedpath + '\\hello\\hello'
+print changedpath
+os.chdir(changedpath)
+currentpath = os.getcwd()
+print currentpath
+os.chdir('../')
+currentpath = os.getcwd()
+print currentpath
+currentlist = os.listdir(currentpath)
+print currentlist
+os.rmdir('hello')
+currentlist = os.listdir(currentpath)
+print currentlist
+os.chdir('../../')
+currentpath = os.getcwd()
+currentlist = os.listdir(currentpath)
+print currentlist
+os.removedirs('hello\\hello')
+currentlist = os.listdir(currentpath)
+print currentlist
+FILE1 = open('test1.txt','w')
+FILE1.close()
+FILE2 = open('test2.txt','w')
+FILE2.close()
+currentlist = os.listdir(currentpath)
+print currentlist
+os.remove('test1.txt')
+currentlist = os.listdir(currentpath)
+print currentlist
+os.rename('test2.txt','newtest.txt')
+currentlist = os.listdir(currentpath)
+print currentlist
+FILE = open('newtest.txt','w')
+FILE.write('THis is for test')
+FILE.close()
+FILESIZE = os.path.getsize('newtest.txt')
+print FILESIZE
+FILESTAT = os.stat('newtest.txt')
+print FILESTAT
+currentpath = currentpath + "\\newtest.txt"
+print currentpath
+(splitpath,splitfile) = os.path.split(currentpath)
+print splitpath
+print splitfile
+(splitpath,splitfile) = os.path.splitext(currentpath)
+print splitpath
+print splitfile
+splitpath = os.path.dirname(currentpath)
+splitfile = os.path.basename(currentpath)
+print splitpath
+print splitfile
+isdir = os.path.isfile(currentpath)
+isfile = os.path.isdir(currentpath)
+print isdir
+print isfile
+os.remove('newtest.txt')
+currentpath = os.path.dirname(currentpath)
+isdir = os.path.isfile(currentpath)
+isfile = os.path.isdir(currentpath)
+print isdir
+print isfile
+isexist = os.path.exists(currentpath)
+print isexist
+isabs = os.path.isabs(currentpath)
+print isabs
+osname = os.name
+print osname
+linesep = os.linesep
+print linesep
+os.system('dir')
+```
+
+保存为os_demo.py，运行，看一下结果
+![os_demo](os_demo.jpg)
+##argparse
+向python中传入命令行参数，解析命令行参数和选项。
+####基本使用
+```python
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.parse_args()
+```
+保存为argparse_demo.py，运行，看一下结果。
+![argparse_demo](argparse_demo.jpg)
+什么结果都没有，就是这样，它本来就什么都不做。
+我们可以给它一个参数。'-h'或者'--help'
+![argparse_demo_h](argparse_demo_h.jpg)
+显示这个函数有一个可选参数'-h'或者'--help'，功能是显示帮助，然后退出。
+```python
+#coding=utf-8
+#导入该模块
+import argparse
+#创建一个解析对象
+parser = argparse.ArgumentParser()
+#向该对象中添加你要关注的命令行参数和选项，每一个add_argument方法对应一个你要关注的参数或选项
+parser.add_argument("echo")
+#最后调用parse_args()方法进行解析,解析成功之后即可使用
+args = parser.parse_args()
+#回显参数
+print args.echo
+
+```
+保存为argparse_add_argument.py，运行，看一下结果。
+不过，现在我们增加了一个参数 'echo'
+![argparse_add_argument](argparse_add_argument.jpg)
+将输入的参数回显出来。
+现在我们来看一下相应的参数
+```python
+ArgumentParser(prog=None, usage=None,description=None, epilog=None, parents=[],formatter_class=argparse.HelpFormatter, prefix_chars='-',fromfile_prefix_chars=None, argument_default=None,conflict_handler='error', add_help=True)
+```
 ####进阶操作
 
 ##sys
