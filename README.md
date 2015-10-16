@@ -419,3 +419,7 @@ f.open('file'[,'mode'])
 [python学习笔记（七）——文件和目录操作](http://www.cnblogs.com/zhoujie/archive/2013/04/10/python7.html)
 
 [关于python文件操作](http://www.cnblogs.com/rollenholt/archive/2012/04/23/2466179.html)
+
+[python操作MySQL数据库](http://www.cnblogs.com/rollenholt/archive/2012/05/29/2524327.html)
+
+[python操作mysql数据库](http://www.runoob.com/python/python-mysql.html)
