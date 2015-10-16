@@ -6,7 +6,10 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 ##MySQLdb
 从名字就可以看出来，它的功能是与MySQL数据库连接用的
 ####基本使用
+首先，让我们连接数据库。
+```python
 
+```
 ####进阶操作
 
 ##os
@@ -147,8 +150,8 @@ def showall(path,leavel=0,filenum=0,show=True):
 			newnum = num
 		else:
 			newnum = newnum + 1
-			tab_stop = ""	
-			if show:		
+			tab_stop = ""
+			if show:
 				for tab in range(leavel):
 					tab_stop = tab_stop + " "
 			print tab_stop + newpath
@@ -160,6 +163,15 @@ if __name__ == '__main__':
 	print "File Number : " + str(num)
 
 ```
+
+##shutil
+也是用来文件操作，但是它与os不同的是它只用来文件或文件夹操作
+- shutil.copyfile('oldfile','newfile') 参数只能是文件，新文件不存在则创建
+- shutil.copy("oldfile","newfileordir") olddir只能是文件，newfileordir可以是文件或文件夹
+- shutil.copytree("olddir","newdir") 参数只能是目录，且newdir必须不存在
+- shutil.move("oldpos","newpos") 移动文件或文件夹
+- shutil.rmtree("dir") 可以空目录或者是有非空目录
+
 ##argparse
 向python中传入命令行参数，解析命令行参数和选项。
 ####基本使用
