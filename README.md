@@ -97,8 +97,50 @@ except MySQLdb.Error,e:
 ####进阶操作
 那我们试一下创建一个新的数据库和新的表单，插入大量的数据来试试。
 ```python
+#coding=utf-8
+import MySQLdb
+
+try:
+	conn = MySQLdb.connect(host='localhost',user='root',passwd='',port=3406)
+	print "Connect Successful !"
+	cur = conn.cursor()
+	#创建一个新的数据库名为python
+	cur.execute("CREATE DATABASE IF NOT EXISTS python")
+	#连接这个数据库
+	conn.select_db('python')
+	#创建一个新的表单test
+	cur.execute("CREATE TABLE test(id int,info varchar(20))")
+	#插入单个数据
+	value = [1,'windard']
+	cur.execute("INSERT INTO test VALUES(%s,%s)",value)
+	conn.commit()
+	#查看结果
+	cur.execute("SELECT * FROM test ")
+	data = cur.fetchone()
+	print data
+	#插入大量数据	
+	values = []
+	for i in range(20):
+		values.append((i,'this is number :' + str(i)))
+	cur.executemany("INSERT INTO test VALUES(%s,%s)",values)
+	conn.commit()	
+	#查看结果，此时execute()的返回值是插入数据得到的行数
+	print "All Database Table"
+	count = cur.execute("SELECT * FROM test ")
+	data = cur.fetchmany(count)
+	for item in data:
+		print item	
+	#删除表单
+	cur.execute("DROP TABLE test")
+	cur.execute("DROP DATABASE python")
+	cur.close()
+	conn.close()
+except MySQLdb.Error,e:
+	print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 
 ```
+保存为mysqldb_third.py，运行，看一下结果。
+![mysqldb_third](mysqldb_third.jpg)
 
 ##os
 非常基础的一个库，但是却实现了我一个想了很久了功能，识别目录下的所有文件。
@@ -295,7 +337,7 @@ print args.echo
 将输入的参数回显出来。
 现在我们来看一下相应的参数
 ```python
-ArgumentParser(prog=None, usage=None,description=None, epilog=None, parents=[],formatter_class=argparse.HelpFormatter, prefix_chars='-',fromfile_prefix_chars=None, argument_default=None,conflict_handler='error', add_help=True)
+ArgumentParser(prog=None, usage=None,description=None, epilog=None, parents=[],formatter_class=argparse.HelpFormatter, prefix_chars='-',fromfile_prefix_chars=None, argument_default=None,conflict_handler='error', add_help=True)  
 
 add_argument(name or flags...[, action][, nargs][, const][, default][, type][, choices][, required][, help][, metavar][, dest])
 ```
