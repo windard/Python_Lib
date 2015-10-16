@@ -18,7 +18,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 3. 创建多级目录--os.makedirs()
 4. 删除一个目录,只能删除空目录--os.rmdir("path")
 5. 删除多个目录,删除目录及其下内容--os.removedirs（"path）
-1. 获取目录中的文件及子目录的列表——os.listdir("path")
+1. 获取目录中的文件及子目录的列表——os.listdir("path")		隐藏文件也会显示出来
 3. 删除一个文件--os.remove()
 4. 文件或者文件夹重命名--os.rename（old， new）
 6. 获取文件大小--os.path.getsize（filename）
@@ -27,6 +27,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 6. 将路径分解为目录名和文件名——os.path.split()
 7. 获得路径的路径名--os.path.dirname()
 8. 获得路径的文件名--os.path.basename()
+9. 路径中加入新的内容--os.path.join(path,file)
 7. 将目录分解为目录加文件名和文件名的扩展名——os.path.splitext()
 8. 判断一个路径是否存在或是否为路径——os.path.isdir("path")
 9. 判断一个文件是否存在或这否为文件——os.path.isfile("file")
@@ -126,9 +127,39 @@ linesep = os.linesep
 print linesep
 os.system('dir')
 ```
+保存为os_improve.py
 
 保存为os_demo.py，运行，看一下结果
 ![os_demo](os_demo.jpg)
+
+给一个查看目录下的所有文件的代码，如果有目录则空四格表示递进关系
+```python
+import os
+
+def showall(path,leavel=0,filenum=0,show=True):
+	newnum = filenum
+	currentpath = path;
+	dirandfile = os.listdir(path)
+	for item in dirandfile:
+		newpath = os.path.join(currentpath,item)
+		if os.path.isdir(newpath):
+			num = showall(newpath,leavel+1,newnum,show)
+			newnum = num
+		else:
+			newnum = newnum + 1
+			tab_stop = ""	
+			if show:		
+				for tab in range(leavel):
+					tab_stop = tab_stop + " "
+			print tab_stop + newpath
+
+	return newnum
+
+if __name__ == '__main__':
+	num = showall('./',show=False)
+	print "File Number : " + str(num)
+
+```
 ##argparse
 向python中传入命令行参数，解析命令行参数和选项。
 ####基本使用
@@ -172,10 +203,35 @@ ArgumentParser()参数用的不多，一般只需要传递description参数。�
 add_argument()
 name or flags：命令行参数名或者选项，如上面的address或者-p,--port.其中命令行参数如果没给定，且没有设置defualt，则出错。但是如果是选项的话，则设置为None
 nargs：命令行参数的个数，一般使用通配符表示，其中，'?'表示只用一个，'*'表示0到多个，'+'表示至少一个
-default：默认值
-store:参数的存储格式化。
+action：默认值
+store:参数的存储格式化,默认为store。
 type：参数的类型，默认是字符串string类型，还有float、int等类型
 help：和ArgumentParser方法中的参数作用相似，出现的场合也一致
+```python
+#coding=utf-8
+import argparse
+parser = argparse.ArgumentParser(description="This is for test")
+#这是必选参数
+parser.add_argument("echo",help="echo this str")
+#这也是必选参数，参数类型为int
+parser.add_argument("int",help="count this int",type=int,action="store")
+#这是可选参数，可以写长形式或短形式
+parser.add_argument("-o","--on",help="show all",action="store_true")
+args=parser.parse_args()
+string = args.echo
+print string
+intchar = args.int
+answer = intchar**2
+#如果选择全部显示，则显示完整
+if args.on:
+	print "Answer is : " + str(answer)
+else:
+	print answer
+```
+保存为argparse_count.py，运行，看一下结果。
+![argparse_count](argparse_count.jpg)
+不带'-'的参数，调用时必须键入值，且顺序与程序定义的顺序一致。默认值
+带'-'的参数，调用时可以不用输入。
 ####进阶操作
 
 ##sys
@@ -215,3 +271,9 @@ f.open('file'[,'mode'])
 |f.isatty()|如果文件是一个终端设备文件（Linux系统中），则返回True，否则返回False。|
 |f.seek(offset[,where])|把文件指针移动到相对于where的offset位置。where为0表示文件开始处，这是默认值 ；1表示当前位置；2表示文件结尾。(注意：如果文件以a或a+的模式打开，每次进行写操作时，文件操作标记会自动返回到文件末尾)|
 |f.truncate([size])|把文件裁成规定的大小，默认的是裁到当前文件操作标记的位置。如果size比文件的大小还要大，依据系统的不同可能是不改变文件，也可能是用0把文件补到相应的大小，也可能是以一些随机的内容加上去。|
+
+
+##参考链接
+[python学习笔记（七）——文件和目录操作](http://www.cnblogs.com/zhoujie/archive/2013/04/10/python7.html)
+
+[关于python文件操作](http://www.cnblogs.com/rollenholt/archive/2012/04/23/2466179.html)
