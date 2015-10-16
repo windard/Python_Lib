@@ -21,7 +21,6 @@ except MySQLdb.Error,e:
 ![mysql_demo](mysql_demo.jpg)
 可以看出来，如果MySQL数据库打开且账户密码正确的话就可以正确连接，并显示数据库版本，如果错误则报错并显示错误类型。
 
-####进阶操作
 接下来，我们试一下数据库的增改删查和刷新。
 先来看一下在数据库test中有一个表单test。
 test中有三个选项，分别是name，id，sex，数据类型分别是char，int，char。
@@ -53,7 +52,53 @@ except MySQLdb.Error,e:
 ![mysqldb_first](mysqldb_first.jpg)
 可以看到之前，在表单里并没有数据，在执行插入了之后有了一行数据。
 注意，在执行插入之后一定要commmit()才能实行有效操作，不然不能写入数据库。
+再来看一个完整的增改删查的代码。
+```python
+#coding=utf-8
+import MySQLdb
 
+try:
+	conn = MySQLdb.connect(host='localhost',user='root',passwd='',db='test',port=3406)
+	print "Connect Successful !"
+	cur = conn.cursor()
+	#首先查询原始数据库状态
+	cur.execute("SELECT * FROM test ")
+	data = cur.fetchone()
+	print data
+	#插入一条数据
+	value = ["Windard",001,"man"]
+	cur.execute("INSERT INTO test(name,id,sex) VALUES(%s,%s,%s)",value)
+	conn.commit()
+	#查询插入数据库之后的状态
+	cur.execute("SELECT * FROM test ")
+	data = cur.fetchone()
+	print data	
+	#更改数据库数据
+	cur.execute("UPDATE test SET id = 100 WHERE name = 'Windard'")
+	#查询更改数据之后的数据库数据
+	cur.execute("SELECT * FROM test ")
+	data = cur.fetchone()
+	print data
+	#删除数据库数据
+	cur.execute("DELETE FROM test WHERE name = 'Windard'")
+	#查询删除数据之后的数据库数据
+	cur.execute("SELECT * FROM test ")
+	data = cur.fetchone()
+	print data	
+	cur.close()		
+	conn.close()
+except MySQLdb.Error,e:
+     print "Mysql Error %d: %s" % (e.args[0], e.args[1])
+```
+保存为mysqldb_second.py，运行，看一下结果。
+![mysqldb_second](mysqldb_second.jpg)
+这里包含完整的数据库增改删查的操作。
+
+####进阶操作
+那我们试一下创建一个新的数据库和新的表单，插入大量的数据来试试。
+```python
+
+```
 
 ##os
 非常基础的一个库，但是却实现了我一个想了很久了功能，识别目录下的所有文件。

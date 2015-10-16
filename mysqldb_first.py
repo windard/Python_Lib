@@ -15,7 +15,7 @@ try:
 	cur.execute("SELECT * FROM test")
 	data = cur.fetchone()
 	print data
-	cur.close()		
+	cur.close()
 	conn.close()
 except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])
