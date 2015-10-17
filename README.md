@@ -1,5 +1,6 @@
 #python 库的学习
 ===
+
 [TOC]
 
 python的强大之处有很大的一方面在于它有各种各样非常强大的库，那么，这篇博客就是记录我学习各种的库的经历吧。
@@ -474,6 +475,53 @@ f.open('file'[,'mode'])
 |f.seek(offset[,where])|把文件指针移动到相对于where的offset位置。where为0表示文件开始处，这是默认值 ；1表示当前位置；2表示文件结尾。(注意：如果文件以a或a+的模式打开，每次进行写操作时，文件操作标记会自动返回到文件末尾)|
 |f.truncate([size])|把文件裁成规定的大小，默认的是裁到当前文件操作标记的位置。如果size比文件的大小还要大，依据系统的不同可能是不改变文件，也可能是用0把文件补到相应的大小，也可能是以一些随机的内容加上去。|
 
+打开不含英文名的文件一般都没有什么问题，主要是文件名含中文的就比较复杂了。
+主要有两种方法：
+1. unicode转码
+```python
+filepath=unicode(filepath,'utf8')
+fobj=open(filepath,"r")
+```
+2. 使用u
+```python
+filepath = u'中文路径'
+fobj = open(filepath)
+```
+我们来试一下
+```python
+#coding=utf-8
+filepath = unicode('测试文档.txt','utf8')
+file1 = open(filepath,'w')
+file1.write("This is for test")
+file1.close()
+filepath = u'测试文档.txt'
+file2 = open(filepath,'r')
+print file2.read()
+file2.close()
+```
+保存为openfile.py，运行，看一下结果。
+![openfile](openfile.jpg)
+确实可以，显示挺好的。
+但是这里又有一个问题了，如果我想要把中文打印出来呢？把刚才的代码稍微改一下
+```python
+#coding=utf-8
+filepath = unicode('测试文档.txt','utf8')
+file1 = open(filepath,'w')
+file1.write('这是测试文档')
+file1.close()
+filepath = u'测试文档.txt'
+file2 = open(filepath,'r')
+print file2.read().decode('utf8')
+file2.close()
+```
+保存为openfile2.py，运行，看一下结果。
+![openfile](openfile2.jpg)
+真的能够显示，但是或许有同学的显示是这样的。
+![openfile2_error](openfile2_error.jpg)
+使用`decode('utf8')`正常显示的Windows的cmd的chcp是936的。decode()是指文件内容以何种方式编码，现在则以同样的这种方式解码。
+这是因为微软的中文操作系统默认的中文编码格式是GBK，所以正常的cmd里面只能显示GBK格式编码的中文，无法显示utf-8格式编码的中文。
+如果想要显示utf-8格式的中文，需要在cmd内键入`chcp 65001`，这是将cmd的显示中文编码改为utf-8。
+或者你也可以将`decode('utf8')`改为`decode('gbk')`。
 
 ##参考链接
 [python学习笔记（七）——文件和目录操作](http://www.cnblogs.com/zhoujie/archive/2013/04/10/python7.html)
@@ -491,3 +539,16 @@ f.open('file'[,'mode'])
 [Argparse简易教程](http://blog.ixxoo.me/argparse.html)
 
 [ argparse — 命令行选项、参数和子命令的解析器](http://python.usyiyi.cn/python_278/library/argparse.html)
+
+[使用Python Requests 库，提交POST请求上传文件，不支持中文文件名？](http://segmentfault.com/q/1010000002633223)
+
+[PHP解决网址URL编码问题的函数urlencode()、urldecode()、rawurlencode()、rawurldecode()](http://www.phpernote.com/php-template/200.html)
+
+[Python处理中文路径](http://blog.csdn.net/maverick1990/article/details/13770693)
+
+[python读写文件，和设置文件的字符编码比如utf-8](http://outofmemory.cn/code-snippet/629/python-duxie-file-setting-file-charaeter-coding-biru-utf-8)
+
+[windows下Python打开包含中文路径名文件](http://my.oschina.net/mcyang000/blog/289460)
+
+[python中的urlencode与urldecode](http://blog.csdn.net/haoni123321/article/details/15814111)
+
