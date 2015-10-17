@@ -406,7 +406,7 @@ add_argument()
 - choices：参数的范围，或者说选择的空间
 - required：设定某个选项是否为必选参数，必须出现。
 - help：和ArgumentParser方法中的参数作用相似，出现的场合也一致
-- metavar：
+- metavar：参数在帮助信息中的名字。
 - dest： 即参数名。
 
 
@@ -487,3 +487,7 @@ f.open('file'[,'mode'])
 [Python命令行解析库argparse](http://www.cnblogs.com/linxiyue/p/3908623.html)
 
 [Python命令行解析库argparse](http://www.cnblogs.com/linxiyue/p/3908623.html)
+
+[Argparse简易教程](http://blog.ixxoo.me/argparse.html)
+
+[ argparse — 命令行选项、参数和子命令的解析器](http://python.usyiyi.cn/python_278/library/argparse.html)
