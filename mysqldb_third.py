@@ -2,7 +2,7 @@
 import MySQLdb
 
 try:
-	conn = MySQLdb.connect(host='localhost',user='root',passwd='',port=3406)
+	conn = MySQLdb.connect(host='localhost',user='root',passwd='',port=3406,charset='utf8')
 	print "Connect Successful !"
 	cur = conn.cursor()
 	#创建一个新的数据库名为python
@@ -32,7 +32,8 @@ try:
 	for item in data:
 		print item	
 	#删除表单
-	cur.execute("DROP TABLE test")
+	cur.execute("DROP TABLE test ")
+	#删除数据库
 	cur.execute("DROP DATABASE python")
 	cur.close()
 	conn.close()

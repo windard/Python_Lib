@@ -101,7 +101,7 @@ except MySQLdb.Error,e:
 import MySQLdb
 
 try:
-	conn = MySQLdb.connect(host='localhost',user='root',passwd='',port=3406)
+	conn = MySQLdb.connect(host='localhost',user='root',passwd='',port=3406,charset='utf8')
 	print "Connect Successful !"
 	cur = conn.cursor()
 	#创建一个新的数据库名为python
@@ -131,7 +131,8 @@ try:
 	for item in data:
 		print item	
 	#删除表单
-	cur.execute("DROP TABLE test")
+	cur.execute("DROP TABLE test ")
+	#删除数据库
 	cur.execute("DROP DATABASE python")
 	cur.close()
 	conn.close()
@@ -141,6 +142,45 @@ except MySQLdb.Error,e:
 ```
 保存为mysqldb_third.py，运行，看一下结果。
 ![mysqldb_third](mysqldb_third.jpg)
+在这里连接数据库的时候也加上了数据库使用的编码格式，utf8，在使用的时候可以避免乱码的出现。
+```python
+#coding=utf-8
+import MySQLdb
+
+try:
+	conn = MySQLdb.connect(host='localhost',user='root',passwd='',db='test',port=3406)
+	print "Connect Successful !"
+	cur = conn.cursor()
+	cur.execute("SELECT * FROM test")
+	data = cur.fetchone()
+	print data
+	value = ["Windard",001,"man"]
+	try:
+		cur.execute("INSERT INTO test(name,id,sex) VALUES(%s,%s,%s)",value)
+		#注意一定要有conn.commit()这句来提交，要不然不能真正的插入数据。
+		conn.commit()
+	except :
+		#发生错误时回滚
+		conn.rollback()
+	
+	cur.execute("SELECT * FROM test")
+	data = cur.fetchall()
+	for item in data:
+		fname = item[0]
+		fid   = item[1]
+		fsex  = item[2] 
+	print "name = %s ,id = %s , sex = %s " %(fname ,fid ,fsex)
+	cur.close()
+	conn.close()
+except MySQLdb.Error,e:
+     print "Mysql Error %d: %s" % (e.args[0], e.args[1])
+```
+保存为mysqldb_error.py，运行，看一下结果。
+![mysqldb_error](mysqldb_error.jpg)
+这个代码演示了发生错误时候回滚的操作，rollback()能够把游标指针指到错误发生之前的位置。
+还有fetchall()即一次取得全部的数据。
+还有其他几个功能类似的函数fetchone()，一次取得一个数据，fetchmany(num),一次取得num个数据。
+
 
 ##os
 非常基础的一个库，但是却实现了我一个想了很久了功能，识别目录下的所有文件。
@@ -345,7 +385,8 @@ ArgumentParser()参数用的不多，一般只需要传递description参数。�
 add_argument()
 name or flags：命令行参数名或者选项，如上面的address或者-p,--port.其中命令行参数如果没给定，且没有设置defualt，则出错。但是如果是选项的话，则设置为None
 nargs：命令行参数的个数，一般使用通配符表示，其中，'?'表示只用一个，'*'表示0到多个，'+'表示至少一个
-action：默认值
+default：默认值
+choices：参数的范围，或者说选择的空间
 store:参数的存储格式化,默认为store。
 type：参数的类型，默认是字符串string类型，还有float、int等类型
 help：和ArgumentParser方法中的参数作用相似，出现的场合也一致
