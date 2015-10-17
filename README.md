@@ -197,11 +197,11 @@ except MySQLdb.Error,e:
 6. 获取文件大小--os.path.getsize（filename）
 7. 获取文件属性--os.stat（file）
 8. 修改文件权限与时间戳--os.chmod（file）
+9. 路径中加入新的内容--os.path.join(path,file)
 6. 将路径分解为目录名和文件名——os.path.split()
+7. 将目录分解为目录加文件名和文件名的扩展名——os.path.splitext()
 7. 获得路径的路径名--os.path.dirname()
 8. 获得路径的文件名--os.path.basename()
-9. 路径中加入新的内容--os.path.join(path,file)
-7. 将目录分解为目录加文件名和文件名的扩展名——os.path.splitext()
 8. 判断一个路径是否存在或是否为路径——os.path.isdir("path")
 9. 判断一个文件是否存在或这否为文件——os.path.isfile("file")
 10. 判断一个路径（目录或文件）是否存在——os.path.exists()
