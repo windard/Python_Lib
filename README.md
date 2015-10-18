@@ -1,4 +1,4 @@
-#python 库的学习
+	#python 库的学习
 ===
 
 [TOC]
@@ -334,6 +334,8 @@ if __name__ == '__main__':
 	print "File Number : " + str(num)
 
 ```
+
+>php也可以打开文件夹，直接用户opendir()就可以。
 
 ##shutil
 也是用来文件操作，但是它与os不同的是它只用来文件或文件夹操作
