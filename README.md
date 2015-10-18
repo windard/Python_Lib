@@ -475,6 +475,7 @@ f.open('file'[,'mode'])
 |f.seek(offset[,where])|把文件指针移动到相对于where的offset位置。where为0表示文件开始处，这是默认值 ；1表示当前位置；2表示文件结尾。(注意：如果文件以a或a+的模式打开，每次进行写操作时，文件操作标记会自动返回到文件末尾)|
 |f.truncate([size])|把文件裁成规定的大小，默认的是裁到当前文件操作标记的位置。如果size比文件的大小还要大，依据系统的不同可能是不改变文件，也可能是用0把文件补到相应的大小，也可能是以一些随机的内容加上去。|
 
+*2015-10-17*
 打开不含英文名的文件一般都没有什么问题，主要是文件名含中文的就比较复杂了。
 主要有两种方法：
 1. unicode转码
@@ -519,10 +520,19 @@ file2.close()
 真的能够显示，但是或许有同学的显示是这样的。
 ![openfile2_error](openfile2_error.jpg)
 使用`decode('utf8')`正常显示的Windows的cmd的chcp是936的。decode()是指文件内容以何种方式编码，现在则以同样的这种方式解码。
+
 这是因为微软的中文操作系统默认的中文编码格式是GBK，所以正常的cmd里面只能显示GBK格式编码的中文，无法显示utf-8格式编码的中文。
+
 如果想要显示utf-8格式的中文，需要在cmd内键入`chcp 65001`，这是将cmd的显示中文编码改为utf-8。
 或者你也可以将`decode('utf8')`改为`decode('gbk')`。
 
+*2015-10-18*
+既然我们已经试过了用Python打开文件的问题，你们接下来就是用PHP打开中文文件的问题了！
+
+因为微软的Windows是默认中文编码格式GBK，需要转码成utf-8才可以正常的看到。
+
+`$filename=iconv('utf-8','gb2312',$filename);`或者是
+`file_get_contents(mb_convert_encoding($filename, 'gbk', 'utf-8'));`
 ##参考链接
 [python学习笔记（七）——文件和目录操作](http://www.cnblogs.com/zhoujie/archive/2013/04/10/python7.html)
 
