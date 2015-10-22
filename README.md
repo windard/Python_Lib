@@ -1,4 +1,4 @@
-	#python 库的学习
+#python 库的学习
 ===
 
 [TOC]
@@ -534,6 +534,7 @@ file2.close()
 真的能够显示，但是或许有同学的显示是这样的。
 ![openfile2_error](openfile2_error.jpg)
 使用`decode('utf8')`正常显示的Windows的cmd的chcp是936的。decode()是指文件内容以何种方式编码，现在则以同样的这种方式解码。
+3.encode()转码
 
 这是因为微软的中文操作系统默认的中文编码格式是GBK，所以正常的cmd里面只能显示GBK格式编码的中文，无法显示utf-8格式编码的中文。
 
