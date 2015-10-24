@@ -618,8 +618,57 @@ oct(x )                 #将一个整数转换为一个八进制字符串
 其中chr(),ord(),hex()等比较常用。
 - 还有hash和md5
  - hash
- - md5。能够生成md5的
-
+ 在Python中有内置模块hashlib可以用来生成安全散列算法SHA-1,SHA224,SHA256,SHA384,SHA512及RSA的md5算法。  
+ 我们来试一下生成一个sha-1的密文.
+ ```python
+ import hashlib
+ decode = "data to be encode"
+ encode = hashlib.sha1()
+ encode.update(decode)
+ print encode.hexdigest()
+ ```
+ 保存为hash_sha1.py，运行，看一下结果。   
+ ![hash_sha1.jpg](hash_sha1.jpg)   
+ 确实生成了四十位的hash密文。   
+ >让我们来看一下hashlib的内置函数有哪些
+ >- hashlib.algorithms。一个元组，提供该模块保证支持的哈希算法的名称。
+ >- hash.digest_size  。以字节为单位的哈希结果的大小。
+ >- hash.block_size   。以字节为单位的哈希算法的内部块的大小。
+ >- hash.update(arg)  。用字符串arg更新哈希对象。重复的调用等同于单次调用所有参数的连接：m.update(a); m.update(b) 相当于m.update(a+b)。
+ >- hash.digest()     。返回目前为止传递给update()方法的字符串的摘要。它是一个具有digest_size个字节的字符串，其中可能包含非ASCII 字符，包括空字节。
+ >- hash.hexdigest()  。类似digest()，但是返回的摘要的字符串的长度翻倍，且只包含十六进制数字。这可用于在电子邮件或其它非二进制环境中安全交换数据。
+ >- hash.copy()       。返回哈希对象的一个副本（"克隆"）。这可以用于更有效地计算分享一个共同的初始子字符串的字符串的摘要。
+ - md5。能够生成md5的模块主要有两个，md5和hashlib。
+ 先来演示一下md5模块。
+ ```python
+ import md5
+ decode = "data to be encode"
+ encode = md5.new()
+ encode.update(decode)
+ print encode.hexdigest()
+ ```
+ 保存为md5_md5.py,运行，看一下结果。   
+ ![md5_md5.jpg](md5_md5.jpg)   
+ 确实生成了32为的md5密文。   
+ >md5模块的使用非常简洁，具体看一下相关的函数。   
+ >- md5.new([arg]) 。返回一个md5对象，如果给出参数，则相当于调用了update(arg)
+ >- md5.updte(arg) 。用string参数arg更新md5对象。注意：如果m.update(a)之后在 m.update(b)，那么就相当于m.update(a+b)。
+ >- md5.digest()   。返回16字节的摘要，由传给update的string生成，摘要没有ascii字符
+ >- md5.hexdigest()。以16进制的形式返回摘要     
+ 
+ 再来试一下hashlib模块
+ ```python
+ import hashlib
+ decode = "data to be encode"
+ encode = hashlib.md5()
+ encode.update(decode)
+ print encode.hexdigest()
+ ```
+ 保存为md5_hash.py，运行，看一下结果。
+ ![md5_hash.jpg](md5_hash.jpg)
+ 可以看出来，两次的结果是一样的。  
+ 在hashlib里面也可以使用一句话模式  
+ `print hashlib.new("md5", "data to be encode").hexdigest()  `
 
 ##参考链接
 [python学习笔记（七）——文件和目录操作](http://www.cnblogs.com/zhoujie/archive/2013/04/10/python7.html)
@@ -661,3 +710,27 @@ oct(x )                 #将一个整数转换为一个八进制字符串
 [python chr()、unichr()和ord()](http://www.lxway.net/94915002.html)
 
 [python chr()、unichr()和ord()](http://crazier9527.iteye.com/blog/411001)
+
+[python两种生成md5的方法](http://outofmemory.cn/code-snippet/939/python-liangzhong-produce-md5-method)
+
+[Python字符串MD5加密
+](http://www.qttc.net/201304314.html)
+
+[python的md5模块使用非常简单](http://kure6.blog.51cto.com/2398286/884529)
+
+[Python hashlib模块 （主要记录md5加密）](http://blog.csdn.net/tys1986blueboy/article/details/7229199)
+
+[md5模块（Python内置模块）和hashlib模块](http://my.oschina.net/duhaizhang/blog/67214)
+
+[python hashlib模块及md5() 、sha()](http://www.361way.com/python-hashlib-md5-sha/4249.html)
+
+[Python/Python3 MD5加密实例学习](http://www.111cn.net/phper/python/89310.htm)
+
+[python模块——hashlib](http://asange.blog.51cto.com/7125040/1426933)
+
+[Python模块学习：hashlib hash加密](http://python.jobbole.com/81556/)
+
+[安全哈希和消息摘要](http://python.usyiyi.cn/python_278/library/hashlib.html)
+
+[python hashlib模块](http://beginman.cn/python/2015/05/07/python-hashlib/)
+
