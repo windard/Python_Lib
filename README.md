@@ -670,6 +670,14 @@ oct(x )                 #将一个整数转换为一个八进制字符串
  在hashlib里面也可以使用一句话模式  
  `print hashlib.new("md5", "data to be encode").hexdigest()  `
 
+
+##media
+
+##额外的东西
+1 python自带了一个简单的服务器，当前目录下启动,就可以在`localhost:8080`查看。
+```python
+python -m SimpleHTTPServer 8080
+```
 ##参考链接
 [python学习笔记（七）——文件和目录操作](http://www.cnblogs.com/zhoujie/archive/2013/04/10/python7.html)
 
