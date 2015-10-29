@@ -684,6 +684,16 @@ python -m SimpleHTTPServer 8080
 php -S localhost:8000
 ```
 
+3. 最简单的nodejs的服务器。
+```javascript
+var http = require('http');
+http.createServer(function (req, res) {
+    res.send('Hello');
+    res.end();
+}).listen(3000);
+```
+保存为server.js,在当前目录下cmd里输入`node server.js`即可调用，在`localhost:3000`查看。
+
 ##参考链接
 [python学习笔记（七）——文件和目录操作](http://www.cnblogs.com/zhoujie/archive/2013/04/10/python7.html)
 
