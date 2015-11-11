@@ -19,13 +19,13 @@ except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 ```
 保存为mysqldb_demo.py，运行，看一下结果。
-![mysql_demo](mysql_demo.jpg)
+![mysql_demo](images/mysql_demo.jpg)
 可以看出来，如果MySQL数据库打开且账户密码正确的话就可以正确连接，并显示数据库版本，如果错误则报错并显示错误类型。
 
 接下来，我们试一下数据库的增改删查和刷新。
 先来看一下在数据库test中有一个表单test。
 test中有三个选项，分别是name，id，sex，数据类型分别是char，int，char。
-![mysql](mysql.jpg)
+![mysql](images/mysql.jpg)
 ```python
 #coding=utf-8
 import MySQLdb
@@ -50,7 +50,7 @@ except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 ```
 保存为mysqldb_first.py,运行，看一下结果。
-![mysqldb_first](mysqldb_first.jpg)
+![mysqldb_first](images/mysqldb_first.jpg)
 可以看到之前，在表单里并没有数据，在执行插入了之后有了一行数据。
 注意，在执行插入之后一定要commmit()才能实行有效操作，不然不能写入数据库。
 再来看一个完整的增改删查的代码。
@@ -92,7 +92,7 @@ except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 ```
 保存为mysqldb_second.py，运行，看一下结果。
-![mysqldb_second](mysqldb_second.jpg)
+![mysqldb_second](images/mysqldb_second.jpg)
 这里包含完整的数据库增改删查的操作。
 
 ####进阶操作
@@ -142,7 +142,7 @@ except MySQLdb.Error,e:
 
 ```
 保存为mysqldb_third.py，运行，看一下结果。
-![mysqldb_third](mysqldb_third.jpg)
+![mysqldb_third](images/mysqldb_third.jpg)
 在这里连接数据库的时候也加上了数据库使用的编码格式，utf8，在使用的时候可以避免乱码的出现。
 ```python
 #coding=utf-8
@@ -177,7 +177,7 @@ except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 ```
 保存为mysqldb_error.py，运行，看一下结果。
-![mysqldb_error](mysqldb_error.jpg)
+![mysqldb_error](images/mysqldb_error.jpg)
 这个代码演示了发生错误时候回滚的操作，rollback()能够把游标指针指到错误发生之前的位置。
 还有fetchall()即一次取得全部的数据。
 还有其他几个功能类似的函数fetchone()，一次取得一个数据，fetchmany(num),一次取得num个数据。
@@ -304,7 +304,7 @@ os.system('dir')
 保存为os_improve.py
 
 保存为os_demo.py，运行，看一下结果
-![os_demo](os_demo.jpg)
+![os_demo](images/os_demo.jpg)
 
 给一个查看目录下的所有文件的代码，如果有目录则空格表示递进关系
 ```python
@@ -355,10 +355,10 @@ parser = argparse.ArgumentParser()
 parser.parse_args()
 ```
 保存为argparse_demo.py，运行，看一下结果。
-![argparse_demo](argparse_demo.jpg)
+![argparse_demo](images/argparse_demo.jpg)
 什么结果都没有，就是这样，它本来就什么都不做。
 我们可以给它一个参数。'-h'或者'--help'
-![argparse_demo_h](argparse_demo_h.jpg)
+![argparse_demo_h](images/argparse_demo_h.jpg)
 显示这个函数有一个可选参数'-h'或者'--help'，功能是显示帮助，然后退出。
 ```python
 #coding=utf-8
@@ -376,7 +376,7 @@ print args.echo
 ```
 保存为argparse_add_argument.py，运行，看一下结果。
 不过，现在我们增加了一个参数 'echo'
-![argparse_add_argument](argparse_add_argument.jpg)
+![argparse_add_argument](images/argparse_add_argument.jpg)
 将输入的参数回显出来。
 现在我们来看一下相应的参数
 ```python
@@ -435,7 +435,7 @@ else:
 	print answer
 ```
 保存为argparse_count.py，运行，看一下结果。
-![argparse_count](argparse_count.jpg)
+![argparse_count](images/argparse_count.jpg)
 不带'-'的参数，调用时必须键入值，且顺序与程序定义的顺序一致。默认值
 带'-'的参数，调用时可以不用输入。
 
@@ -515,7 +515,7 @@ print file2.read()
 file2.close()
 ```
 保存为openfile.py，运行，看一下结果。
-![openfile](openfile.jpg)
+![openfile](images/openfile.jpg)
 确实可以，显示挺好的。
 但是这里又有一个问题了，如果我想要把中文打印出来呢？把刚才的代码稍微改一下
 ```python
@@ -530,9 +530,9 @@ print file2.read().decode('utf8')
 file2.close()
 ```
 保存为openfile2.py，运行，看一下结果。
-![openfile](openfile2.jpg)
+![openfile](images/openfile2.jpg)
 真的能够显示，但是或许有同学的显示是这样的。
-![openfile2_error](openfile2_error.jpg)
+![openfile2_error](images/openfile2_error.jpg)
 使用`decode('utf8')`正常显示的Windows的cmd的chcp是936的。decode()是指文件内容以何种方式编码，现在则以同样的这种方式解码。
 3.encode()转码
 
@@ -582,7 +582,7 @@ new_decode = base64.b64decode(encode)
 print new_decode
 ```
 保存为base64_demo.py，运行，看一下效果。
-![base64_demo.jpg](base64_demo.jpg)
+![base64_demo.jpg](images/base64_demo.jpg)
 ####其他函数
 - encode()函数也可以进行base64的编码和解码操作
 ```python
@@ -593,7 +593,7 @@ new_decode = encode.decode("base64")
 print new_decode
 ```
 保存为base64_encode.py，运行，看一下结果。
-![base64_encode.jpg](base64_encode.jpg)
+![base64_encode.jpg](images/base64_encode.jpg)
 可以看出来，效果是与base64模块解码编码一样的结果。
 >decode标准语法：str.decode(encoding='UTF-8',errors='strict')
 >- encoding -- 要使用的编码，如"UTF-8"。
@@ -628,7 +628,7 @@ oct(x )                 #将一个整数转换为一个八进制字符串
  print encode.hexdigest()
  ```
  保存为hash_sha1.py，运行，看一下结果。   
- ![hash_sha1.jpg](hash_sha1.jpg)   
+ ![hash_sha1.jpg](images/hash_sha1.jpg)   
  确实生成了四十位的hash密文。   
  >让我们来看一下hashlib的内置函数有哪些
  >- hashlib.algorithms。一个元组，提供该模块保证支持的哈希算法的名称。
@@ -648,7 +648,7 @@ oct(x )                 #将一个整数转换为一个八进制字符串
  print encode.hexdigest()
  ```
  保存为md5_md5.py,运行，看一下结果。   
- ![md5_md5.jpg](md5_md5.jpg)   
+ ![md5_md5.jpg](images/md5_md5.jpg)   
  确实生成了32为的md5密文。   
  >md5模块的使用非常简洁，具体看一下相关的函数。   
  >- md5.new([arg]) 。返回一个md5对象，如果给出参数，则相当于调用了update(arg)
@@ -665,13 +665,224 @@ oct(x )                 #将一个整数转换为一个八进制字符串
  print encode.hexdigest()
  ```
  保存为md5_hash.py，运行，看一下结果。
- ![md5_hash.jpg](md5_hash.jpg)
+ ![md5_hash.jpg](images/md5_hash.jpg)
  可以看出来，两次的结果是一样的。  
  在hashlib里面也可以使用一句话模式  
  `print hashlib.new("md5", "data to be encode").hexdigest()  `
 
 
 ##media
+
+##smtplib
+用Python发送邮件，胶水语言当然能够胜任。通过SMTP协议发送邮件，不过它并不是自己的邮件服务器，而是通过调用你的邮箱给别人发送邮件，比如说QQ邮箱或者网易邮箱或者什么什么的。      
+先来一个简单的示例。     
+>不过想要使用你的邮箱通过SMTP发送邮件需要先确认你的邮箱服务器开通了SMTP服务。    
+>以QQ邮箱为例，开通SMTP服务这样的。     
+>![](images/qqmail_SMTP.jpg)
+####基本使用
+
+```python
+#coding=utf-8
+
+import smtplib
+
+#先创建一个连接邮件服务器对象，使用默认端口25
+smtpObj = smtplib.SMTP("smtp.qq.com")
+#用户名和密码登陆
+from_name = '1106911190@qq.com'
+to_name = 'me@wenqiangyang.com'
+#如果此处用的是QQ邮箱，那么这个密码就是你的QQ邮箱独立密码
+password = 'XXXXXX'
+#以下为邮件的内容,发送的内容是字符串。
+#但是邮件一般由标题，发件人，收件人，邮件内容，附件构成。
+#发送邮件的时候需要使用SMTP协议中定义的格式
+message = """
+From: From Person <1106911190@qq.com>
+To: To Person <me@wenqiangyang.com>
+Subject: SMTP e-mail test
+
+This is a test.
+"""
+
+#登陆邮箱
+smtpObj.login(from_name,password)
+#发送邮件
+smtpObj.sendmail(from_name,to_name,message)
+print "Sending Successful"
+#关闭连接
+smtpObj.close()
+```
+
+保存为qqmail_smtp_demo.py，运行，看一下结果。    
+![qqmail_smtp_demo.jpg](images/qqmail_smtp_demo.jpg)         
+这样就可以发送一个简单的邮件了，其实真正核心的代码只有四行。    
+1. smtplib.SMTP( [host [, port [, local_hostname]]] )     
+这句代码用来创建一个SMTP对象，并连接邮件服务器。     
+>在此处，也可以化为两步。
+>先创建对象`smtpObj = smtplib.SMTP()`，再连接服务器 `smtpObj.connect(host)`
+2. SMTP.login(user,password)     
+用上一句创建的SMTP对象，登陆发邮件的邮箱     
+3. SMTP.sendmail(from_addr, to_addrs, msg[, mail_options, rcpt_options]     
+还是用SMTP对象发出邮件，不过要注意一下第三个参数msg，一般不自己写，而是通过MIME来创建一个msg对象再转化为字符串。就像上面的这个例子，我自己写msg并没有效果，被全部当成了邮件正文发送。     
+4. SMTP.close()     
+关闭SMTP对象的连接，其实如果你不关闭，在代码运行结束也会被自动关闭。      
+
+接下来，我们使用163邮箱也来试一下。   
+
+```python
+#coding=utf-8
+
+import smtplib
+from email.mime.text import MIMEText
+
+smtpObj = smtplib.SMTP("smtp.163.com")
+from_name = '18607571914@163.com'
+to_name = 'me@wenqiangyang.com'
+password = 'XXXXXX'
+
+#使用MIMEText来创建msg对象
+message = MIMEText("天下武功，唯快不破")
+message["Subject"] = "千秋万载，一统江湖"
+message["From"] = from_name
+message["To"] = to_name
+
+smtpObj.login(from_name,password)
+#这个地方需要把message对象转化为字符串
+smtpObj.sendmail(from_name,to_name,message.as_string())
+print "Sending Successful"
+smtpObj.close()
+```
+
+保存为163mail_smtp_demo.py，运行，看一下结果。    
+![163mail_smtp_demo.jpg](images/163mail_smtp_demo.jpg)     
+
+####进阶操作
+1. 发送HTML格式的邮件   
+其实发送HTML格式的邮件也非常简单，在MIMETest对象里面指定文本为HTML即可。   
+
+```python
+#coding=utf-8
+
+import smtplib
+from email.mime.text import MIMEText
+
+smtpObj = smtplib.SMTP("smtp.163.com")
+from_name = '18607571914@163.com'
+to_name = 'me@wenqiangyang.com'
+password = 'XXXXXX'
+
+#这是将要发送的HTML部分
+HTML = "<p>天下武功，唯快不破<p><br><a href='http://www.wenqiangyang.com'>Click To Find Me</a>"
+#只需在MIMETest对象里指定文件格式
+message = MIMEText(HTML,_subtype='html',_charset='utf-8')
+message["Subject"] = "千秋万载，一统江湖"
+message["From"] = from_name
+message["To"] = to_name
+
+smtpObj.login(from_name,password)
+#这个地方需要把message对象转化为字符串
+smtpObj.sendmail(from_name,to_name,message.as_string())
+print "Sending Successful"
+smtpObj.close()
+```
+
+保存为163mail_smtp_html.py，运行，看一下结果。   
+![163mail_smtp_html.jpg](images/163mail_smtp_html.jpg)   
+![163mail_smtp_html_successful.jpg](images/163mail_smtp_html_successful.jpg)   
+
+2. 发送附件
+发送附件则需要创建MIMEMultipart实例，然后构造附件发送。    
+
+```python
+#coding=utf-8
+
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+smtpObj = smtplib.SMTP("smtp.163.com")
+from_name = '18607571914@163.com'
+to_name = 'me@wenqiangyang.com'
+password = 'XXXXXX'
+
+#先创建一个带附件的对象
+message = MIMEMultipart()
+
+#构造附件
+attr = MIMEText(open("163mail_smtp_html.py","rb").read(),"base64","utf-8")
+attr["Content-Type"] = 'application/octet-stream'
+#此处的文件名写什么，邮件中显示什么名字
+attr["Content-Disposition"] = 'attachment; filename="file.py"'
+
+#将附件加入邮件中
+message.attach(attr)
+
+#在邮件中加入内容
+content = MIMEText("天下英雄，唯君与吾","plain","utf-8")
+message.attach(content)
+
+#邮件的收件人，发件人及主题
+message["Subject"] = "千秋万载，一统江湖"
+message["From"] = from_name
+message["To"] = to_name
+
+smtpObj.login(from_name,password)
+#这个地方需要把message对象转化为字符串
+smtpObj.sendmail(from_name,to_name,message.as_string())
+print "Sending Successful"
+smtpObj.close()
+```
+
+保存为163mail_smtp_multipart.py，运行，看一下结果。   
+![163mail_smtp_multipart.jpg](images/163mail_smtp_multipart.jpg)    
+![163mail_smtp_multipart_successful.jpg](images/163mail_smtp_multipart_successful.jpg)   
+如果需要发送多个附件则依次创建附件对象并加入邮件即可。    
+
+3. SSL与TLS
+python支持SSL/TLS的安全邮件。
+
+##envelopes
+这是将email和smtplib两个库进行封装，使其发送邮件更加方便。    
+不过一般Python并不自带，需要自行安装。
+>安装方法
+>- Linux下：`pip install envelopes`
+>- Windows下，点击[这里](envelopes-master.zip)下载文件压缩包，解压后进入文件夹，`python install setup.py`即可安装。
+
+```python
+#coding=utf-8
+
+from envelopes import Envelope
+
+#创建一个envelopes对象
+envelope = Envelope(
+	#发件人的地址，和名称
+	from_addr = (u"1106911190@qq.com",u"Windard"),
+	#收件人的地址，和名称
+	to_addr = (u"me@wenqiangyang.com",u"Yang"),
+	#邮件的主题
+	subject = u"天上地下，何以为家",
+	#邮件的内容
+	text_body = u"眼泪被岁月蒸发"
+	)
+
+#在邮件中添加附件也非常简单
+envelope.add_attachment('images/163mail_smtp_demo.jpg')
+
+#最后连接邮件服务器并发送
+envelope.send("smtp.qq.com",login="1106911190@qq.com",password="XXXXXX",tls=True)
+
+print "Sending Successful"
+```
+
+保存为envelopes_demo.py，运行，看一下结果。   
+![envelopes_demo.jpg](images/envelopes_demo.jpg)   
+![envelopes_demo_successful.jpg](images/envelopes_demo_successful.jpg)   
+发送邮件的地方也可以不用`envelope.send()`而用原生的`SMTP.SMTP()`，只需要在开始的时候导入`SMTP`，然后就可以`qq=SMTP(host="XXX",login="XXX",password="XXX")`,再用`qq.send(envelope)`来发送出去。   
+>envelope也可以进行群发，只需要在设定`to_addr=(u"XXX@XX.com",u"XXX",u"XXX@XX.com",u"XXX")`即可。
+>envelope也可以用来发送HTML，只需在对象中使用`html_body=u'XXX',`即可发送HTML文本。
+>envelope也可以设定字符编码，只需在对象中使用` charset=u'XXX',`即可设定编码格式。
+>envelope也可设定抄送人，只需在对象中设定` cc_addr=u'XXX',`即可设定抄送人，也可以是多个形式的列表。
+
 
 ##额外的东西
 1. python自带了一个简单web的服务器，当前目录下启动,就可以在`localhost:8080`查看。
@@ -693,6 +904,8 @@ http.createServer(function (req, res) {
 }).listen(3000);
 ```
 保存为server.js,在当前目录下cmd里输入`node server.js`即可调用，在`localhost:3000`查看。
+
+
 
 ##参考链接
 [python学习笔记（七）——文件和目录操作](http://www.cnblogs.com/zhoujie/archive/2013/04/10/python7.html)
@@ -757,4 +970,22 @@ http.createServer(function (req, res) {
 [安全哈希和消息摘要](http://python.usyiyi.cn/python_278/library/hashlib.html)
 
 [python hashlib模块](http://beginman.cn/python/2015/05/07/python-hashlib/)
+
+[python发送各类邮件的主要方法](http://www.cnblogs.com/xiaowuyi/archive/2012/03/17/2404015.html)
+
+[Python使用SMTP发送邮件](http://www.runoob.com/python/python-email.html)
+
+[Python smtplib发送邮件](http://www.zhidaow.com/post/python-send-email-with-smtplib)
+
+[飘逸的python - 发送qq邮件](http://blog.csdn.net/handsomekang/article/details/9785411)
+
+[ python模块之smtplib: 用python发送SSL/TLS安全邮件](http://blog.csdn.net/zhaoweikid/article/details/1638349)
+
+[Envelopes](http://tomekwojcik.github.io/envelopes/)
+
+[python优秀库 － 使用envelopes发送邮件](http://www.cnblogs.com/liulixiang/p/3540270.html)
+
+[Python用Envelopes发送邮件和附件](http://www.zhidaow.com/post/python-envelopes)
+
+
 
