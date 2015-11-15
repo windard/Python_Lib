@@ -4,6 +4,12 @@
 [TOC]
 
 python的强大之处有很大的一方面在于它有各种各样非常强大的库，那么，这篇博客就是记录我学习各种的库的经历吧。
+>声明：
+>本人使用的Python版本为Python2.7.10，Windows 10 操作系统环境下，以下代码均亲测。
+
+后来，我才知道，原来有一本书叫《Python 标准库》,几百个标准库,还有一本书叫Python图像处理的标准库。       
+[《Python 标准库》](python标准库.pdf) [《PythonImagingLibrary中文手册》](PythonImagingLibrary中文手册.pdf)
+
 ##MySQLdb
 从名字就可以看出来，它的功能是与MySQL数据库连接用的
 ####基本使用
@@ -672,6 +678,229 @@ oct(x )                 #将一个整数转换为一个八进制字符串
 
 
 ##media
+原本以为media是一个很简单的图像处理库，结果下载就纠结我一半天。它不是Python自带的库，需要自行安装，而安装这个库又需要先安装一些其他的东西。本人环境Windows 10 64位处理器Python2.7.10。      
+1. 下载[Python Imaging Library 1.1.7 for Python 2.7](PIL-1.1.7.win32-py2.7.exe)，安装。    
+2. 下载[pygame-1.9.1.win32-py2.7.msi](pygame-1.9.1.win32-py2.7.msi)，安装。    
+3. 下载[numpy-1.6.1-win32-superpack-python2.7.exe](numpy-1.6.1-win32-superpack-python2.7.exe)，安装。    
+4. 下载[gwpy-code.zip](gwpy-code.zip)，解压，进入code->install，双击`PyGraphics-2.0.win32.exe`安装。     
+>此处，本人安装的时候提示缺少了`MSVCR71.dll`，下载[msvcr71.rar](msvcr71.rar)，安装。    
+5. 下载[setuptools-0.6c11.win32-py2.7.exe](setuptools-0.6c11.win32-py2.7.exe)    
+6. 最后打开cmd，在命令行中输入`C:\Python27\Scripts\easy_install nose `，当然你得先安装了`ease_install`。   
+7. 在cmd中使用`pip install media`即可。   
+
+还有另一种比较简便的方法，全程使用pip安装。   
+
+```
+pip install Ampy  
+pip install PyGraphics  
+pip install nose  
+pip install media    
+```
+
+####基本使用
+算了，大家还是放弃这个库吧。安装非常复杂，使用起来也有问题。     
+
+##Image
+这个是专门用来处理图片的，只要你在上面了安装了pil图像处理库，就会自带这个库的。     
+####基本操作
+```python
+import Image
+pic = Image.open("../images/test.jpg")
+pic.show()
+```
+保存为image_demo.py，保存，运行即可看到图片。    
+![image_demo_successful.jpg](images/image_demo_successful.jpg)   
+>但是非常有趣的是，它打开的是jpg的文件，结果在显示的确实bmp文件。所以我在第一次打开的时候需要为bmp文件设定一个默认打开方式，而且打开失败了，结果我在第二次打开的时候，因为已经设定了默认打开方式，竟然能够查看图片了。我用的是win 10自带的照片查看器。
+
+####进阶操作
+除了打开图片，我们还可以看一下图片的一些基本信息。   
+
+```python
+#coding=utf-8
+import Image
+pic = Image.open("../images/test.jpg")
+#打印图片对象
+print pic
+#打印图片大小
+print pic.size
+#打印图片编码格式
+print pic.mode
+#打印图片保存格式
+print pic.format
+```
+保存为image_second.py，运行，看一下结果。
+![image_second.jpg](images/image_second.jpg)
+
+然后进行一些简单的图片操作，比如说调整文件大小，旋转图像，改变文件格式等。   
+```python
+#coding=utf-8
+import Image
+pic = Image.open("../images/test.jpg")
+
+#改变图像大小
+pic1 = pic.resize((600,600))
+# pic1.show()
+print pic1.size
+#保存图片,也可以同时改变图片格式
+pic1.save("../images/test1.png")
+print pic1.mode
+print pic1.format
+
+#剪裁图片
+pic2 = pic.crop((0,200,600,800))
+# pic2.show()
+print pic2.size
+#保存图片
+pic1.save("../images/test2.jpg")
+print pic2.mode
+print pic2.format
+
+#旋转图片
+pic3 = pic2.rotate(45)
+pic3.show()
+#保存图片
+pic3.save("../images/test3.jpg")
+```
+保存为image_change.py，运行，看一下结果。    
+![image_change.jpg](images/image_change.jpg)
+然后查看文件夹，相应的图片也会保存下来。     
+然后创建一个新的图像，并与另一张图像合并。   
+```python
+#coding=utf-8
+import Image
+#生成一张新的图片
+pic1 = Image.new("RGB",(600,600),(255,147,89))
+# pic1 = Image.open("../images/test1.png")
+#打开一张图片
+pic2 = Image.open("../images/test2.jpg")
+#先把第二张图片的编码格式转化为与第一张相同
+pic2.convert(pic1.mode)
+#把两张图片结合到一起
+pic3 = Image.blend(pic1,pic2,0.3)
+pic3.show()
+pic3.save("../images/test4.jpg")
+```
+保存为image_create.py，运行，看一下结果。    
+![image_create.jpg](images/image_create.jpg)     
+`Image.blend()`的第三个参数为两张图片的透明度p，代表第一张图片透明度1-p，第二张图片透明度p。   
+还有注意在结合之前要先做一个格式转换，才能够结合成功。    
+
+最后，对图片进行直方图统计，打印256个灰度级像素点个数的统计值。     
+```python
+import Image
+pic = Image.open("../images/test.jpg")
+for i in  range(len(pic.histogram())):
+	if i%30==0 and i!=0:
+		print ""	
+	print pic.histogram()[i],
+```
+保存为image_histogram.py，运行，看一下结果。        
+![image_histogram.jpg](images/image_histogram.jpg)          
+
+####ImageDraw
+上一个函数库是用来操作图像的，那么这个函数库使用来画图的，这些都属于PIL图像处理库。     
+```python
+#coding=utf-8
+import Image,ImageDraw
+pic = Image.open("../images/test2.jpg")
+draw = ImageDraw.Draw(pic)
+width,height = pic.size
+
+#画两条对角线
+draw.line(((0,0),(width-1,height-1)),fill=(136,56,99))
+draw.line(((0,height-1),(width-1,0)),fill=(6,156,209))
+
+#画一个圆
+draw.arc((0,0,width-1,height-1),0,360,fill=(255,255,0))
+pic.show()
+pic.save("../images/test5.jpg")
+```
+保存为imageDraw_demo.py，运行，看一下结果。       
+![imageDraw_demo.jpg](images/imageDraw_demo.jpg)    
+
+####ImageEnhance
+这个函数库是用来图像增强，用来色彩增强，亮度增强，对比度增强，图像尖锐化等增强操作。     
+```python
+#coding=utf-8
+import Image,ImageEnhance
+pic = Image.open("../images/test2.jpg")
+
+#亮度增强
+brightness = ImageEnhance.Brightness(pic)
+bright_pic = brightness.enhance(2.0)
+bright_pic.show()
+bright_pic.save("../images/test6.jpg")
+
+#图像尖锐化
+sharpness = ImageEnhance.Sharpness(pic)
+sharp_pic = sharpness.enhance(5.0)
+sharp_pic.show()
+sharp_pic.save("../images/test7.jpg")
+
+#对比度增强
+contrast = ImageEnhance.Contrast(pic)
+contrast_pic = contrast.enhance(3.0)
+contrast_pic.show()
+contrast_pic.save("../images/test8.jpg")
+```
+保存为imageEnhance_demo.py，运行，看一下结果。      
+在你的文件夹里就可以看到几张照片，确实是能够有相应的改变。       
+
+####imageFont
+遇到了问题，还有其他的在安装opencv的时候也遇到了一个问题。    
+`ImportError: The _imagingft C module is not installed`和` error: Unable to find vcvarsall.bat`，算了。不然就可以用Python写验证码了。       
+[在Python中用PIL做验证码](http://www.zouyesheng.com/captcha.html)
+
+```python
+#coding=utf-8
+import Image, ImageDraw, ImageFont, ImageFilter
+import random
+
+# 随机字母:
+def rndChar():
+    return chr(random.randint(65, 90))
+
+# 随机颜色1:
+def rndColor():
+    return (random.randint(64, 255), random.randint(64, 255), random.randint(64, 255))
+
+# 随机颜色2:
+def rndColor2():
+    return (random.randint(32, 127), random.randint(32, 127), random.randint(32, 127))
+
+# 240 x 60:
+width = 60 * 4
+height = 60
+image = Image.new('RGB', (width, height), (255, 255, 255))
+# 创建Font对象:
+font = ImageFont.truetype('Arial.ttf', 36)
+# 创建Draw对象:
+draw = ImageDraw.Draw(image)
+# 填充每个像素:
+for x in range(width):
+    for y in range(height):
+        draw.point((x, y), fill=rndColor())
+# 输出文字:
+for t in range(4):
+    draw.text((60 * t + 10, 10), rndChar(), font=font, fill=rndColor2())
+# 模糊:
+image = image.filter(ImageFilter.BLUR)
+image.show()
+image.save('code.jpg', 'jpeg');
+```
+
+####imageFilter
+图片模糊效果。     
+```python
+#coding=utf-8
+import Image,ImageFilter
+pic = Image.open("../images/test2.jpg")
+pic1 = pic.filter(ImageFilter.BLUR)
+pic1.show()
+pic1.save("../images/test9.jpg")
+```
+保存为imageFilter_demo.py，运行，看一下结果。     
+![imageFilter_demo.jpg](images/imageFilter_demo.jpg)
 
 ##smtplib
 用Python发送邮件，胶水语言当然能够胜任。通过SMTP协议发送邮件，不过它并不是自己的邮件服务器，而是通过调用你的邮箱给别人发送邮件，比如说QQ邮箱或者网易邮箱或者什么什么的。      
@@ -839,7 +1068,48 @@ smtpObj.close()
 如果需要发送多个附件则依次创建附件对象并加入邮件即可。    
 
 3. SSL与TLS
-python支持SSL/TLS的安全邮件。
+python支持SSL/TLS的安全邮件。       
+使用`smtpObj.starttls()`即可开启ssl，就像这样。     
+
+```python
+#coding=utf-8
+
+import smtplib
+import socket
+
+#先创建一个连接邮件服务器对象，使用默认端口25
+smtpObj = smtplib.SMTP("smtp.qq.com")
+try:
+	smtpObj.starttls()
+	print "Successful SSL"
+except:
+	pass
+#用户名和密码登陆
+from_name = '1106911190@qq.com'
+to_name = 'me@wenqiangyang.com'
+#如果此处用的是QQ邮箱，那么这个密码就是你的QQ邮箱独立密码
+password = 'XXXXXX'
+#以下为邮件的内容,发送的内容是字符串。
+#但是邮件一般由标题，发件人，收件人，邮件内容，附件构成。
+#发送邮件的时候需要使用SMTP协议中定义的格式
+message = """
+From: From Person <1106911190@qq.com>
+To: To Person <me@wenqiangyang.com>
+Subject: SMTP e-mail test
+
+日出东方，唯我不败
+"""
+
+#登陆邮箱
+smtpObj.login(from_name,password)
+#发送邮件
+smtpObj.sendmail(from_name,to_name,message)
+print "Sending Successful"
+#关闭连接
+smtpObj.close()
+```
+保存为smtp_ssl.py，保存，运行看一下结果。      
+![smtp_ssl.jpg](images/smtp_ssl.jpg)    
 
 ##envelopes
 这是将email和smtplib两个库进行封装，使其发送邮件更加方便。    
@@ -883,6 +1153,154 @@ print "Sending Successful"
 >envelope也可以设定字符编码，只需在对象中使用` charset=u'XXX',`即可设定编码格式。
 >envelope也可设定抄送人，只需在对象中设定` cc_addr=u'XXX',`即可设定抄送人，也可以是多个形式的列表。
 
+##poplib
+pop也是邮箱服务的，和SMTP一起用，smtplib用来连接邮箱服务器发送邮件，poplib用来连接服务器接受邮件。  
+```python
+#coding=utf-8
+
+import poplib
+
+#邮箱信息
+host = "pop.163.com"
+user = "18607571914@163.com"
+password = "XXXXXX"
+#连接邮件服务器
+p = poplib.POP3(host)
+p.user(user)
+p.pass_(password)
+
+#邮箱里邮件总的信息
+status = p.stat()
+print "MailBox has %d message for a total of %s bytes"%(status[0],status[1])
+p.quit()
+```
+保存为pop_demo.py，运行，看一下结果。    
+![pop_demo.jpg](images/pop_demo.jpg)      
+好吧，这只是个开始，接下来我们来点复杂的。      
+```python
+#coding=utf-8
+
+import poplib
+
+#邮箱信息
+host = "pop.163.com"
+user = "18607571914@163.com"
+password = "XXXXXX"
+#连接邮件服务器
+p = poplib.POP3(host)
+
+#打印服务器欢迎信息
+print p.getwelcome()
+
+p.user(user)
+p.pass_(password)
+
+#邮箱里邮件总的信息
+status = p.stat()
+print "MailBox has %d message for a total of %s bytes"%(status[0],status[1])
+
+#返回每个邮件的编号和大小
+resp, mails, octets = p.list()
+print mails
+
+# 获取最新一封邮件, 注意索引号从1开始:
+index = len(mails)
+resp, lines, octets = p.retr(index)
+
+print lines
+
+#这样可以更加直观的查看邮件
+msg_content = '\r\n'.join(lines)
+print msg_content
+
+#删除邮件
+try:
+	p.dele(index)
+	print "Deleting Successful"
+except:
+	print "Deleting Failed"
+
+p.quit()
+```
+保存为pop_second.py，运行，看一下结果。   
+算了，结果就不放图了，这里已经基本上能够看到大概的邮箱的情况了，但是这还不够，我们需要查看邮件的具体内容。而具体的邮件内容就是我们发邮件时的msg对象的逆向解析了,当然，如果你在发送的时候是直接使用字符串发送过去的，那么接受到的就直接是可以识别的字符串。    
+```python
+
+```
+保存为pop_third.py，这个代码的功能是读取所有邮件的主题，和最近一封邮件的内容。
+
+
+
+
+##json
+python这么强大的语言当然也可以用来处理json，两个主要的函数是`json.dumps()`和`json.loads()`分别用来将dist字典格式的Python数据编码为json数据格式，和将json数据格式解码为Python的数据格式。     
+```python
+import json
+
+data = {
+    'name' : 'ACME',
+    'shares' : 100,
+    'price' : 542.23,
+    'others': ["first thing","second thing","third thing"]
+}
+
+json_str = json.dumps(data)
+print json_str
+
+python_str = json.loads(json_str)
+print python_str
+print python_str["name"]
+print python_str["price"]
+print python_str["others"][0]
+```
+保存为json_demo.py，运行，看一下结果。    
+![json_demo.jpg](images/json_demo.jpg)
+可以看到第一行是json数据格式，第二行是Python的dist数据格式，也就可以正常的读写。    
+在将json数据格式转化为Python的数据格式了之后，为了更好的展示，可以使用`pprint`来代替原生的`print`，它会按照key的字幕顺序以一种更加美观的方式输出。   
+```python
+import json
+from pprint import pprint
+
+data = {
+    'name' : 'ACME',
+    'shares' : 100,
+    'price' : 542.23,
+    'others': ["first thing","second thing","third thing"]
+}
+
+json_str = json.dumps(data)
+
+python_str = json.loads(json_str)
+pprint(python_str)
+```
+保存为json_demo_2.py,运行，看一下结果。     
+![json_demo_2.jpg](images/json_demo_2.jpg)     
+我们还可以将json数据解析成一个Python对象。    
+```python
+import json
+
+class JSONObject:
+	def __init__(self,d):
+		self.__dict__=d
+
+data = {
+    'name' : 'ACME',
+    'shares' : 100,
+    'price' : 542.23,
+    'others': ["first thing","second thing","third thing"]
+}
+
+json_str = json.dumps(data)
+
+python_str = json.loads(json_str, object_hook=JSONObject)
+print isinstance(python_str,object)
+print python_str.name
+print python_str.price
+print python_str.others[1]
+```
+保存为json_object.py，运行，看一下结果。     
+![json_object.jpg](images/json_object.jpg)    
+在解码json的时候可以采用`pprint`来获得一个比较漂亮的输出，在编码json的时候也可以在`dumps()`函数里加上参数`indent=X`来缩进从而获得一个比较漂亮的输出。     
 
 ##额外的东西
 1. python自带了一个简单web的服务器，当前目录下启动,就可以在`localhost:8080`查看。
@@ -986,6 +1404,12 @@ http.createServer(function (req, res) {
 [python优秀库 － 使用envelopes发送邮件](http://www.cnblogs.com/liulixiang/p/3540270.html)
 
 [Python用Envelopes发送邮件和附件](http://www.zhidaow.com/post/python-envelopes)
+
+[python import media模块](http://tomyong.blog.51cto.com/2094963/1135201)
+
+[Python中通过Image的open之后，去show结果打不开bmp图片，无法正常显示图片](http://www.crifan.com/python_image_show_can_not_open_bmp_image_file/)
+
+[读写JSON数据](http://python3-cookbook.readthedocs.org/zh_CN/latest/c06/p02_read-write_json_data.html)
 
 
 
