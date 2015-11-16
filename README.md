@@ -309,10 +309,18 @@ os.system('dir')
 ```
 保存为os_improve.py
 
-保存为os_demo.py，运行，看一下结果
-![os_demo](images/os_demo.jpg)
+保存为os_demo.py，运行，看一下结果             
+![os_demo](images/os_demo.jpg)              
+重点是还可以运行shell命令。          
+```python
+import os
+shell = "dir"
+print os.system(shell)
+```
+保存为os_shell.py，运行，看一下结果。
+![os_shell.jpg](images/os_shell.jpg)
 
-给一个查看目录下的所有文件的代码，如果有目录则空格表示递进关系
+给一个查看目录下的所有文件的代码，如果有目录则空格表示递进关系         
 ```python
 import os
 
@@ -655,12 +663,12 @@ oct(x )                 #将一个整数转换为一个八进制字符串
  ```
  保存为md5_md5.py,运行，看一下结果。   
  ![md5_md5.jpg](images/md5_md5.jpg)   
- 确实生成了32为的md5密文。   
+ 确实生成了32位的md5密文。   
  >md5模块的使用非常简洁，具体看一下相关的函数。   
  >- md5.new([arg]) 。返回一个md5对象，如果给出参数，则相当于调用了update(arg)
  >- md5.updte(arg) 。用string参数arg更新md5对象。注意：如果m.update(a)之后在 m.update(b)，那么就相当于m.update(a+b)。
  >- md5.digest()   。返回16字节的摘要，由传给update的string生成，摘要没有ascii字符
- >- md5.hexdigest()。以16进制的形式返回摘要     
+ >- md5.hexdigest()。以16进制的形式返回32位的md5值     
  
  再来试一下hashlib模块
  ```python
@@ -675,7 +683,39 @@ oct(x )                 #将一个整数转换为一个八进制字符串
  可以看出来，两次的结果是一样的。  
  在hashlib里面也可以使用一句话模式  
  `print hashlib.new("md5", "data to be encode").hexdigest()  `
-
+ - 文件的md5值
+ 从上面md5的生成可以看出来，只要是一个字符串都可以生成md5值，同样的方法，如果把一个文件以二进制读取出来也可以计算出来，因为md5的不可解密性，md5值经常用来检验文件是否被修改。
+ ```python
+ #coding=utf-8
+ import hashlib
+ #读取二进制文件
+ filename = open("md5_hash.py","rb")
+ filecontent = filename.read()
+ m = hashlib.md5()
+ m.update(filecontent)
+ decode = m.hexdigest()
+ print decode
+ ```
+ 保存为md5_hash_file.py，运行，看一下结果。       
+ ![md5_hash_file.jpg](images/md5_hash_file.jpg)      
+ 这里每次读取文件都是直接打开全部文件读入缓存，如果文件过大的话就会占用过多内存，可以进行稍微改进。      
+ ```python
+ #coding=utf-8
+ import hashlib
+ #读取二进制文件
+ filename = open("md5_hash.py","rb")
+ block = 2**20
+ m = hashlib.md5()
+ while True:
+ 	data = filename.read(block)
+ 	if not data:
+ 		break
+ 	m.update(data)
+ decode = m.hexdigest()
+ print decode
+ ```
+ 保存为md5_hash_bigfile.py，运行，看一下效果。              
+ ![md5_hash_bigfile.jpg](images/md5_hash_bigfile.jpg)
 
 ##media
 原本以为media是一个很简单的图像处理库，结果下载就纠结我一半天。它不是Python自带的库，需要自行安装，而安装这个库又需要先安装一些其他的东西。本人环境Windows 10 64位处理器Python2.7.10。      
@@ -1225,9 +1265,77 @@ p.quit()
 保存为pop_second.py，运行，看一下结果。   
 算了，结果就不放图了，这里已经基本上能够看到大概的邮箱的情况了，但是这还不够，我们需要查看邮件的具体内容。而具体的邮件内容就是我们发邮件时的msg对象的逆向解析了,当然，如果你在发送的时候是直接使用字符串发送过去的，那么接受到的就直接是可以识别的字符串。    
 ```python
+#coding=utf-8
 
+import poplib
+import email
+from email.parser import Parser
+from email.header import decode_header
+from email.utils import parseaddr
+
+def showAttachment(msg):
+	maintype=msg.get_content_maintype()
+	if maintype == 'multipart':
+		for part in msg.get_payload():
+			showAttachment(part)
+	elif maintype == 'text':
+		if  not msg["Content-Disposition"]:
+			pass
+		else:
+			print "This mail has an Attachment"
+			filename = msg["Content-Disposition"].split("\"")[1]
+			print "File Name: "+filename
+			print ""
+
+def showSubject(msg):
+	try:
+		print msg["Subject"]
+		print ""
+	except:
+		print ""	
+		pass
+
+#邮箱信息
+host = "pop.163.com"
+user = "18607571914@163.com"
+password = "XXXXXX"
+p = poplib.POP3(host)
+
+print p.getwelcome()+"\n"
+
+p.user(user)
+p.pass_(password)
+
+#邮箱里邮件总的信息
+status = p.stat()
+print "MailBox has %d message for a total of %s bytes"%(status[0],status[1])
+print "-"*80
+
+#返回每个邮件的编号和大小
+resp, mails, octets = p.list()
+
+#显示所有邮件的主题
+for index in range(1,len(mails)+1):
+	resp, lines, octets = p.retr(index)
+	msg_content = '\r\n'.join(lines)
+	msg = Parser().parsestr(msg_content)
+	print "This Is No.%s Mail Subject :"%index
+	showSubject(msg)
+	showAttachment(msg)
+
+#获取最新一封邮件, 注意索引号从1开始:
+print "\n\n\nThe Lastest Mail is: \n"
+index = len(mails)
+resp, lines, octets = p.retr(index)
+msg_content = '\r\n'.join(lines)
+msg = Parser().parsestr(msg_content)
+print "Subject :"
+showSubject(msg)
+showAttachment(msg)
+
+p.quit()
 ```
-保存为pop_third.py，这个代码的功能是读取所有邮件的主题，和最近一封邮件的内容。
+保存为pop_third.py，这个代码的功能是读取所有邮件的主题，和最近一封邮件的内容。    
 
 
 
@@ -1301,6 +1409,52 @@ print python_str.others[1]
 保存为json_object.py，运行，看一下结果。     
 ![json_object.jpg](images/json_object.jpg)    
 在解码json的时候可以采用`pprint`来获得一个比较漂亮的输出，在编码json的时候也可以在`dumps()`函数里加上参数`indent=X`来缩进从而获得一个比较漂亮的输出。     
+
+##time
+时间函数time，使用起来也非常简单，一般用来取得当前时间，和计算一段时间差。      
+```python
+#coding=utf-8
+import time
+import calendar
+
+# 显示从1970年1月1日到现在经过了多长时间
+print time.time()
+#延迟3秒
+time.sleep(3)
+print time.time()
+
+#显示当前时间
+print time.ctime()
+#或者这样
+print time.asctime( time.localtime(time.time()) )
+
+#详细的时间参数
+print "This year is :     " + str(time.localtime(time.time()).tm_year)
+print "This month is :    " + str(time.localtime(time.time()).tm_mon)
+print "This day is :      " + str(time.localtime(time.time()).tm_mday)
+print "This hour is :     " + str(time.localtime(time.time()).tm_hour)
+print "This minute is :   " + str(time.localtime(time.time()).tm_min)
+print "This second is :   " + str(time.localtime(time.time()).tm_sec)
+print "This weekday is :  " + str(time.localtime(time.time()).tm_wday)
+print "This year day is : " + str(time.localtime(time.time()).tm_yday)
+
+#获取某月日历
+print calendar.month(2008, 1)
+```
+保存为time_demo.py，运行，看一下效果。           
+![time_demo.jpg](images/time_demo.jpg)       
+计算时间差。          
+```python
+import time
+
+start_time = time.clock()
+time.sleep(3)
+end_time   = time.clock()
+print "%.4f second"%(end_time - start_time) 
+```
+保存为time_time.py，运行，看一下结果。         
+![time_time.jpg](images/time_time.jpg)         
+可以看到每次执行的时间都不一样，但是都在3秒左右。          
 
 ##额外的东西
 1. python自带了一个简单web的服务器，当前目录下启动,就可以在`localhost:8080`查看。
@@ -1411,5 +1565,10 @@ http.createServer(function (req, res) {
 
 [读写JSON数据](http://python3-cookbook.readthedocs.org/zh_CN/latest/c06/p02_read-write_json_data.html)
 
+[python检测文件的MD5值](http://www.sharejs.com/codes/python/7136)
 
+[python学习，计算文件MD5值 ](http://blog.chinaunix.net/uid-29648425-id-4246141.html)
 
+[利用os.path和hashlib遍历目录计算所有文件的md5值](http://www.oschina.net/code/snippet_85544_2805)
+
+[python使用os.path和hashlib遍历目录计算所有文件的md5值](http://outofmemory.cn/code-snippet/3353/python-usage-os-path-hashlib-bianli-directory-tell-suo-exist-file-md5-value)
