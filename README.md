@@ -200,10 +200,10 @@ except MySQLdb.Error,e:
 5. 删除多个目录,删除目录及其下内容--os.removedirs（"path）
 1. 获取目录中的文件及子目录的列表——os.listdir("path")		隐藏文件也会显示出来
 3. 删除一个文件--os.remove()
-4. 文件或者文件夹重命名--os.rename（old， new）
+4. 文件或者文件夹重命名--os.rename(old， new)
 6. 获取文件大小--os.path.getsize（filename）
-7. 获取文件属性--os.stat（file）
-8. 修改文件权限与时间戳--os.chmod（file）
+7. 获取文件属性--os.stat(file)
+8. 修改文件权限与时间戳--os.chmod(file)
 9. 路径中加入新的内容--os.path.join(path,file)
 6. 将路径分解为目录名和文件名——os.path.split()
 7. 将目录分解为目录加文件名和文件名的扩展名——os.path.splitext()
@@ -217,7 +217,8 @@ except MySQLdb.Error,e:
 10. 指示你正在使用的平台--os.name       对于Windows，它是'nt'，而对于Linux/Unix用户，它是'posix'
 11. 给出当前平台使用的行终止符--os.linesep()    Windows使用'\r\n',Linux使用'\n',而Mac使用'\r'
 12. 运行shell命令-- os.system()
-13. 终止当前进程--os.exit（）
+13. 终止当前进程--os.exit()
+14. 循环遍历目录--os.walk()  返回一个三元组，第一个是路径，第二个是路径下的目录，第三个是路径下的非目录。
 
 ```python
 #coding=utf-8
@@ -317,8 +318,29 @@ import os
 shell = "dir"
 print os.system(shell)
 ```
-保存为os_shell.py，运行，看一下结果。
-![os_shell.jpg](images/os_shell.jpg)
+保存为os_shell.py，运行，看一下结果。            
+![os_shell.jpg](images/os_shell.jpg)                  
+试一下用`os.walk()`来遍历文件。              
+```python
+import os
+
+dirlist = r"C:\Users\dell\Desktop\2048"
+filenum = 0
+dirnum  = 0
+for i,j,k in os.walk(dirlist):
+	print i
+for i,j,k in os.walk(dirlist):
+	for item in k:
+		print item
+	filenum = filenum + 1
+	for index in range(len(k)):
+		dirnum = dirnum + 1
+
+print filenum
+print dirnum
+```
+保存为os_walk.py，运行，看一下结果。               
+![os_walk.jpg](images/os_walk.jpg)      
 
 给一个查看目录下的所有文件的代码，如果有目录则空格表示递进关系         
 ```python

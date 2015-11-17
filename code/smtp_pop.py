@@ -22,6 +22,7 @@ def sendOrReceive():
 	else:
 		print "Your Input Is Wrong,Please Input Aganin"	
 		workType = sendOrReceive()
+		return workType
 
 #Send Information
 def sendInfo():
@@ -69,6 +70,14 @@ def sendMessage():
 	content = raw_input("Please Input Your Email Content:\n")
 	return (subject,content)
 
+#quit
+def Quit():
+	print "Thanks For Your Using ."
+	print "You Can Report Bugs to 1106911190@qq.com"
+	print "PRESS ANYKEY TO QUIT"
+	raw_input()
+	sys.exit()
+
 if __name__ == '__main__':  
 	workType = sendOrReceive()
 	if workType == 1:
@@ -86,10 +95,10 @@ if __name__ == '__main__':
 		except:
 			print "Sending Failes"
 		smtpObj.close()
-		print "PRESS ANYKEY TO EXIT"
-		raw_input()
-		sys.exit()	
+		Quit()	
 		
 	elif workType == 2:
 		email_host,email,password = receiveInfo()
+
+
 
