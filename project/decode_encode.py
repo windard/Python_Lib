@@ -12,6 +12,8 @@ def decodeFile(dotype,filename):
 		decode = hashlib.md5()
 	elif dotype.lower().startswith("sha1"):
 		decode = hashlib.sha1()
+	else:
+		return "Sorry,Your Input Is Wrong,Please Try Again"
 	while True:
 		data = filename.read(BLOCK)
 		if not data:
@@ -60,7 +62,7 @@ if __name__ == '__main__':
 	parser.add_argument("-f","--file",help="decode file",action="store_true")
 	parser.add_argument("--type",help="decode or encode type",action="store",default="md5",dest="dotype")
 	parser.add_argument("--data",help="decode or encode data",action="store",dest="data")
-	parser.add_argument("--filename",help="select your file",action="store",default=False,dest="filename")
+	parser.add_argument("--filename",help="select your file",action="store",dest="filename")
 	parser.add_argument("--save",help="input stdio or text",action="store",default=False,dest="save")
 	args = parser.parse_args()
 	data = args.data

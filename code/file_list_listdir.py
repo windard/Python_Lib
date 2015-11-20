@@ -1,36 +1,4 @@
 import os
-import time
-# # print os.getcwd()
-# def func():
-# 	pass
-# # os.sep
-# # os.getcwd()
-# # print os.listdir()
-# # print os.walk(os.getcwd())
-
-list1 = []
-list2 = []
-dirlist = r"C:\Users\dell\Desktop\2048"
-filenum = 0
-dirnum  = 0
-for i,j,k in os.walk(dirlist):
-	list1.append(i)
-for i,j,k in os.walk(dirlist):
-	for item in k:
-		list2.append(item)
-	filenum = filenum + 1
-	for index in range(len(k)):
-		dirnum = dirnum + 1
-
-print list1
-for i in list1:
-	if "css" in i:
-		print i
-print list2
-
-
-
-# import os
 
 def showall(path,leavel=0,filenum=0,dirnum=0,show=True):
 	newnum = filenum
