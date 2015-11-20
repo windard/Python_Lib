@@ -1,4 +1,4 @@
-#coding=gbk
+#coding=utf-8
 import xlwt
 
 
@@ -9,4 +9,4 @@ table = excel.add_sheet("sheet_one")
 table.write(0,0,"test")
 
 
-excel.save('test.xls')
+excel.save('文档.xls')
