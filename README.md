@@ -3,6 +3,7 @@
 
 [TOC]
 
+##add a test in ubuntu
 python的强大之处有很大的一方面在于它有各种各样非常强大的库，那么，这篇博客就是记录我学习各种的库的经历吧。
 >声明：
 >本人使用的Python版本为Python2.7.10，Windows 10 操作系统环境下，以下代码均亲测。
@@ -1825,7 +1826,10 @@ http.createServer(function (req, res) {
 [Python之sys模块小探](http://5ydycm.blog.51cto.com/115934/304324)
 
 [python 中 os._exit()， sys.exit()， exit() 的区别是什么？](http://www.zhihu.com/question/21187839)
+<<<<<<< HEAD
 
 [python使用xlrd和xlwt读写excel](http://outofmemory.cn/code-snippet/4295/python-read-write-excel-with-xlwt-xlrd)
 
 [Python xlrd、xlwt、xlutils读取、修改Excel文件](http://blog.csdn.net/tianzhu123/article/details/7225809)
+=======
+>>>>>>> c731e4bf65c51c77cb91c51e9c74b8ee1f5ef6e9
