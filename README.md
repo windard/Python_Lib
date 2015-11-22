@@ -25,7 +25,7 @@ except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 ```
 保存为mysqldb_demo.py，运行，看一下结果。
-![mysql_demo](images/mysql_demo.jpg)
+![mysql_demo](images/mysql_demo.jpg)             
 可以看出来，如果MySQL数据库打开且账户密码正确的话就可以正确连接，并显示数据库版本，如果错误则报错并显示错误类型。
 
 接下来，我们试一下数据库的增改删查和刷新。
@@ -97,8 +97,8 @@ try:
 except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 ```
-保存为mysqldb_second.py，运行，看一下结果。
-![mysqldb_second](images/mysqldb_second.jpg)
+保存为mysqldb_second.py，运行，看一下结果。              
+![mysqldb_second](images/mysqldb_second.jpg)              
 这里包含完整的数据库增改删查的操作。
 
 ####进阶操作
@@ -1610,12 +1610,94 @@ print random.sample(p,3)
 ![random_demo.jpg](images/random_demo.jpg)          
 
 ##xlwt
-强大的Python与Excel交互，可以用xlwt打开Excel表单，并写入。      
-
+强大的Python与Excel交互，可以用xlwt打开Excel表单并写入，但是只能写入，不能读取。  
+```python
+#coding=utf-8
+import xlwt
+#设定打开文档的编码格式，或者留空
+excel = xlwt.Workbook('utf-8')
+#新建一个sheet
+table1 = excel.add_sheet("sheet_one")
+#写入数据table.write(行，列，值)
+table1.write(0,0,"test")
+#如果对一个单元格重复操作就会报错
+#需要引入可以覆盖
+table2 = excel.add_sheet("sheet_two",cell_overwrite_ok=True)
+for i in range(10):
+	for j in range(10):
+		table2.write(i,j,i+j)
+#另外，也可以为表单使用样式
+style = xlwt.XFStyle()
+#设置字体
+font  = xlwt.Font()
+font.name = "MicroSoft YaHei"
+#加粗
+font.bold = True
+style.font = font
+table2.write(10,10,"This is ten_ten cell",style)
+excel.save('test.xls')
+```
+保存为xlwt_demo.py，运行，看一下结果。   
+![xlwt_demo.jpg](images/xlwt_demo.jpg)   
 
 ##xlrd
-用Python打开Excel并读取。     
+用Python打开Excel并读取,但是这个只能读。不能写入。         
+```python
+#coding=utf-8
+import xlrd
+#打开一个Excel表单
+data = xlrd.open_workbook("test.xls")
+#查看每个sheet名称
+print data.sheet_names()
+#得到第一个工作表单
+table1 = data.sheets()[0]
+#或者也可以这样得到
+table2 = data.sheet_by_index(1)
+#或者也可以这样得到
+table3 = data.sheet_by_name(u"sheet_one")
+#获得行数和列数
+nrows = table2.nrows
+ncols = table2.ncols
+print "rows : " + str(nrows) + "  cols : " + str(ncols) 
+#获得整行或者整列的值
+row1 = table2.row_values(0)
+for i in range(ncols):
+	print "This is 1 row %s col value : %s"%(i+1,row1[i])
+cols = table2.col_values(1)
+#得到某个单元格的值
+cell = table2.cell(0,0).value
+print cell
+#也可以使用行列索引
+cell = table2.row(10)[10].value
+print cell
+```
+保存为xlrd_demo.py，运行，看一下结果。   
+![xlrd_demo.jpg](images/xlrd_demo.jpg)   
 
+##xlutils
+真是坑爹吖，一个简单的Excel还要这样折磨我，这个是用来再已有的Excel表单上修改的。
+而且其实这个是调用了上面两个的方法来实现自己的功能。      
+```python
+#coding=utf-8
+from xlrd import open_workbook
+from xlutils.copy import copy
+ 
+ #打开表单时，保留原有表单格式
+rb = open_workbook('test.xls',formatting_info=True)
+ 
+#通过sheet_by_index()获取的sheet没有write()方法
+rs = rb.sheet_by_index(0)
+
+wb = copy(rb)
+ 
+#通过get_sheet()获取的sheet有write()方法
+ws = wb.get_sheet(0)
+ws.write(0, 0, 'changed!')
+ 
+wb.save('test.xls')
+```
+保存为xlutils_demo.py，运行，看一下结果。   
+![xlutils_demo.jpg](images/xlutils_demo.jpg)           
 
 
 
@@ -1743,3 +1825,7 @@ http.createServer(function (req, res) {
 [Python之sys模块小探](http://5ydycm.blog.51cto.com/115934/304324)
 
 [python 中 os._exit()， sys.exit()， exit() 的区别是什么？](http://www.zhihu.com/question/21187839)
+
+[python使用xlrd和xlwt读写excel](http://outofmemory.cn/code-snippet/4295/python-read-write-excel-with-xlwt-xlrd)
+
+[Python xlrd、xlwt、xlutils读取、修改Excel文件](http://blog.csdn.net/tianzhu123/article/details/7225809)
