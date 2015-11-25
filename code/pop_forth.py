@@ -34,7 +34,7 @@ def showSubject(msg):
 #邮箱信息
 host = "pop.163.com"
 user = "18607571914@163.com"
-password = "yang1106911190"
+password = "XXXXXX"
 p = poplib.POP3(host)
 
 print p.getwelcome()+"\n"
