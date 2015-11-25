@@ -207,23 +207,13 @@ if __name__ == '__main__':
 		status = popObj.stat()
 		print "MailBox has %d message for a total of %s bytes"%(status[0],status[1])
 		resp, mails, octets = popObj.list()
-		# for index in range(len(mails)-10,len(mails)+1):
-		# 	resp, lines, octets = popObj.retr(index)
-		# 	msg_content = '\r\n'.join(lines)
-		# 	msg = Parser().parsestr(msg_content)
-		# 	print "This Is No.%s Mail Subject :"%index
-		# 	showSubject(msg)
-		# 	showAttachment(msg)
-
-		index = 117
-		# for index in range(len(mails)-10,len(mails)+1):
-		resp, lines, octets = popObj.retr(index)
-		msg_content = '\r\n'.join(lines)
-		msg = Parser().parsestr(msg_content)
-		print "This Is No.%s Mail Subject :"%index
-		showSubject(msg)
-		showAttachment(msg)			
-
+		for index in range(len(mails)-10,len(mails)+1):
+		 	resp, lines, octets = popObj.retr(index)
+			msg_content = '\r\n'.join(lines)
+			msg = Parser().parsestr(msg_content)
+			print "This Is No.%s Mail Subject :"%index
+			showSubject(msg)
+			showAttachment(msg)
 
 		print "\n\n\nThe Lastest Mail is: \n"
 		index = len(mails)
