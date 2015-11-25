@@ -22,13 +22,10 @@ def showAttachment(msg):
 
 def showSubject(msg):
 	try:
-#		print "Come Ing"
-		# print unicode(decode_header(msg["Subject"])[0][0],decode_header(msg["Subject"])[0][1])
-#		if not decode_header(msg["Subject"])[0][1]==None:
-		print decode_header(msg["Subject"])[0][0]
-#		else:
-#			print decode_header(msg["Subject"])[0][0]
-#			print "There is none"
+		decode = "utf-8"
+		if decode_header(msg["Subject"])[0][1]=="gbk":
+			print decode_header(msg["Subject"])[0][0].decode("gbk").encode("utf-8")
+		print unicode(decode_header(msg["Subject"])[0][0],decode)	
 		print ""
 	except:
 		print ""	
@@ -54,25 +51,13 @@ print "-"*80
 resp, mails, octets = p.list()
 
 #显示所有邮件的主题
-# for index in range(1,len(mails)+1):
-# 	resp, lines, octets = p.retr(index)
-# 	msg_content = '\r\n'.join(lines)
-# 	msg = Parser().parsestr(msg_content)
-# 	print "This Is No.%s Mail Subject :"%index
-# 	showSubject(msg)
-# 	showAttachment(msg)
-
-index = 8
-resp, lines, octets = p.retr(index)
-msg_content = '\r\n'.join(lines)
-msg = Parser().parsestr(msg_content)
-print "This Is No.%s Mail Subject :"%index
-# showSubject(msg)
-print decode_header(msg["Subject"])[0][0].decode("gbk").encode("utf-8")
-showAttachment(msg)
-
-
-
+for index in range(1,len(mails)+1):
+	resp, lines, octets = p.retr(index)
+	msg_content = '\r\n'.join(lines)
+	msg = Parser().parsestr(msg_content)
+	print "This Is No.%s Mail Subject :"%index
+	showSubject(msg)
+	showAttachment(msg)
 
 #获取最新一封邮件, 注意索引号从1开始:
 print "\n\n\nThe Lastest Mail is: \n"
