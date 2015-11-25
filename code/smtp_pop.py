@@ -206,7 +206,7 @@ if __name__ == '__main__':
 		status = popObj.stat()
 		print "MailBox has %d message for a total of %s bytes"%(status[0],status[1])
 		resp, mails, octets = popObj.list()
-		for index in range(1,len(mails)+1):
+		for index in range(len(mails)-10,len(mails)+1):
 			resp, lines, octets = popObj.retr(index)
 			msg_content = '\r\n'.join(lines)
 			msg = Parser().parsestr(msg_content)
