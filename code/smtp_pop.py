@@ -45,7 +45,7 @@ def sendInfo():
 	to_email   = raw_input("Please Input To_email:\n")
 	return (email_host,from_email,to_email,password)
 
-#Reseive Information
+#Receive Information
 def receiveInfo():
 	while True:
 		email_host = raw_input("Please Input Your Email_host:\n")
@@ -106,6 +106,19 @@ def receLogin(popObj,email,password):
 		print "Your Username Or Password Is Wrong,Please Try Aganin"
 		return 0	
 
+#chose send type
+def sendType():
+	sendtype = raw_input("Please Input Your Send Type:[plain/html/multi]\n")
+	if sendtype.lower().startswith("plain"):
+		return 1
+	elif sendtype.lower().startswith("html"):
+		return 2
+	elif sendtype.lower().startswith("multi"):
+		return 3
+	else:
+		print "Your Chose Is Wrong,Please Try Aganin"
+		return 0
+
 #Send Content
 def sendMessage():
 	subject = raw_input("Please Input Your Email Subject\n")
@@ -148,8 +161,27 @@ if __name__ == '__main__':
 	if workType == 1:
 		email_host,from_email,to_email,password = sendInfo()
 		smtpObj = smtplib.SMTP_SSL(email_host)
+		while True:
+			sendtype = sendType()
+			if sendtype:
+				break
 		messageSubject,messageContent = sendMessage()
-		message = MIMEText(messageContent)
+		if not sendtype==3:
+			if sendtype==1:
+				message = MIMEText(messageContent,_subtype='plain',_charset='utf-8')
+			else:
+				message = MIMEText(messageContent,_subtype='html',_charset='utf-8')
+		else:
+			multiName = raw_input("Please Input Your Attachment Name:\n")
+			message = MIMEMultipart()
+			attr = MIMEText(open(multiName,"rb").read(),"base64","utf-8")
+			attr["Content-Type"] = 'application/octet-stream'
+			attr["Content-Disposition"] = 'attachment; filename="%s"'%(multiName)
+			message.attach(attr)
+			content = MIMEText(messageContent,"plain","utf-8")
+			message.attach(content)
+
+
 		message["Subject"] = messageSubject
 		message["From"] = from_email
 		message["To"] = to_email

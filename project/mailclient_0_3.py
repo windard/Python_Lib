@@ -99,8 +99,8 @@ def sendLogin(smtpObj,from_email,password):
 #receive login
 def receLogin(popObj,email,password):
 	try:
-		p.user(email)
-		p.pass_(password)
+		popObj.user(email)
+		popObj.pass_(password)
 		return 1
 	except:
 		print "Your Username Or Password Is Wrong,Please Try Aganin"
@@ -112,6 +112,29 @@ def sendMessage():
 	content = raw_input("Please Input Your Email Content:\n")
 	return (subject,content)
 
+#show mail attachment
+def showAttachment(msg):
+	maintype=msg.get_content_maintype()
+	if maintype == 'multipart':
+		for part in msg.get_payload():
+			showAttachment(part)
+	elif maintype == 'text':
+		if  not msg["Content-Disposition"]:
+			pass
+		else:
+			print "This mail has an Attachment"
+			filename = msg["Content-Disposition"].split("\"")[-2]
+			print "File Name: "+filename
+			print ""
+
+#show mail subject
+def showSubject(msg):
+	try:
+		print msg["Subject"]
+		print ""
+	except:
+		print ""	
+		pass
 #quit
 def Quit():
 	print "Thanks For Your Using ."
@@ -141,6 +164,19 @@ if __name__ == '__main__':
 		
 	elif workType == 2:
 		email_host,email,password = receiveInfo()
+		popObj = poplib.POP3_SSL(email_host)
+		popObj.user(email)
+		popObj.pass_(password)
+		status = popObj.stat()
+		print "MailBox has %d message for a total of %s bytes"%(status[0],status[1])
+		resp, mails, octets = popObj.list()
+		for index in range(1,len(mails)+1):
+			resp, lines, octets = popObj.retr(index)
+			msg_content = '\r\n'.join(lines)
+			msg = Parser().parsestr(msg_content)
+			print "This Is No.%s Mail Subject :"%index
+			showSubject(msg)
+			showAttachment(msg)
 
 
 

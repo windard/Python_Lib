@@ -1735,7 +1735,6 @@ signature = rsa.sign(message,privkey,'SHA-1')
 rsa.verify("hello",signature,pubkey)
 ```
 
-
 ##额外的东西
 1. python自带了一个简单web的服务器，当前目录下启动,就可以在`localhost:8080`查看。
 ```python
