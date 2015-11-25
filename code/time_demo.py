@@ -10,6 +10,8 @@ print time.time()
 
 #显示当前时间
 print time.ctime()
+#time.ctime(t) 显示从1970年1月1日过了t秒的时间
+
 #或者这样
 print time.asctime( time.localtime(time.time()) )
 

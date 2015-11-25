@@ -216,8 +216,11 @@ except MySQLdb.Error,e:
 9. 读取和设置环境变量--os.getenv() 与os.putenv()
 10. 指示你正在使用的平台--os.name       对于Windows，它是'nt'，而对于Linux/Unix用户，它是'posix'
 11. 给出当前平台使用的行终止符--os.linesep()    Windows使用'\r\n',Linux使用'\n',而Mac使用'\r'
-12. 运行shell命令-- os.system()
-13. 终止当前进程--os.exit()
+12. 运行shell命令-- os.system()  
+ >但是这个执行命令行没有返回值，直接输出，不管你有没有print                            
+13. 执行shell命令-- os.popen() 
+>执行命令行，返回一个file open的对象，需要read才能得到执行结果，但是还是没有返回值，如果需要更多的命令行操作，可以使用commands库
+13. 终止当前进程--os.exit()      
 14. 循环遍历目录--os.walk()  返回一个三元组，第一个是路径，第二个是路径下的目录，第三个是路径下的非目录。
 
 ```python
@@ -1441,7 +1444,9 @@ showAttachment(msg)
 
 p.quit()
 ```
-保存为pop_third.py，这个代码的功能是读取所有邮件的主题，和最近一封邮件的内容。    
+保存为pop_third.py，这个代码的功能是读取所有邮件的主题，和最近一封邮件的内容。       
+但是可以看到在读取邮件标题的时候还是一堆乱码，需要对其进行解码。       
+  
 
 
 
@@ -1531,6 +1536,9 @@ print time.time()
 
 #显示当前时间
 print time.ctime()
+#time.ctime(t) 显示从1970年1月1日过了t秒钟的时间
+
+
 #或者这样
 print time.asctime( time.localtime(time.time()) )
 
