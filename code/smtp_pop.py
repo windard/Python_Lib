@@ -143,10 +143,11 @@ def showAttachment(msg):
 #show mail subject
 def showSubject(msg):
 	try:
-		decode = "utf-8"
-		if decode_header(msg["Subject"])[0][1]=="gbk":
-			print decode_header(msg["Subject"])[0][0].decode("gbk").encode("utf-8")
-		print unicode(decode_header(msg["Subject"])[0][0],decode)	
+		subdecode = decode_header(msg["Subject"])[0][1]
+		if not subdecode==None:
+			print  decode_header(msg["Subject"])[0][0].decode(decode_header(msg["Subject"])[0][1]).encode("utf-8")
+		else:
+			print unicode(decode_header(msg["Subject"])[0][0],"utf-8")	
 		print ""
 	except:
 		print ""	
@@ -215,4 +216,14 @@ if __name__ == '__main__':
 			showAttachment(msg)
 
 
+		print "\n\n\nThe Lastest Mail is: \n"
+		index = len(mails)
+		resp, lines, octets = popObj.retr(index)
+		msg_content = '\r\n'.join(lines)
+		msg = Parser().parsestr(msg_content)
+		print "Subject :"
+		showSubject(msg)
+		showAttachment(msg)
 
+		popObj.quit()
+		Quit()
