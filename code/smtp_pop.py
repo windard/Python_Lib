@@ -143,10 +143,13 @@ def showAttachment(msg):
 #show mail subject
 def showSubject(msg):
 	try:
-		decode = "utf-8"
-		if decode_header(msg["Subject"])[0][1]=="gbk":
-			print decode_header(msg["Subject"])[0][0].decode("gbk").encode("utf-8")
-		print unicode(decode_header(msg["Subject"])[0][0],decode)	
+		# decode = "utf-8"
+		# if decode_header(msg["Subject"])[0][1]=="gbk":
+		# 	print decode_header(msg["Subject"])[0][0].decode("gbk").encode("utf-8")
+		# print unicode(decode_header(msg["Subject"])[0][0],decode)	
+		# print decode_header(msg["Subject"])[0][0]
+		# print decode_header(msg["Subject"])[0][1]
+		print decode_header(msg["Subject"])[0][0].decode(decode_header(msg["Subject"])[0][1]).encode("utf-8")
 		print ""
 	except:
 		print ""	
@@ -206,13 +209,22 @@ if __name__ == '__main__':
 		status = popObj.stat()
 		print "MailBox has %d message for a total of %s bytes"%(status[0],status[1])
 		resp, mails, octets = popObj.list()
-		for index in range(len(mails)-10,len(mails)+1):
-			resp, lines, octets = popObj.retr(index)
-			msg_content = '\r\n'.join(lines)
-			msg = Parser().parsestr(msg_content)
-			print "This Is No.%s Mail Subject :"%index
-			showSubject(msg)
-			showAttachment(msg)
+		# for index in range(len(mails)-10,len(mails)+1):
+		# 	resp, lines, octets = popObj.retr(index)
+		# 	msg_content = '\r\n'.join(lines)
+		# 	msg = Parser().parsestr(msg_content)
+		# 	print "This Is No.%s Mail Subject :"%index
+		# 	showSubject(msg)
+		# 	showAttachment(msg)
+
+		index = 117
+		# for index in range(len(mails)-10,len(mails)+1):
+		resp, lines, octets = popObj.retr(index)
+		msg_content = '\r\n'.join(lines)
+		msg = Parser().parsestr(msg_content)
+		print "This Is No.%s Mail Subject :"%index
+		showSubject(msg)
+		showAttachment(msg)			
 
 
 
