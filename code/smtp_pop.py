@@ -143,11 +143,15 @@ def showAttachment(msg):
 #show mail subject
 def showSubject(msg):
 	try:
-		print msg["Subject"]
+		decode = "utf-8"
+		if decode_header(msg["Subject"])[0][1]=="gbk":
+			print decode_header(msg["Subject"])[0][0].decode("gbk").encode("utf-8")
+		print unicode(decode_header(msg["Subject"])[0][0],decode)	
 		print ""
 	except:
 		print ""	
 		pass
+		
 #quit
 def Quit():
 	print "Thanks For Your Using ."

@@ -1942,12 +1942,11 @@ http.createServer(function (req, res) {
 [Python之sys模块小探](http://5ydycm.blog.51cto.com/115934/304324)
 
 [python 中 os._exit()， sys.exit()， exit() 的区别是什么？](http://www.zhihu.com/question/21187839)
-<<<<<<< HEAD
 
 [python使用xlrd和xlwt读写excel](http://outofmemory.cn/code-snippet/4295/python-read-write-excel-with-xlwt-xlrd)
 
 [Python xlrd、xlwt、xlutils读取、修改Excel文件](http://blog.csdn.net/tianzhu123/article/details/7225809)
-=======
->>>>>>> c731e4bf65c51c77cb91c51e9c74b8ee1f5ef6e9
 
 [python下RSA加密解密以及跨平台问题](http://www.cnblogs.com/luchanghong/archive/2012/07/18/2596886.html)
+
+[[原创] 用Python处理邮件，全文完．](http://www.chinaunix.net/old_jh/55/575710.html)
