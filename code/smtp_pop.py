@@ -140,6 +140,27 @@ def showAttachment(msg):
 			print "File Name: "+filename
 			print ""
 
+#download attachment
+def downloadAttachment(msg):
+	maintype=msg.get_content_maintype()
+	if maintype == 'multipart':
+		for part in msg.get_payload():
+			downloadAttachment(part)
+	elif maintype == 'text':
+		if  not msg["Content-Disposition"]:
+			pass
+		else:
+			download = raw_input("Do You Want To Download The Attachment?[yes|no]\n")
+			if download.lower().startswith("no"):
+				print "OK,Do Not Download"
+				pass
+			else:
+				filename = msg["Content-Disposition"].split("\"")[-2]
+				downloadfile = open(filename,"wb")
+				downloadfile.write(msg.get_payload(decode=True))
+				downloadfile.close()
+				print "Download Successful"
+
 #show mail subject
 def showSubject(msg):
 	try:
@@ -153,6 +174,25 @@ def showSubject(msg):
 		print ""	
 		pass
 		
+#show mail from and to		
+def showMoreInfo():
+	try:
+		print "From: " + msg["From"]
+		print "To  : " + msg["to"]
+	except:
+		print ""
+		pass
+
+#show mail content
+def showContent(msg):
+	contentType = msg.get_content_type()
+	if contentType.lower().startswith("multipart"):
+		for i in msg.get_payload():
+			showContent(i)
+	elif contentType.lower().endswith("base64"):
+		pass
+	else:
+		print msg.get_payload(decode=True)		
 #quit
 def Quit():
 	print "Thanks For Your Using ."
@@ -220,9 +260,11 @@ if __name__ == '__main__':
 		resp, lines, octets = popObj.retr(index)
 		msg_content = '\r\n'.join(lines)
 		msg = Parser().parsestr(msg_content)
+		showMoreInfo(msg)
 		print "Subject :"
 		showSubject(msg)
 		showAttachment(msg)
 		showContent(msg)
+		downloadAttachment(msg)
 		popObj.quit()
 		Quit()
