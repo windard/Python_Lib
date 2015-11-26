@@ -51,7 +51,7 @@ def showSubject(msg):
 		print ""	
 		pass
 
-def showMoreInfo():
+def showMoreInfo(msg):
 	try:
 		print "From: " + msg["From"]
 		print "To  : " + msg["to"]
@@ -74,7 +74,7 @@ def showContent(msg):
 #邮箱信息
 host = "pop.163.com"
 user = "18607571914@163.com"
-password = "XXXXXX"
+password = "yang1106911190"
 p = poplib.POP3(host)
 
 print p.getwelcome()+"\n"
@@ -105,7 +105,7 @@ index = len(mails)
 resp, lines, octets = p.retr(index)
 msg_content = '\r\n'.join(lines)
 msg = Parser().parsestr(msg_content)
-showMoreInfo()
+showMoreInfo(msg)
 print "Subject :"
 showSubject(msg)
 print "Content :"
@@ -114,5 +114,8 @@ showAttachment(msg)
 
 #是否下载附件
 downloadAttachment(msg)
+
+for i in msg.get_payload():
+	print i["Content-Type"]
 
 p.quit()

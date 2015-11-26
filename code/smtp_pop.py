@@ -135,6 +135,7 @@ def showAttachment(msg):
 		if  not msg["Content-Disposition"]:
 			pass
 		else:
+			print "-"*50
 			print "This mail has an Attachment"
 			filename = msg["Content-Disposition"].split("\"")[-2]
 			print "File Name: "+filename
@@ -175,7 +176,7 @@ def showSubject(msg):
 		pass
 		
 #show mail from and to		
-def showMoreInfo():
+def showMoreInfo(msg):
 	try:
 		print "From: " + msg["From"]
 		print "To  : " + msg["to"]
@@ -263,8 +264,9 @@ if __name__ == '__main__':
 		showMoreInfo(msg)
 		print "Subject :"
 		showSubject(msg)
-		showAttachment(msg)
+		print "Content :"
 		showContent(msg)
+		showAttachment(msg)
 		downloadAttachment(msg)
 		popObj.quit()
 		Quit()
