@@ -15,10 +15,31 @@ def showAttachment(msg):
 		if  not msg["Content-Disposition"]:
 			pass
 		else:
+			print "-"*50
 			print "This mail has an Attachment"
 			filename = msg["Content-Disposition"].split("\"")[-2]
 			print "File Name: "+filename
 			print ""
+
+def downloadAttachment(msg):
+	maintype=msg.get_content_maintype()
+	if maintype == 'multipart':
+		for part in msg.get_payload():
+			downloadAttachment(part)
+	elif maintype == 'text':
+		if  not msg["Content-Disposition"]:
+			pass
+		else:
+			download = raw_input("Do You Want To Download The Attachment?[yes|no]\n")
+			if download.lower().startswith("no"):
+				print "OK,Do Not Download"
+				pass
+			else:
+				filename = msg["Content-Disposition"].split("\"")[-2]
+				downloadfile = open(filename,"wb")
+				downloadfile.write(msg.get_payload(decode=True))
+				downloadfile.close()
+				print "Download Successful"
 
 def showSubject(msg):
 	try:
@@ -26,10 +47,29 @@ def showSubject(msg):
 		if decode_header(msg["Subject"])[0][1]=="gbk":
 			print decode_header(msg["Subject"])[0][0].decode("gbk").encode("utf-8")
 		print unicode(decode_header(msg["Subject"])[0][0],decode)	
-		print ""
 	except:
 		print ""	
 		pass
+
+def showMoreInfo():
+	try:
+		print "From: " + msg["From"]
+		print "To  : " + msg["to"]
+	except:
+		print ""
+		pass
+
+def showContent(msg):
+	contentType = msg.get_content_type()
+	if contentType.lower().startswith("multipart"):
+		for i in msg.get_payload():
+			showContent(i)
+	elif contentType.lower().endswith("base64"):
+		pass
+	else:
+		print msg.get_payload(decode=True)
+
+
 
 #邮箱信息
 host = "pop.163.com"
@@ -65,8 +105,14 @@ index = len(mails)
 resp, lines, octets = p.retr(index)
 msg_content = '\r\n'.join(lines)
 msg = Parser().parsestr(msg_content)
+showMoreInfo()
 print "Subject :"
 showSubject(msg)
+print "Content :"
+showContent(msg)
 showAttachment(msg)
+
+#是否下载附件
+downloadAttachment(msg)
 
 p.quit()

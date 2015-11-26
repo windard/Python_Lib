@@ -223,6 +223,6 @@ if __name__ == '__main__':
 		print "Subject :"
 		showSubject(msg)
 		showAttachment(msg)
-
+		showContent(msg)
 		popObj.quit()
 		Quit()
