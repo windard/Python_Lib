@@ -1,6 +1,7 @@
 import poplib
 import email
 import sys
+import os
 from email.parser import Parser
 from email.header import decode_header
 from email.utils import parseaddr
@@ -194,6 +195,42 @@ def showContent(msg):
 		pass
 	else:
 		print msg.get_payload(decode=True)		
+
+#delete single mail
+def deleteMail(popObj):
+	try:
+		deletenum = input("Please Input The Number Mail You Want To Delete: \n")
+	except:
+		print "Your Input Is Wrong"
+		os.exit(0)
+	index = int(deletenum)	
+	try:
+		msg.dele(index)
+		print "Delete Number %d Mail Successful"%index
+	except:
+		print "Delete Mail Failed"
+
+#read single mail
+def readMail(popObj):
+	try:
+		num = input("Please Input The Number Your Want To Read :\n")
+	except:
+		print "Your Input Is Wrong"
+		os.exit(0)
+
+	print "\n\n\nThe Number %d Mail is: \n"%num
+	index = int(num)
+	resp, lines, octets = popObj.retr(index)
+	msg_content = '\r\n'.join(lines)
+	msg = Parser().parsestr(msg_content)
+	showMoreInfo(msg)
+	print "Subject :"
+	showSubject(msg)
+	print "Content :"
+	showContent(msg)
+	showAttachment(msg)
+	downloadAttachment(msg)
+
 #quit
 def Quit():
 	print "Thanks For Your Using ."
@@ -268,5 +305,15 @@ if __name__ == '__main__':
 		showContent(msg)
 		showAttachment(msg)
 		downloadAttachment(msg)
-		popObj.quit()
+
+		while True:
+			continueType = raw_input("Please Input The Next You Want To Do:[read|delete|quit]\n")
+			if continueType.lower().startswith("read"):
+				readMail(popObj)
+			elif continueType.lower().startswith("delete"):
+				deleteMail(popObj)
+			else:
+				break
+
+		popObj.quit()	
 		Quit()
