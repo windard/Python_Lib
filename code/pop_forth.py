@@ -7,11 +7,11 @@ from email.header import decode_header
 from email.utils import parseaddr
 
 def showAttachment(msg):
-	maintype=msg.get_content_maintype()
-	if maintype == 'multipart':
+	maintype=msg.get_content_type()
+	if maintype.lower().startswith('multipart'):
 		for part in msg.get_payload():
 			showAttachment(part)
-	elif maintype == 'text':
+	elif maintype.lower().endswith("base64"):
 		if  not msg["Content-Disposition"]:
 			pass
 		else:
@@ -20,6 +20,8 @@ def showAttachment(msg):
 			filename = msg["Content-Disposition"].split("\"")[-2]
 			print "File Name: "+filename
 			print ""
+	else:
+		pass
 
 def downloadAttachment(msg):
 	maintype=msg.get_content_maintype()
@@ -72,10 +74,10 @@ def showContent(msg):
 
 
 #邮箱信息
-host = "pop.163.com"
-user = "18607571914@163.com"
+host = "pop.qq.com"
+user = "1106911190@qq.com"
 password = "yang1106911190"
-p = poplib.POP3(host)
+p = poplib.POP3_SSL(host)
 
 print p.getwelcome()+"\n"
 
@@ -115,7 +117,7 @@ showAttachment(msg)
 #是否下载附件
 downloadAttachment(msg)
 
-for i in msg.get_payload():
-	print i["Content-Type"]
+# for i in msg.get_payload():
+# 	print i["Content-Type"]
 
 p.quit()

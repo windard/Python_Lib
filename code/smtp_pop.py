@@ -128,11 +128,11 @@ def sendMessage():
 
 #show mail attachment
 def showAttachment(msg):
-	maintype=msg.get_content_maintype()
-	if maintype == 'multipart':
+	maintype=msg.get_content_type()
+	if maintype.lower().startswith('multipart'):
 		for part in msg.get_payload():
 			showAttachment(part)
-	elif maintype == 'text':
+	elif maintype.lower().endswith("base64"):
 		if  not msg["Content-Disposition"]:
 			pass
 		else:
@@ -141,14 +141,16 @@ def showAttachment(msg):
 			filename = msg["Content-Disposition"].split("\"")[-2]
 			print "File Name: "+filename
 			print ""
+	else:
+		pass
 
 #download attachment
 def downloadAttachment(msg):
-	maintype=msg.get_content_maintype()
-	if maintype == 'multipart':
+	maintype=msg.get_content_type()
+	if maintype.lower().startswith('multipart'):
 		for part in msg.get_payload():
 			downloadAttachment(part)
-	elif maintype == 'text':
+	elif maintype.lower().endswith("base64"):
 		if  not msg["Content-Disposition"]:
 			pass
 		else:
@@ -179,8 +181,16 @@ def showSubject(msg):
 #show mail from and to		
 def showMoreInfo(msg):
 	try:
-		print "From: " + msg["From"]
-		print "To  : " + msg["to"]
+		from_email_decode = decode_header(msg["from"])[0][1]
+		if not from_email_decode==None:
+			print  "From: " + decode_header(msg["from"])[0][0].decode(decode_header(msg["from"])[0][1]).encode("utf-8")
+		else:
+			print "From: " + unicode(decode_header(msg["from"])[0][0],"utf-8")	
+		to_email_decode = decode_header(msg["to"])[0][1]
+		if not to_email_decode==None:
+			print  "To  : " + decode_header(msg["to"])[0][0].decode(decode_header(msg["to"])[0][1]).encode("utf-8")
+		else:
+			print "To  : " + unicode(decode_header(msg["to"])[0][0],"utf-8")	
 	except:
 		print ""
 		pass
@@ -202,7 +212,7 @@ def deleteMail(popObj):
 		deletenum = input("Please Input The Number Mail You Want To Delete: \n")
 	except:
 		print "Your Input Is Wrong"
-		os.exit(0)
+		return
 	index = int(deletenum)	
 	try:
 		msg.dele(index)
@@ -213,13 +223,15 @@ def deleteMail(popObj):
 #read single mail
 def readMail(popObj):
 	try:
-		num = input("Please Input The Number Your Want To Read :\n")
+		index = input("Please Input The Number Your Want To Read :\n")
 	except:
 		print "Your Input Is Wrong"
-		os.exit(0)
-
-	print "\n\n\nThe Number %d Mail is: \n"%num
-	index = int(num)
+		return
+	resp, mails, octets = popObj.list()
+	if index > len(mails):
+		print "Your Input Is Wrong"
+		return 
+	print "\n\n\nThe Number %d Mail is: \n"%index
 	resp, lines, octets = popObj.retr(index)
 	msg_content = '\r\n'.join(lines)
 	msg = Parser().parsestr(msg_content)
@@ -230,6 +242,26 @@ def readMail(popObj):
 	showContent(msg)
 	showAttachment(msg)
 	downloadAttachment(msg)
+
+#show more subject
+def showMoreSubject(popObj):
+	try:
+		beginnum = int(input("Please Input The Number Begin:\n"))
+		endnum   = int(input("Please Input The Number End  :\n"))
+	except:
+		print "Your Input Is Wrong\n"
+		return
+	resp, mails, octets = popObj.list()
+	if endnum > len(mails)+1:
+		endnum = len(mails)+1
+	for index in range(beginnum,endnum):
+	 	resp, lines, octets = popObj.retr(index)
+		msg_content = '\r\n'.join(lines)
+		msg = Parser().parsestr(msg_content)
+		print "This Is No.%s Mail Subject :"%index
+		showSubject(msg)
+		showAttachment(msg)
+
 
 #quit
 def Quit():
@@ -307,11 +339,13 @@ if __name__ == '__main__':
 		downloadAttachment(msg)
 
 		while True:
-			continueType = raw_input("Please Input The Next You Want To Do:[read|delete|quit]\n")
+			continueType = raw_input("Please Input The Next You Want To Do:[read|delete|quit|more]\n")
 			if continueType.lower().startswith("read"):
 				readMail(popObj)
 			elif continueType.lower().startswith("delete"):
 				deleteMail(popObj)
+			elif continueType.lower().startswith("more"):
+				showMoreSubject(popObj)
 			else:
 				break
 
