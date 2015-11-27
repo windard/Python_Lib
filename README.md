@@ -220,7 +220,7 @@ except MySQLdb.Error,e:
  >但是这个执行命令行没有返回值，直接输出，不管你有没有print                            
 13. 执行shell命令-- os.popen() 
 >执行命令行，返回一个file open的对象，需要read才能得到执行结果，但是还是没有返回值，如果需要更多的命令行操作，可以使用commands库
-13. 终止当前进程--os.exit()      
+13. 终止当前进程--os._exit(0)      
 14. 循环遍历目录--os.walk()  返回一个三元组，第一个是路径，第二个是路径下的目录，第三个是路径下的非目录。
 
 ```python
@@ -502,7 +502,7 @@ print num
 
 2. `sys.platform()` 获得当前终端是Windows下还是Linux下。        
 3. `sys.exit(n)` 退出程序，它有一个可选的整数参数，当n为0是是正常退出，其他为不正常，可抛异常事件捕获，默认为0。                   
->注意，此处的`sys.exit()`和`os.exit`和`exit()/quit()`都能够退出Python程序，但是`sys.exit()`一般用在主线程中退出整个Python进程，而`os.exit()`不抛出异常，不执行清理工作，`exit()/quit()`一般在交互式shell中使用。           
+>注意，此处的`sys.exit()`和`os._exit()`和`exit()/quit()`都能够退出Python程序，但是`sys.exit()`一般用在主线程中退出整个Python进程，而`os._exit()`不抛出异常，不执行清理工作，`exit()/quit()`一般在交互式shell中使用。           
 4. `sys.path` 系统的环境变量，返回列表。         
 ```python
 #coding=utf-8
