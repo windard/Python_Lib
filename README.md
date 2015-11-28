@@ -880,7 +880,19 @@ u'\u6211\u7231\u4e2d\u56fd'
 >>> print binascii.a2b_hex('e68891e788b1e4b8ade59bbd').decode('utf-8')
 我爱中国
 ```
-
+```
+mport binascii
+>>> binascii.b2a_hex('伟止')
+'ced2b0aed6d0b9fa'
+>>> binascii.a2b_hex('ced2b0aed6d0b9fa')
+'\xce\xd2\xb0\xae\xd6\xd0\xb9\xfa'
+>>> binascii.a2b_hex('ced2b0aed6d0b9fa').decode('gbk')
+u'\u6211\u7231\u4e2d\u56fd'
+>>> print binascii.a2b_hex('ced2b0aed6d0b9fa')
+伟止
+>>> print binascii.a2b_hex('ced2b0aed6d0b9fa').decode('gbk')
+伟止
+```
 ##media
 原本以为media是一个很简单的图像处理库，结果下载就纠结我一半天。它不是Python自带的库，需要自行安装，而安装这个库又需要先安装一些其他的东西。本人环境Windows 10 64位处理器Python2.7.10。      
 1. 下载[Python Imaging Library 1.1.7 for Python 2.7](PIL-1.1.7.win32-py2.7.exe)，安装。    
