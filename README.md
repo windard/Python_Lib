@@ -1980,6 +1980,40 @@ print plain
 保存为crypto_3des.py，运行，看一下结果。        
 ![crypto_3des.jpg](images/crypto_3des.jpg)
 
+##getpass
+这个库的功能很简单，也很有用，就是在输入的时候输入字符不回显出来。它只有两个函数，`getpass`和`getuser`,功能分别是输入不进行回显和获得当前系统登录用户名。
+```python
+#coding=utf-8
+import getpass
+#输入不回显，默认会提示password
+pass1 = getpass.getpass()
+#输入不回显，但是提示 请输入密码
+pass2 = getpass.getpass("请输入密码:")
+print pass1
+print pass2
+#登录系统的用户名
+print getpass.getuser()
+```
+![getpass_demo.jpg](images/getpass_demo.jpg)
+
+##glob
+这个库也非常的简单，功能就是windows下的`find`或者是linux下的`grep`。它只有两个函数，`glob()`和`iglob()`,功能是一样的，只不过返回值不一样，前者返回列表，后者返回一个对象。他们都支持绝对路径和相对路径，支持通配符。
+```
+#coding=utf-8
+import glob
+#得到当前目录下的所有python文件，返回一个列表
+f = glob.glob(r'./*.py')
+for i in f:
+	print i
+#得到父级目录下所有的文件，返回一个对象，但是也能够用for循环遍历
+t = glob.iglob(r'../*')
+for j in t:
+	print j
+```
+
+##zipfile
+
+
 ##额外的东西
 1. python自带了一个简单web的服务器，当前目录下启动,就可以在`localhost:8080`查看。
 ```python
@@ -2116,3 +2150,5 @@ http.createServer(function (req, res) {
 [Package Crypto](https://pythonhosted.org/pycrypto/)
 
 [pyDes库 实现python的des加密](http://www.cnblogs.com/SunboyL/p/pyDes.html)
+
+[Python 之getpass模块](http://caisangzi.blog.51cto.com/6387416/1391123)
