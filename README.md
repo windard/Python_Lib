@@ -879,20 +879,46 @@ bin(x )                 #将一个整数转化为一个二进制字符串
 u'\u6211\u7231\u4e2d\u56fd'
 >>> print binascii.a2b_hex('e68891e788b1e4b8ade59bbd').decode('utf-8')
 我爱中国
+>>> binascii.a2b_hex('e68891e788b1e4b8ade59bbd').decode('utf-8').encode('gbk')
+'\xce\xd2\xb0\xae\xd6\xd0\xb9\xfa'
 ```
+下面是我在我的windows 10下的,所以编码格式就是gbk,但是可以看到两者的unicode编码是一致的。                                       
 ```
-mport binascii
->>> binascii.b2a_hex('伟止')
+>>> import binascii
+>>> binascii.b2a_hex('我爱中国')
 'ced2b0aed6d0b9fa'
 >>> binascii.a2b_hex('ced2b0aed6d0b9fa')
 '\xce\xd2\xb0\xae\xd6\xd0\xb9\xfa'
 >>> binascii.a2b_hex('ced2b0aed6d0b9fa').decode('gbk')
 u'\u6211\u7231\u4e2d\u56fd'
 >>> print binascii.a2b_hex('ced2b0aed6d0b9fa')
-伟止
+我爱中国
 >>> print binascii.a2b_hex('ced2b0aed6d0b9fa').decode('gbk')
-伟止
+我爱中国
+>>> binascii.a2b_hex('ced2b0aed6d0b9fa').decode('gbk').encode('utf-8')
+'\xe6\x88\x91\xe7\x88\xb1\xe4\xb8\xad\xe5\x9b\xbd'
 ```
+接下来是binascii所有的函数列表。             
+```python
+binascii.a2b_uu(string)
+binascii.b2a_uu(data)
+binascii.a2b_base64(string)
+binascii.b2a_base64(data)
+binascii.a2b_qp(string[, header])
+binascii.b2a_qp(data[, quotetabs, istext, header])
+binascii.a2b_hqx(string)
+binascii.rledecode_hqx(data)
+binascii.rlecode_hqx(data)
+binascii.b2a_hqx(data)
+binascii.crc_hqx(data, crc)
+binascii.crc32(data[, crc])
+binascii.b2a_hex(data)
+binascii.b2a_hex(data)
+binascii.hexlify(data)
+binascii.a2b_hex(hexstr)
+binascii.unhexlify(hexstr)
+```
+
 ##media
 原本以为media是一个很简单的图像处理库，结果下载就纠结我一半天。它不是Python自带的库，需要自行安装，而安装这个库又需要先安装一些其他的东西。本人环境Windows 10 64位处理器Python2.7.10。      
 1. 下载[Python Imaging Library 1.1.7 for Python 2.7](PIL-1.1.7.win32-py2.7.exe)，安装。    
@@ -2149,8 +2175,8 @@ a = gzip.GzipFile('zipfile_demo.gz','ab')
 a.write("This is another data")
 a.close()
 ```
-保存为gzip_demo.py，运行，看一下结果。               
-![gzip_demo.png](images/gzip_demo.png)
+保存为gzip\_demo.py，运行，看一下结果。               
+![gzip\_demo.png](images/gzip_demo.png)
 这是直接用vim打开gz压缩文件的样子，可以看到确实是这些文件，而且也加入了后来的数据。           
 ```python
 #coding=utf-8
@@ -2161,10 +2187,10 @@ f.write(g.read())
 f.close()
 g.close()
 ```
-保存为gzip_unzip.py。
+保存为gzip\_unzip.py。
 
 ##tarfile
-*.tgz与*.tar.gz是同种格式的文件，都是现有tar打包之后的文件压缩为gz文件格式。                
+\*.tgz与\*.tar.gz是同种格式的文件，都是现有tar打包之后的文件压缩为gz文件格式。                
 tarfile这个库也是和linux下的tar命令一样，功能丰富，不仅能打包，还能够压缩。            
 ```python
 #coding=utf-8
@@ -2186,7 +2212,7 @@ for i in allfile:
 	tar.add(i)
 tar.close()
 ```
-保存为tarfile_demo.py。                          
+保存为tarfile\_demo.py。                          
 可以看到这个库的用法与之前的zipfile库的用法非常相似，而且解压的过程也非常相近。                
 ```python
 #coding=utf-8
@@ -2201,7 +2227,7 @@ for i in g.getnames():
 确实是与tar的用法基本一致，只不过在tar中每一次打开文件的模式需要指定压缩格式。         
 w或者是w:\* 只进行简单的压缩，w: 不压缩，w:gz 使用gzip压缩方式,w:bz2 使用bzip2压缩方式。                  
 
-##tarfile
+##rarfile
 与上面的用法基本一致，但是使用较少,就只写解压文件的代码吧。                    
 ```python
 #coding=utf-8
@@ -2211,6 +2237,11 @@ g = rarfile.RarFile('demo.rar')
 g.extractall()
 g.close()
 ```
+
+##ftplib
+这是python的进行ftp文件传输的库，可以进应用TLS加密，一般的就是创建一个ftp对象ftplib.FTP(),应用加密的话就是创建一个ftp-tls对象ftplib.FTP_TLS()。  
+创建ftp对象的工厂函数`class ftplib.FTP([host[, user[, passwd[, acct[, timeout]]]]])`,创建ftp-tls对象的工厂函数`class ftplib.FTP_TLS([host[, user[, passwd[, acct[, keyfile[, certfile[, context[, timeout]]]]]]]])`
+
 
 ##额外的东西
 1. python自带了一个简单web的服务器，当前目录下启动,就可以在`localhost:8080`查看。
