@@ -826,6 +826,61 @@ oct(x )                 #将一个整数转换为一个八进制字符串
  保存为md5_hash_bigfile.py，运行，看一下效果。              
  ![md5_hash_bigfile.jpg](images/md5_hash_bigfile.jpg)
 
+
+##binacsii
+在上面的进制转换里面，像字符串转化为十六机制甚至是二进制的都是只能转换单个字符。                     
+```
+chr(x )                 #将一个整数转换为一个ASCII字符  
+unichr(x )              #将一个整数转换为Unicode字符  
+ord(x )                 #将一个ASCII字符转换为它的整数值  
+hex(x )                 #将一个整数转换为一个十六进制字符串  
+oct(x )                 #将一个整数转换为一个八进制字符串  
+bin(x )                 #将一个整数转化为一个二进制字符串
+```
+比如说，将字符`a`的十进制，十六进制，八进制，和二进制表示出来需要这样。          
+```
+>>> ord('a')
+97
+>>> hex(ord('a'))
+'0x61'
+>>> oct(ord('a'))
+'0141'
+>>> bin(ord('a'))
+'0b1100001'
+```
+可是如果有时候我们需要将字符串转化为十六进制数的时候，就需要binascii库了。            
+```python
+>>> import binascii
+>>> a = 'I love China'
+>>> binascii.b2a_hex(a)
+'49206c6f7665204368696e61'
+>>> binascii.hexlify(a)
+'49206c6f7665204368696e61'
+```
+也可以将十六进制数转化为字符串。
+```python
+>>> import binascii
+>>> a = '49206c6f7665204368696e61'
+>>> binascii.a2b_hex(a)
+'I love China'
+>>> binascii.unhexlify(a)
+'I love China'
+```
+甚至中文也可以转化,在我的ubuntu上当然是utf-8编码的。                  
+```python
+>>> import binascii
+>>> binascii.b2a_hex('我爱中国')
+'e68891e788b1e4b8ade59bbd'
+>>> binascii.a2b_hex('e68891e788b1e4b8ade59bbd')
+'\xe6\x88\x91\xe7\x88\xb1\xe4\xb8\xad\xe5\x9b\xbd'
+>>> print binascii.a2b_hex('e68891e788b1e4b8ade59bbd')
+我爱中国
+>>> binascii.a2b_hex('e68891e788b1e4b8ade59bbd').decode('utf-8')
+u'\u6211\u7231\u4e2d\u56fd'
+>>> print binascii.a2b_hex('e68891e788b1e4b8ade59bbd').decode('utf-8')
+我爱中国
+```
+
 ##media
 原本以为media是一个很简单的图像处理库，结果下载就纠结我一半天。它不是Python自带的库，需要自行安装，而安装这个库又需要先安装一些其他的东西。本人环境Windows 10 64位处理器Python2.7.10。      
 1. 下载[Python Imaging Library 1.1.7 for Python 2.7](PIL-1.1.7.win32-py2.7.exe)，安装。    
@@ -2057,14 +2112,93 @@ import zipfile
 #解压文件到当前文件夹
 f = zipfile.ZipFile('test.zip','r')
 #这一步为了保存压缩文件的目录结构
+#此处也可以直接用g.extractall()
 for i in f.namelist():
 	f.extract(i)
 #解压文件到指定文件夹
 for i in f.namelist():
 	f.extract(i,'demo')
 ```
-保存为zipfile_unzip.py，运行，看一下结果。          
+保存为zipfile_unzip.py。          
 
+##gzip
+功能与linux下的gzip功能是一样的，只能压缩单个文件，可以是直接压缩数据，也可以追加数据。
+```python
+#coding=utf-8
+import gzip
+filename = open('zipfile_demo.py','rb')
+#创建一个新的压缩文件
+g = gzip.open('zipfile_demo.gz','wb')
+g.write(filename.read())
+filename.close()
+g.close()
+#打开一个已经创建的压缩文件
+a = gzip.GzipFile('zipfile_demo.gz','ab')
+a.write("This is another data")
+a.close()
+```
+保存为gzip_demo.py，运行，看一下结果。               
+![gzip_demo.png](images/gzip_demo.png)
+这是直接用vim打开gz压缩文件的样子，可以看到确实是这些文件，而且也加入了后来的数据。           
+```python
+#coding=utf-8
+import gzip
+g = gzip.open('zipfile_demo.gz','rb')
+f = open('zipfile_demo.py','wb')
+f.write(g.read())
+f.close()
+g.close()
+```
+保存为gzip_unzip.py。
+
+##tarfile
+*.tgz与*.tar.gz是同种格式的文件，都是现有tar打包之后的文件压缩为gz文件格式。                
+tarfile这个库也是和linux下的tar命令一样，功能丰富，不仅能打包，还能够压缩。            
+```python
+#coding=utf-8
+import tarfile
+allfile = []
+#此处我们也使用之前zipfile的递归的方法
+def getall(begindir):
+	global allfile
+	newpath = os.listdir(begindir)
+	for i in newpath:
+		currentpath = os.path.join(begindir,i)
+		if os.path.isdir(currentpath):
+			getall(currentpath)
+		else:
+			allfile.append(currentpath)
+#创建一个tar.gz的压缩包
+tar = tarfile.open('demo.tar.gz','w:gz')
+for i in allfile:
+	tar.add(i)
+tar.close()
+```
+保存为tarfile_demo.py。                          
+可以看到这个库的用法与之前的zipfile库的用法非常相似，而且解压的过程也非常相近。                
+```python
+#coding=utf-8
+import tarfile 
+#解压到当前文件夹
+g = tarfile.open('demo.tar.gz','r:gz')
+#此处也可以直接用g.extractall()
+for i in g.getnames():
+	g.extract(i)
+```
+保存为tarfile_unzip.py。                                       
+确实是与tar的用法基本一致，只不过在tar中每一次打开文件的模式需要指定压缩格式。         
+w或者是w:\* 只进行简单的压缩，w: 不压缩，w:gz 使用gzip压缩方式,w:bz2 使用bzip2压缩方式。                  
+
+##tarfile
+与上面的用法基本一致，但是使用较少,就只写解压文件的代码吧。                    
+```python
+#coding=utf-8
+import rarfile
+g = rarfile.RarFile('demo.rar')
+#解压到当前文件夹
+g.extractall()
+g.close()
+```
 
 ##额外的东西
 1. python自带了一个简单web的服务器，当前目录下启动,就可以在`localhost:8080`查看。

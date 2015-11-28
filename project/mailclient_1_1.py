@@ -2,6 +2,7 @@ import poplib
 import email
 import sys
 import os
+import getpass
 from email.parser import Parser
 from email.header import decode_header
 from email.utils import parseaddr
@@ -39,7 +40,7 @@ def sendInfo():
 			break	
 	while True:
 		from_email = raw_input("Please Input From_email:\n")
-		password   = raw_input("Please Input Your Password:\n")
+		password   = getpass.getpass("Please Input Your Password:\n")
 		smtpObj = smtplib.SMTP_SSL(email_host)		
 		if sendLogin(smtpObj,from_email,password):
 			break	
@@ -60,7 +61,7 @@ def receiveInfo():
 			break
 	while True:
 		email      = raw_input("Please Input Your Email:\n")
-		password   = raw_input("Please Input Your Password:\n")
+		password   = getpass.getpass("Please Input Your Password:\n")
 		popObj = poplib.POP3_SSL(email_host)
 		if receLogin(popObj,email,password):
 			break

@@ -6,6 +6,7 @@ import zipfile
 f = zipfile.ZipFile('test.zip','r')
 
 #这一步为了保存压缩文件的目录结构
+#此处也可以直接用g.extractall()
 for i in f.namelist():
 	f.extract(i)
 
