@@ -7,7 +7,10 @@ def showall(path,leavel=0,filenum=0,dirnum=0,show=True,showtype=True,save=False)
 	newnum = filenum
 	oldnum = dirnum
 	currentpath = path;
-	dirandfile = os.listdir(path)
+	try:
+		dirandfile = os.listdir(path)
+	except:
+		return 0,0
 	for item in dirandfile:
 		newpath = os.path.join(currentpath,item)
 		if os.path.isdir(newpath):
