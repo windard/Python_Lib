@@ -2351,7 +2351,7 @@ data = """
 ```python
 This is code block
 hello world
-```
+\`\`\`
 
 
 	or like This
@@ -2401,7 +2401,7 @@ data = """
 ```python
 This is code block
 hello world
-```
+\`\`\`
 
 
 	or like This
@@ -2451,7 +2451,7 @@ data = """
 ```python
 This is code block
 hello world
-```
+\`\`\`
 
 
 	or like This
@@ -2475,7 +2475,9 @@ print result
 保存为markdown_mistune.py，运行，看一下结果。              
 ![markdown_mistune.jpg](images/markdown_mistune.jpg)                       
 结果差不多，感觉这几个markdown解析器都差不多吖，为什么还要这么多呢？             
-再来看一下最后一个Misaka
+再来看一下最后一个Misaka                              
+本来在windows下装这个库没有装成功，准备在ubuntu下试一下，结果发现在ubuntu下也没有装成功，那就没有办法，只能先算了。       
+
 
 ##额外的东西
 1. python自带了一个简单web的服务器，当前目录下启动,就可以在`localhost:8080`查看。
