@@ -849,6 +849,7 @@ bin(x )                 #将一个整数转化为一个二进制字符串
 '0b1100001'
 ```
 可是如果有时候我们需要将字符串转化为十六进制数的时候，就需要binascii库了。            
+其实还有一种方法的，就是字符串的内置函数encode和decode()，很强大，不做演示了。
 ```python
 >>> import binascii
 >>> a = 'I love China'
