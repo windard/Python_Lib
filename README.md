@@ -2177,7 +2177,7 @@ a.write("This is another data")
 a.close()
 ```
 保存为gzip_demo.py，运行，看一下结果。               
-![gzip_demo.png](images/gzip_demo.png)
+![gzip_demo.png](images/gzip_demo.png)                   
 这是直接用vim打开gz压缩文件的样子，可以看到确实是这些文件，而且也加入了后来的数据。           
 ```python
 #coding=utf-8
@@ -2264,7 +2264,7 @@ print f.dir()
 f.quit()
 ```
 保存为ftplib_demo.py,运行，看一下结果。                
-![ftplib_demo.png](images/ftplib_dmeo.png)                   
+![ftplib_demo.png](images/ftplib_demo.png)                   
 上面的例子就是建立了一个ftp对象，并连接远程服务器查看服务器上的文件，那么接下里让我们开始上传下载吧。            
 ```python
 #coding=utf-8
