@@ -2316,7 +2316,170 @@ f.quit()
 GUI
 
 ##Thread
-多线程
+多线程，但是这个多线程的库已经用的很少了，现在大家用的都是threading的这个库。它在多线程的控制上不如threading，以及不支持守护线程。不过我们还是先来讲一下这个库，对多线程有一个简单的了解。                              
+首先假设我们有两个任务，一个需要2秒钟来完成，一个需要4秒钟来完成，花费时间我们用sleep来代替。那么正常情况下，我们需要6秒才能完成这两个任务。代码如下。                      
+```python
+#coding=utf-8
+from time import ctime,sleep
+def loop0():
+	print 	"loop0 start at: ",ctime()
+	sleep(2)
+	print 	"loop0 end 	 at: ",ctime()
+def loop1():
+	print 	"loop1 start at: ",ctime()
+	sleep(4)
+	print 	"loop1 end 	 at: ",ctime()
+print "all start at: ",ctime()
+loop0()
+loop1()
+print "all end   at: ",ctime()
+```
+保存为no_thread_demo.py，运行，看一下结果。                                   
+![no_thread_demo.jpg](images/no_thread_demo.jpg)                
+可以看到确实是花费了6秒钟，现在，我们再来使用多线程是他们同时进行，并且使用锁，把主进程锁住等待全部子进程完成，那么应该只花费4秒钟就可以全部完成了。                         
+```python
+#coding=utf-8
+import thread
+from time import ctime,sleep
+#这次两个函数只用一个函数体,在函数结束后释放这个锁
+def loop(nloop,nsec,lock):
+	print "loop",nloop," start at: ",ctime()
+	sleep(nsec)
+	print "loop",nloop,"end    at: ",ctime()
+	lock.release()
+print "all start at: ",ctime()
+#两个函数运行时间
+loops = [4,2]
+#这是两个锁的列表
+locks = []
+nloops = range(len(loops))
+#创建两个锁
+for i in nloops:
+	lock = thread.allocate_lock()
+	lock.acquire()
+	locks.append(lock)
+#创建两个带锁的线程
+for i in nloops:
+	thread.start_new_thread(loop,(i,loops[i],locks[i]))
+#等待两个带锁的线程结束
+for i in nloops:
+	while locks[i].locked():
+		pass
+print "all end   at: ",ctime()
+```
+保存为thread_demo.py，运行，看一下结果。                             
+![thread_demo.jpg](images/thread_demo.jpg)                               
+两个函数由于同时开始，他们的开始的函数都写到一起了。。。不过还是可以看到确实整个函数只进行了4秒钟。                       
+
+##threading
+在thread的库里还需要我们自己的去设定锁，并且在主线程里阻塞主线程的进行来判断锁是否已经释放。但是在threading库里，因为守护线程的存在，主线程会自动等待子线程全部结束才会继续下去，不过在这里还是需要手动的将子线程加入(join)到主线程中。               
+还是上一个例子，我们用threading来试一下。                     
+```python
+#coding=utf-8
+import threading
+from time import ctime,sleep
+def loop(nloop,nsec):
+	print "loop",nloop," start at: ",ctime()
+	sleep(nsec)
+	print "loop",nloop,"end    at: ",ctime()
+print "all start at: ",ctime()
+loops = [4,2]
+threads = []
+nloops = range(len(loops))
+#创建两个线程
+for i in nloops:
+	t = threading.Thread(target=loop,args=(i,loops[i]))
+	threads.append(t)
+#让两个线程同时开始
+for i in nloops:
+	threads[i].start()
+#将两个线程加入主线程
+#如果将join和start在一起的话
+#就会阻塞主线程的执行
+#没有产生另一个子线程
+#所以并没有开启多线程
+#还是一个线程一个线程的执行
+for i in nloops:
+	threads[i].join()
+print "all end   at: ",ctime()
+```
+保存为threading_demo.py，运行，看一下结果。                           
+![threading_demo.jpg](images/threading_demo.jpg)                                
+然后我们再来介绍一种多线程模式，生产者-消费者模式，这也是现实生活中最常用的多线程模式。   
+假设我们有这样一条工程，一共有两道工序。必须等到第一道工序结束了才能进行第二道工序。这时我们就引入了生产者和消费者的概念，第一道工序是生产者，第二道工序是消费者，分别是两个线程。  
+首先我们需要使用Queue队列模块，让多个线程之间共享数据。生产者不停的往队列里面加入货物，消费者不停的从队列里消费货物。
+假设我们一共有100个货物，生产者与消费者所需时间都是1秒以内的随机时间。                 
+```python
+#coding=utf-8
+import threading
+from Queue import Queue
+from random import random
+from time import ctime,sleep
+def writeQ(queue):
+	for i in range(100):
+		print "Producting project for Q..."
+		sleep(random())
+		queue.put('xxx',1)
+		print "Size now",queue.qsize()
+def readQ(queue):
+	for i in range(100):
+		print "Consuming project from Q..."
+		sleep(random())
+		queue.get(1)
+		print "Size now",queue.qsize()
+
+print "all start at: ",ctime()
+funcs = [writeQ,readQ]
+nfunc = range(len(funcs))
+q = Queue(48)
+threads = []
+for i in nfunc:
+	t = threading.Thread(target=funcs[i],args=(q,))
+	threads.append(t)	
+for i in nfunc:
+	threads[i].start()
+for i in nfunc:
+	threads[i].join()
+print "all end   at: ",ctime()
+```
+保存为为threading_queue.py，运行，看一下结果。                           
+最后总花费大概50秒左右，已经能够把效率提高一倍了。可是仅仅这样怎么够，这才两个线程，让我们来开八个线程试一下，生产者和消费者各四个线程。                         
+果然在把生产者消费者线程增多的时候，相比较效率提高了很多。               
+```python
+#coding=utf-8
+import threading
+from Queue import Queue
+from random import random
+from time import ctime,sleep
+def writeQ(queue):
+	for i in range(25):
+		print "Producting project for Q..."
+		sleep(random())
+		queue.put('xxx',1)
+		print "Size now",queue.qsize()
+def readQ(queue):
+	for i in range(25):
+		print "Consuming project from Q..."
+		sleep(random())
+		queue.get(1)
+		print "Size now",queue.qsize()
+print "all start at: ",ctime()
+funcs = [writeQ,readQ]
+nfunc = range(len(funcs))
+q = Queue(48)
+threads = []
+for i in nfunc:
+	for j in range(4):
+		t = threading.Thread(target=funcs[i],args=(q,))
+		threads.append(t)	
+for i in range(8):
+	threads[i].start()
+for i in range(8):
+	threads[i].join()
+print "all end   at: ",ctime()
+```
+
+
 
 ##socket
 socket网络编程
