@@ -1,7 +1,7 @@
 ##这是一些用Python写的小项目。          
 
 1. PortScan             
-简易的端口扫描器                      
+端口扫描器                      
 项目地址：[PortScan](https://github.com/1106911190/Port_Scan)           
 
 2. MailClient            
@@ -54,5 +54,5 @@
  6. `--filename=` 课选参数，计算文件的hash值的文件（在cmd的936代码页下可以操作中文名的文件）
  7. `--save=` 可选参数，若保存到文本中，则保存的文件名
 
-**Version:1.0**                  
+**Version:1.1**                  
 增加对AES，DES，DES3，RSA加密算法的支持。
