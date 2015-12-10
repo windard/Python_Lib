@@ -36,8 +36,107 @@ print "all end   at: ",ctime()
 保存为threading_demo.py，运行，看一下结果。                           
 ![threading_demo.jpg](images/threading_demo.jpg)          
 
-####面向对象        
-Python是一门面向对象的编程语言，当然也可以面向对象的创建子线程。
+####创建多线程的几种方法
+
+上面我们演示的是最基本的创建多线程的方式，也是最不推荐的方式。实际上threading库一共为我们提供三种创建多线程的方法，后两种更加的体现了Python面向对象的特性。                 
+
+三种创建多线程的方法                        
+1. 创建一个threading的实例，传给它一个参数。
+2. 创建一个threading的实例，传给它一个可调用的类对象。
+3. 从threading派生出一个子类，创建这个子类的实例。
+
+那么接下里我们分别演示一下另外的两种方法。                  
+
+######创建一个threading的实例，传给它一个可调用的类对象
+这里我们需要先创建一个类供线程启动的时候执行，然后在线程启动的时候，Thread对象会调用我们创建的对象的执行函数。                
+
+```python
+#coding=utf-8
+
+import threading
+from time import ctime,sleep
+
+class ThreadFunc(object):
+	def __init__(self, func ,args,name=""):
+		self.args = args
+		self.func = func
+		self.name = name
+
+	def __call__(self):
+		apply(self.func,self.args)
+
+def loop(nloop,nsec):
+	print "loop",nloop," start at: ",ctime()
+	sleep(nsec)
+	print "loop",nloop,"end    at: ",ctime()
+
+print "all start at: ",ctime()
+
+loops = [4,2]
+threads = []
+nloops = range(len(loops))
+
+for i in nloops:
+	t = threading.Thread(target=ThreadFunc(loop,(i,loops[i]),loop.__name__))
+	threads.append(t)	
+
+for i in nloops:
+	threads[i].start()
+
+for i in nloops:
+	threads[i].join()
+
+print "all end   at: ",ctime()
+```
+
+保存为threading_class.py，运行，看一下结果。                              
+![threading_class.jpg](images/threading_class.jpg)       
+
+####从threading派生出一个子类，创建这个子类的实例
+创建一个继承自Thread的之类，然后构造这个之类的实例，这时，Thread的start方法在就要在之类里重写为run方法。                 
+
+```python
+#coding=utf-8
+
+import threading
+from time import ctime,sleep
+
+class MyThread(threading.Thread):
+	def __init__(self,func,args,name=""):
+		threading.Thread.__init__(self)
+		self.name = name
+		self.func = func
+		self.args = args
+
+	def run(self):
+		apply(self.func,self.args)
+
+def loop(nloop,nsec):
+	print "loop",nloop," start at: ",ctime()
+	sleep(nsec)
+	print "loop",nloop,"end    at: ",ctime()
+	
+print "all start at: ",ctime()
+
+loops = [4,2]
+threads = []
+nloops = range(len(loops))
+
+for i in nloops:
+	t = MyThread(loop,(i,loops[i]),loop.__name__)
+	threads.append(t)	
+
+for i in nloops:
+	threads[i].start()
+
+for i in nloops:
+	threads[i].join()
+
+print "all end   at: ",ctime()
+```
+
+保存为threading_class_MyThread.py，运行，看一下结果。                          
+![threading_class_MyThread.jpg](images/threading_class_MyThread.jpg)                      
 
 ####生产者-消费者模式
 
@@ -45,18 +144,21 @@ Python是一门面向对象的编程语言，当然也可以面向对象的创�
 假设我们有这样一条工程，一共有两道工序。必须等到第一道工序结束了才能进行第二道工序。这时我们就引入了生产者和消费者的概念，第一道工序是生产者，第二道工序是消费者，分别是两个线程。  
 首先我们需要使用Queue队列模块，让多个线程之间共享数据。生产者不停的往队列里面加入货物，消费者不停的从队列里消费货物。
 假设我们一共有100个货物，生产者与消费者所需时间都是1秒以内的随机时间。                 
+
 ```python
 #coding=utf-8
-import threading
-from Queue import Queue
+
+import threading 
 from random import random
 from time import ctime,sleep
+
 def writeQ(queue):
 	for i in range(100):
 		print "Producting project for Q..."
 		sleep(random())
 		queue.put('xxx',1)
 		print "Size now",queue.qsize()
+
 def readQ(queue):
 	for i in range(100):
 		print "Consuming project from Q..."
@@ -65,55 +167,73 @@ def readQ(queue):
 		print "Size now",queue.qsize()
 
 print "all start at: ",ctime()
+
 funcs = [writeQ,readQ]
 nfunc = range(len(funcs))
+
 q = Queue(48)
 threads = []
+
 for i in nfunc:
 	t = threading.Thread(target=funcs[i],args=(q,))
 	threads.append(t)	
+
 for i in nfunc:
 	threads[i].start()
+
 for i in nfunc:
 	threads[i].join()
+
 print "all end   at: ",ctime()
 ```
+
 保存为为threading_queue.py，运行，看一下结果。      
 
-####八个线程                     
+######八个线程                     
 最后总花费大概50秒左右，已经能够把效率提高一倍了。可是仅仅这样怎么够，这才两个线程，让我们来开八个线程试一下，生产者和消费者各四个线程。                         
 果然在把生产者消费者线程增多的时候，相比较效率提高了很多。               
+
 ```python
 #coding=utf-8
+
 import threading
 from Queue import Queue
 from random import random
 from time import ctime,sleep
+
 def writeQ(queue):
 	for i in range(25):
 		print "Producting project for Q..."
 		sleep(random())
 		queue.put('xxx',1)
 		print "Size now",queue.qsize()
+
 def readQ(queue):
 	for i in range(25):
 		print "Consuming project from Q..."
 		sleep(random())
 		queue.get(1)
 		print "Size now",queue.qsize()
+
 print "all start at: ",ctime()
+
 funcs = [writeQ,readQ]
 nfunc = range(len(funcs))
+
 q = Queue(48)
 threads = []
+
 for i in nfunc:
 	for j in range(4):
 		t = threading.Thread(target=funcs[i],args=(q,))
 		threads.append(t)	
+
 for i in range(8):
 	threads[i].start()
+
 for i in range(8):
 	threads[i].join()
+
 print "all end   at: ",ctime()
 ```
 

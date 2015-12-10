@@ -87,6 +87,14 @@ GUI
 
 ##[threading](content/threading.md)
 
+##Queue
+
+##subprocess  
+
+##multiprocessing
+
+##logging
+
 ##socket
 socket网络编程
 
