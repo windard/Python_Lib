@@ -91,7 +91,7 @@ GUI
 
 ##[threading](content/threading.md)
 
-##Queue
+##[Queue](content/Queue.md)
 
 ##subprocess  
 

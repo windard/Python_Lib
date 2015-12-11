@@ -67,3 +67,51 @@ print math.ceil(-2.1)
 #不大于的最大整数
 print math.floor(2.1)
 print math.floor(-2.1)
+
+#将数字转化为度数
+print math.degrees(pi)
+
+#将度数转化为数字
+print math.radians(180)
+
+#幂函数 同 e^x
+print math.exp(1)
+
+#幂函数结果减一 同 e^x -1  
+print math.expm1(1)
+
+#浮点数绝对值
+print math.fabs(-10)
+
+#阶乘
+print math.factorial(5)
+
+#浮点数求和
+print math.fsum([1,2,3])
+
+#勾股定理求弦 同 sqrt(x*x + y*y)
+print math.hypot(3,4)
+
+#判断浮点数是否无穷大 正无穷或者负无穷
+print math.isinf(10000000)
+
+#判断浮点数是否不是为一个数
+print math.isnan(10.01)
+
+#ldexp(x,i) = x * z**i
+print math.ldexp(3,2)
+
+#以e为底的指数函数
+print math.log(1)
+
+#以10为底的指数函数
+print math.log10(100)
+
+#以e为底的指数函数 但是参数为x+1
+print math.log1p(0)
+
+#乘方
+print math.pow(2,4)
+
+#开根号
+print math.sqrt(9)
