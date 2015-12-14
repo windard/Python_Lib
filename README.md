@@ -84,6 +84,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ##[math](content/math.md)
 
+##functools 
+
 ##Tkinter
 GUI
 

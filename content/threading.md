@@ -138,6 +138,8 @@ print "all end   at: ",ctime()
 保存为threading_class_MyThread.py，运行，看一下结果。                          
 ![threading_class_MyThread.jpg](images/threading_class_MyThread.jpg)                      
 
+####资源锁定
+
 ####生产者-消费者模式
 
 然后我们再来介绍一种多线程模式，生产者-消费者模式，这也是现实生活中最常用的多线程模式。   
