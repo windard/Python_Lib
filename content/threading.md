@@ -138,8 +138,6 @@ print "all end   at: ",ctime()
 保存为threading_class_MyThread.py，运行，看一下结果。                          
 ![threading_class_MyThread.jpg](images/threading_class_MyThread.jpg)                      
 
-####资源锁定
-
 ####生产者-消费者模式
 
 然后我们再来介绍一种多线程模式，生产者-消费者模式，这也是现实生活中最常用的多线程模式。   
@@ -241,4 +239,104 @@ print "all end   at: ",ctime()
 
 保存为threading_queue_last.py。							
 我们这是把生产者消费者同时执行，如果在生产者花费时间较短，只要时间在消费者的时候，我们可以先让生产者生产全部的货物，然后开多个子线程让消费者将其消费完为止。             
+
+
+####资源锁定
+前面我们已经看到因为线程同步的原因，输出的时候总是显得不那么整齐，就是因为多线程在抢占同一个资源的原因。而如果我们在对同一个数据进行操作时，因为多线程的原因，可能一个线程对其进行操作还未结束另一个线程就强行进行了下一轮更改，这样的话肯定会有一些问题。          
+所以这就需要资源锁定，当一个资源被锁定的时候，同时只能有一个资源对其进行操作，这样就保证了多线程的安全性。                          
+
+我们先来看一下没有资源锁的情况 
+
+```python
+#coding=utf-8
+
+import threading
+from time import ctime,sleep
+
+counter = 0
+
+class MyThread1(threading.Thread):
+	def __init__(self):
+		threading.Thread.__init__(self)
+
+	def run(self):
+		global counter
+		counter += 1
+		print "  "+str(counter)+"  "
+
+class MyThread2(threading.Thread):
+	def __init__(self):
+		threading.Thread.__init__(self)
+
+	def run(self):
+		global counter
+		counter -= 1
+		print "  "+str(counter)+"  "
+
+if __name__ == '__main__':
+	threads = []
+	for i in range(20):
+		if i%2:
+			t = MyThread1()
+		else:
+			t = MyThread2()
+		threads.append(t)
+
+	for t in threads:
+		t.start()
+```
+
+保存为Threading_nolock.py，运行，看一下结果。             
+![threading_nolock.jpg](images/threading_nolock.jpg)             
+
+现在我们将其上锁。                    
+
+```python
+#coding=utf-8
+
+import threading
+from time import ctime,sleep
+
+counter = 0
+lock = threading.Lock()
+
+class MyThread1(threading.Thread):
+	def __init__(self):
+		threading.Thread.__init__(self)
+
+	def run(self):
+		if lock.acquire():
+			global counter
+			counter += 1
+			print "  "+str(counter)+"  "
+			lock.release()
+
+class MyThread2(threading.Thread):
+	def __init__(self):
+		threading.Thread.__init__(self)
+
+	def run(self):
+		if lock.acquire():
+			global counter
+			counter -= 1
+			print "  "+str(counter)+"  "
+			lock.release()
+
+if __name__ == '__main__':
+	threads = []
+	for i in range(20):
+		if i%2:
+			t = MyThread1()
+		else:
+			t = MyThread2()
+		threads.append(t)
+
+	for t in threads:
+		t.start()
+```
+
+保存为threading_lock.py，运行，看一下结果。          
+![threading_lock.jpg](images/threading_lock.jpg)             
+
+
 
