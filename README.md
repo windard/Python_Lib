@@ -104,7 +104,6 @@ GUI
 ##logging
 
 ##socket
-socket网络编程
 
 ##OpelSSL
 
