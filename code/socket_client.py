@@ -7,9 +7,13 @@ port = int(sys.argv[2])
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 try:
 	s.connect((host,port))
-	print "Connect Successful"
-	#s.sendall("Hello world")
-	response = s.recv()
-	print response
+	print "Connect Successful" 
 except:
-	print "Your Connect Is Wrong"
+	print "Connect Failed"
+
+s.send("/")
+try:
+	buf = s.recv(1024)
+	print "Received From Sercer : " + buf
+except:
+	pass

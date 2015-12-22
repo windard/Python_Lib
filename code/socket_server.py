@@ -9,10 +9,11 @@ s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 s.bind((host,port))
 s.listen(5)
 
-print "Server is running on port %s Press Ctrl-Z to stop"%port
+print "Server is running on port %s Press Ctrl-C to stop"%port
 
 while 1:
 	clientsock,clientaddr = s.accept()
 	print "Welcome from %s : %s"%(clientaddr[0],clientaddr[1])
-	result = s.recv(1024)
-	print result
+	resquest = clientsock.recv(1024)
+	print "Received From client : " + resquest
+	clientsock.send("Hello client")
