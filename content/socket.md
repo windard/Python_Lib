@@ -36,18 +36,21 @@ host = sys.argv[1]
 port = int(sys.argv[2])
 
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-s.connect((host,port))
+try:
+	s.connect((host,port))
+	print "Connect Successful" 
+except:
+	print "Connect Failed"
 
-while 1:
-    buf = s.recv(2048)
-    if not len(buf):
-        break
-    print buf
+s.send("hello server")
+
+buf = s.recv(1024)
+print "Received From Sercer : " + buf
 ```
 
 保存为socket_client.py，运行，看一下结果。                   
 ![socket_client.jpg](images/socket_client.png)                 
-可以看到，我先是在本机开了一个ftp服务器，用socket可以成功连接上去，然后就是连接百度的http服务器，看到也连接成功了，最后一个是连接后面的socket服务器，同样的返回了服务器的回复。可是为什么百度的http服务器没有回复呢？因为我们向它发送的请求不对。              
+可以看到，我先是在本机开了一个ftp服务器，用socket可以成功连接上去，然后就是连接百度的http服务器，看到也连接成功了，最后一个是连接后面的socket服务器，同样的返回了服务器的回复。可是为什么百度的http服务器没有回复呢？因为我们向它发送的请求不对,如果想要得到返回数据，我们需要发送一个GET请求,`GET /HTTP/1.1\r\n\r\n`。              
 
 ####简单的TCP协议的网络服务器
 
@@ -70,6 +73,9 @@ while 1:
 	resquest = clientsock.recv(1024)
 	print "Received From client : " + resquest
 	clientsock.send("Hello client")
+	clientsock.close()
+
+s.close()
 ```
 
 保存为socket_server.py，运行，看一下结果。                  
@@ -84,6 +90,75 @@ while 1:
 family有`AF_INET`包括internet地址，`AF_INET6`包括ipv6的internet地址，`AF_UNIX`同一台机器上。                    
 type有`SOCK_STREAM`数据流套接字，`SOCK_DGRAM`数据报套接字，`SOCK_RAW`原始套接字。                  
 
+2. 根据主机和端口找到socket并连接
+`socketobject.connect((host,port))`
+host和port构成一个元组。                      
+
+3. 发送和接收数据
+`socketobject.recv()`和`socketobject.send()`接收和发送数据。                   
+
+####建立一个socket服务器
+1. 创建一个socket对象
+`socketcobject = socket.socket(family[[,type])`
+
+2. 将socket绑定到一个指定端口上
+`socketobject.bind((host,port))`
+host和port构成一个元组，如果host为`0.0.0.0`或者为空时表示其可以接受所有ip的连接。                 
+
+3. 设置socket监听数目
+`socketobject.listen(number)`number大于0,如果同时有多个客户端连接，即进入队列，若队列已满，则拒绝进入。                  
+
+4. 连接客户端
+`client = socketobject.accept()`client是一个socket对象和socket信息的元组。
+
+5. 发送和接收数据
+`clientobject.recv()`和`clientobject.send()`接收和发送数据。                         
+发送数据还可以用`clientobject.sendall()`
+
+6. 关闭客户端连接
+`clientobject.close()`
+
+7. 关闭socket服务器端
+`socketobject.close()`
+
+####socketobject的其他函数
+1. socketobject.settimeout() 
+2. socketobject.gettimeout()
+3. socketobject.getpeername()
+4. socketobject.getsocketname()
+5. socketobject.getsocketoption()
+
+```python
+#coding=utf-8
+import socket,sys
+
+host = sys.argv[1]
+port = int(sys.argv[2])
+
+s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+try:
+	s.connect((host,port))
+	print "Connect Successful" 
+except:
+	print "Connect Failed"
+
+s.send("hello server")
+
+timeout = s.gettimeout()
+print timeout
+
+s.settimeout(2)
+
+timeout = s.gettimeout()
+print timeout
+
+buf = s.recv(1024)
+print "Received From Sercer : " + buf
+```
+
+保存为socket_client_improve.py，运行，看一下结果。                       
+![socket_client_improve.png](images/socket_client_improve.png)
+
 ####socket的其他功能函数
 1. socket.gethostname() 
 2. socket.gethostbyname(host) 
@@ -91,6 +166,10 @@ type有`SOCK_STREAM`数据流套接字，`SOCK_DGRAM`数据报套接字，`SOCK_
 4. socket.getservbyname(servicename[,protocolname]) 
 5. socket.getprotobyname(name) 
 6. socket.getservbyport(port[,protocolname])
+7. socket.getaddrinfo(host,port[,family])
+8. socket.setdefaulttimeout()
+9. socket.getdefaulttimeout()
+10. socket.ssl()
 
 ```python
 #coding=utf-8
@@ -124,19 +203,53 @@ print "25 port is : " + servivename
 
 servivename = socket.getservbyport(43)
 print "43 port is : " + servivename
+
+addrinfo = socket.getaddrinfo("www.baidu.com",None)
+for item in addrinfo:
+	print "www.baidu.com ip is : " + item[4][0]
 ```
 
 保存为socket_get.py，运行，看一下结果。                       
 ![socket_get](images/socket_get.png)                 
 
+####可复用的服务器端
+我们现在的服务器端虽然是可以监听多个客户端连接，但是如果有一个客户端已经连接上却长时间占据着不结束的话，就会阻塞后面客户端的连接，而如果客户端设定了连接超时时间的话，很容易就会丢失客户端的连接。            
 
+所以为了可复用的服务器端，我们首先想到可以用多线程，来避免客户端阻塞。
 
+```python
+#coding=utf-8
 
+import socket
+import thread 
 
+host = "127.0.0.1"
+port = 8081
 
+s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+s.bind((host,port))
+s.listen(5)
 
+def connect(socket):
+	while 1:
+		print "Received From client : " + resquest
+		socket.send("Hello client")
+		buf = socket.recv(1024)
+		while not buf:
+			break
+		print buf
 
+print "Server is running on port %s Press Ctrl-C to stop"%port
 
+while 1:
+	clientsock,clientaddr = s.accept()
+	print "Welcome from %s : %s"%(clientaddr[0],clientaddr[1])
+	resquest = clientsock.recv(1024)
+	thread.start_new_thread(connect ,(clientsock,))
 
+s.close()
+```
+
+保存为socket_server_thread.py，运行，现在就可以多路连接。                     
 
 

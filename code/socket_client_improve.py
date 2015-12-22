@@ -13,5 +13,13 @@ except:
 
 s.send("hello server")
 
+timeout = s.gettimeout()
+print timeout
+
+s.settimeout(2)
+
+timeout = s.gettimeout()
+print timeout
+
 buf = s.recv(1024)
 print "Received From Sercer : " + buf

@@ -17,3 +17,6 @@ while 1:
 	resquest = clientsock.recv(1024)
 	print "Received From client : " + resquest
 	clientsock.send("Hello client")
+	clientsock.close()
+
+s.close()
