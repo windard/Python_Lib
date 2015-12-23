@@ -8,7 +8,8 @@ s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 try:
 	s.connect((host,port))
 	print "Connect Successful"
-	response = s.recv(2048)
+	#s.sendall("Hello world")
+	response = s.recv()
 	print response
 except:
 	print "Your Connect Is Wrong"
