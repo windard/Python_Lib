@@ -116,4 +116,4 @@ GUI
 
 ##[Reference_link](content/reference_link.md)
 
-
+上面有些库是需要自己安装，而安装这些库一般都用pip比较快，在windows下安装pip可以通过先安装easy_install，再通过安装pip的办法。
