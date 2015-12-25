@@ -253,7 +253,7 @@ s.close()
 现在可以通过多个telnet来与服务器端相连接了，但是这里有一个新的问题，每一次当关闭服务器端之后，再次打开的时候就会报出端口已被占的错误。        
 ![socket_error.png](socket_error.png)                       
 
-我们可以通过可重用套接字来解决这个问题。           
+因为在你的socket端口在关闭之后系统会自动为你保存一段时间，防止你再次需要时被其他服务占用，那么我们可以通过可重用套接字来解决这个问题。           
 
 ```python
 #coding=utf-8
@@ -298,4 +298,117 @@ s.close()
 保存为socket_server_sockopt.py，运行，看一下结果。               
 ![socket_server_sockopt.png](images/socket_server_sockopt.png)
 
+####socket聊天服务器
+
+聊天服务器用到了一个新的库，select,用于动态的监听所有的io网络，并返回可用的io。这里涉及到一些同步异步，阻塞非阻塞的内容，在我的另一片博客里有详细的讲解。
+
+```python
+#coding=utf-8
+
+import sys
+import socket
+import select
+import argparse
+
+def runserver(host,port):
+	s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+	s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+	s.bind((host,port))
+	s.listen(10)
+
+	print "Server is running ... "
+
+	inputs = [0,s]
+	outputs = []
+	clients = {}
+
+	while True:
+		try:
+			readable,writeable,exceptional = select.select(inputs,outputs,[])
+			for sock in readable:
+				if sock == s:
+					clientsock,clientaddr = sock.accept()
+					if clientsock.recv(1024).endswith("NAME:"):
+						clientname = str(clientaddr)
+					else:
+						clientname =clientsock.recv(1024).split('NAME:')[1]
+					clientsock.sendall("Welcome " + clientname + "\n")
+					print clientname + " Come In"
+					clients[clientsock] = (clientname,clientaddr,clientsock)
+					inputs.append(clientsock)
+					for output in outputs:
+						output.sendall("Welcome " + clientname + " Come In \n")
+					outputs.append(clientsock)
+				elif sock == 0:
+					message = sys.stdin.readline()
+					if message.startswith("QUIT"):
+						print "Server is close ... "
+						sys.exit(0)
+					for output in outputs:
+						output.sendall("Server : " + message)			
+				else:
+					data = sock.recv(1024)
+					if data:
+						if data.startswith("SECRECT"):
+							print "SECRECT " + clients[sock][0] + " : " + data,
+							output = data.split(" ")[1]
+							message = data.split(" ")[2]```
+
+```
+
+保存为socket_chatroom_server.py，运行，看一下结果。                          
+
+```python
+#coding=utf-8
+
+import sys
+import socket
+import select
+import argparse
+
+def runclient(host,port,name):
+	s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+	s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+	s.connect((host,port))
+	if name:
+		s.sendall("NAME:"+name)
+	else:
+		s.sendall("NAME:")
+	print s.recv(1024),
+
+	while True:
+		try:
+			readable,writeable,exceptional = select.select([0,s],[],[])
+			for sock in readable:
+				if sock == s:
+					data = sock.recv(1024)
+					if not data:
+						print "Server is closed"
+						sys.exit(0)
+					sys.stdout.write(data)
+					sys.stdout.flush()
+				else:
+					data = sys.stdin.readline()
+					if data.startswith("QUIT"):
+						print "Client is closed"
+						sys.exit(0)
+					s.sendall(data)
+		except KeyboardInterrupt:
+			print "Client is closed"
+			break
+
+if __name__ == '__main__':
+	parser = argparse.ArgumentParser(description="socket chatroom")
+	parser.add_argument("--host",help="input your host",action="store",default="127.0.0.1",dest="host")
+	parser.add_argument("--port",help="input your port",action="store",default=8888,type=int,dest="port")
+	parser.add_argument("--name",help="input your name",action="store",default=None,dest="name")
+	args = parser.parse_args()
+	host = args.host
+	port = args.port
+	name = args.name
+	runclient(host,port,name)
+
+```
+
+保存为socket_chatroom_client.py，运行，看一下结果。                           
 

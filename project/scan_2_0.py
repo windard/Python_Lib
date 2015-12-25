@@ -45,7 +45,7 @@ def thread_demo(host,port_start,port_end,show,thread):
 		threads[i].join()
 
 if __name__ == '__main__':  
-	parser = argparse.ArgumentParser(description="input your host and port")
+	parser = argparse.ArgumentParser(description="Scan host and port")
 	parser.add_argument("-o","--on",help="show close",action="store_true")
 	parser.add_argument("--host",help="chose host",action="store",default='127.0.0.1',dest="host")
 	parser.add_argument("--host_start",help="chose host_start",action="store",default='127.0.0.1',dest="host_start")
