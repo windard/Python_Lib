@@ -15,9 +15,11 @@ def connect(clientsock,clientaddr):
 	clientsock.send("Hello client")
 	while 1:
 		resquest = clientsock.recv(1024)		
-		while not len(resquest):
+		if resquest.lower().startswith('q'):
 			break
 		print "Received From No.%s client : "%clientaddr[1] + resquest,
+		message = raw_input('\n')
+		clientsock.sendall(message)
 
 print "Server is running on port %s Press Ctrl-C to stop"%port
 

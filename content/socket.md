@@ -50,7 +50,7 @@ print "Received From Sercer : " + buf
 
 保存为socket_client.py，运行，看一下结果。                   
 ![socket_client.jpg](images/socket_client.png)                 
-可以看到，我先是在本机开了一个ftp服务器，用socket可以成功连接上去，然后就是连接百度的http服务器，看到也连接成功了，最后一个是连接后面的socket服务器，同样的返回了服务器的回复。可是为什么百度的http服务器没有回复呢？因为我们向它发送的请求不对,如果想要得到返回数据，我们需要发送一个GET请求,`GET /HTTP/1.1\r\n\r\n`。              
+可以看到，我先是在本机开了一个ftp服务器，用socket可以成功连接上去，然后就是连接百度的http服务器，看到也连接成功了，最后一个是连接后面的socket服务器，同样的返回了服务器的回复。可是为什么百度的http服务器没有回复呢？因为我们向它发送的请求不对,如果想要得到返回数据，我们需要发送一个GET请求,`GET / \HTTP1.1\r\n\r\n`。              
 
 ####简单的TCP协议的网络服务器
 
@@ -103,7 +103,7 @@ host和port构成一个元组。
 
 2. 将socket绑定到一个指定端口上
 `socketobject.bind((host,port))`
-host和port构成一个元组，如果host为`0.0.0.0`或者为空时表示其可以接受所有ip的连接。                 
+host和port构成一个元组，如果host为`0.0.0.0`或者为空时表示其可以接受所有ip的连接,如果port为0,即表示动态的选择一个端口。                 
 
 3. 设置socket监听数目
 `socketobject.listen(number)`number大于0,如果同时有多个客户端连接，即进入队列，若队列已满，则拒绝进入。                  
@@ -213,9 +213,9 @@ for item in addrinfo:
 ![socket_get](images/socket_get.png)                 
 
 ####可复用的服务器端
-我们现在的服务器端虽然是可以监听多个客户端连接，但是如果有一个客户端已经连接上却长时间占据着不结束的话，就会阻塞后面客户端的连接，而如果客户端设定了连接超时时间的话，很容易就会丢失客户端的连接。            
+我们现在的服务器端虽然是可以监听多个客户端连接，但是如果有一个客户端已经连接上却长时间占据着不结束的话，就会阻塞后面客户端的连接。            
 
-所以为了可复用的服务器端，我们首先想到可以用多线程，来避免客户端阻塞。
+所以为了可复用的服务器端，我们想到可以用多线程，来避免客户端阻塞。
 
 ```python
 #coding=utf-8
@@ -230,26 +230,72 @@ s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 s.bind((host,port))
 s.listen(5)
 
-def connect(socket):
+def connect(clientsock,clientaddr):
+	print "Welcome from %s : %s"%(clientaddr[0],clientaddr[1])
+	clientsock.send("Hello client \n")
 	while 1:
-		print "Received From client : " + resquest
-		socket.send("Hello client")
-		buf = socket.recv(1024)
-		while not buf:
+		resquest = clientsock.recv(1024)		
+		while not len(resquest):
 			break
-		print buf
+		print "Received From No.%s client : "%clientaddr[1] + resquest,
 
 print "Server is running on port %s Press Ctrl-C to stop"%port
 
 while 1:
 	clientsock,clientaddr = s.accept()
-	print "Welcome from %s : %s"%(clientaddr[0],clientaddr[1])
-	resquest = clientsock.recv(1024)
-	thread.start_new_thread(connect ,(clientsock,))
+	thread.start_new_thread(connect ,(clientsock,clientaddr))
 
 s.close()
 ```
 
-保存为socket_server_thread.py，运行，现在就可以多路连接。                     
+保存为socket_server_thread.py，运行，看一下结果。                     
+
+现在可以通过多个telnet来与服务器端相连接了，但是这里有一个新的问题，每一次当关闭服务器端之后，再次打开的时候就会报出端口已被占的错误。        
+![socket_error.png](socket_error.png)                       
+
+我们可以通过可重用套接字来解决这个问题。           
+
+```python
+#coding=utf-8
+
+import socket
+import thread 
+
+def connect(clientsock,clientaddr):
+	print "Welcome from %s : %s"%(clientaddr[0],clientaddr[1])
+	clientsock.send("Hello client \n")
+	while 1:
+		resquest = clientsock.recv(1024)		
+		while not len(resquest):
+			break
+		print "Received From No.%s client : "%clientaddr[1] + resquest,
+
+
+host = "127.0.0.1"
+port = 8081
+
+s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+
+old_state = s.getsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR)
+print "Old State is : " + str(old_state)
+
+s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+new_state = s.getsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR)
+print "New State is : " + str(new_state)
+
+s.bind((host,port))
+s.listen(5)
+
+print "Server is running on port %s Press Ctrl-C to stop"%port
+
+while 1:
+	clientsock,clientaddr = s.accept()
+	thread.start_new_thread(connect ,(clientsock,clientaddr))
+
+s.close()
+```
+
+保存为socket_server_sockopt.py，运行，看一下结果。               
+![socket_server_sockopt.png](images/socket_server_sockopt.png)
 
 

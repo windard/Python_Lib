@@ -33,3 +33,4 @@ print "43 port is : " + servivename
 addrinfo = socket.getaddrinfo("www.baidu.com",None)
 for item in addrinfo:
 	print "www.baidu.com ip is : " + item[4][0]
+

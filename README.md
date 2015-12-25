@@ -91,7 +91,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 ##Tkinter
 GUI
 
-##[Thread](content/Thread.md)                   
+##[Thread](content/thread.md)                   
 
 ##[threading](content/threading.md)
 
@@ -103,7 +103,9 @@ GUI
 
 ##logging
 
-##socket
+##[socket](content/socket.md)
+
+##[commands](content/commands.md)
 
 ##OpelSSL
 

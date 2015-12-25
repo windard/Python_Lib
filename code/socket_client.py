@@ -14,4 +14,4 @@ except:
 s.send("hello server")
 
 buf = s.recv(1024)
-print "Received From Sercer : " + buf
+print "Received From Server : " + buf
