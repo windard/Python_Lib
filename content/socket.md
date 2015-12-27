@@ -328,10 +328,11 @@ def runserver(host,port):
 			for sock in readable:
 				if sock == s:
 					clientsock,clientaddr = sock.accept()
-					if clientsock.recv(1024).endswith("NAME:"):
+					recvname = clientsock.recv(1024)
+					if recvname.endswith("NAME:"):
 						clientname = str(clientaddr)
 					else:
-						clientname =clientsock.recv(1024).split('NAME:')[1]
+						clientname = recvname.split('NAME:')[1]
 					clientsock.sendall("Welcome " + clientname + "\n")
 					print clientname + " Come In"
 					clients[clientsock] = (clientname,clientaddr,clientsock)
@@ -352,28 +353,38 @@ def runserver(host,port):
 						if data.startswith("SECRECT"):
 							print "SECRECT " + clients[sock][0] + " : " + data,
 							output = data.split(" ")[1]
-							message = data.split(" ")[2]```
+							message = data.split(" ")[2]
+							for client in clients.values():
+								if client[0] == output:
+									client[2].sendall("SECRECT " + clients[sock][0] + " : " + message)
+						else:
+							print clients[sock][0] + " : " + data,
+							for output in outputs:
+								if output != sock:
+									output.sendall(clients[sock][0] + " : " + data)
+					else:
+						name = clients[sock][0]
+						print name+" leaved "
+						for output in outputs:
+							output.sendall(name+" leaved \n")
+						inputs.remove(sock)
+						outputs.remove(sock)
+						del clients[sock]
 
-```
 
-保存为socket_chatroom_server.py，运行，看一下结果。                          
+		except KeyboardInterrupt:
+			print "Server is close ... "
+			break
 
-```python
-#coding=utf-8
-
-import sys
-import socket
-import select
-import argparse
-
-def runclient(host,port,name):
+def runclient(host,port,name=None):
 	s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 	s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
 	s.connect((host,port))
-	if name:
+	if name!=None:
 		s.sendall("NAME:"+name)
 	else:
 		s.sendall("NAME:")
+
 	print s.recv(1024),
 
 	while True:
@@ -399,16 +410,23 @@ def runclient(host,port,name):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description="socket chatroom")
+	parser.add_argument("--type",help="chose the type",action="store",default="client",dest="type")
 	parser.add_argument("--host",help="input your host",action="store",default="127.0.0.1",dest="host")
 	parser.add_argument("--port",help="input your port",action="store",default=8888,type=int,dest="port")
 	parser.add_argument("--name",help="input your name",action="store",default=None,dest="name")
 	args = parser.parse_args()
+	chattype = args.type
 	host = args.host
 	port = args.port
 	name = args.name
-	runclient(host,port,name)
+	if chattype.startswith("server"):
+		runserver(host,port)
+	elif chattype.startswith("client"):
+		runclient(host,port,name)
+	else:
+		print "your input is wrong"
 
 ```
 
-保存为socket_chatroom_client.py，运行，看一下结果。                           
+保存为socket_chatroom.py，运行，看一下结果。                           
 

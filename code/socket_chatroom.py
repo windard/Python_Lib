@@ -23,10 +23,11 @@ def runserver(host,port):
 			for sock in readable:
 				if sock == s:
 					clientsock,clientaddr = sock.accept()
-					if clientsock.recv(1024).endswith("NAME:"):
+					recvname = clientsock.recv(1024)
+					if recvname.endswith("NAME:"):
 						clientname = str(clientaddr)
 					else:
-						clientname =clientsock.recv(1024).split('NAME:')[1]
+						clientname = recvname.split('NAME:')[1]
 					clientsock.sendall("Welcome " + clientname + "\n")
 					print clientname + " Come In"
 					clients[clientsock] = (clientname,clientaddr,clientsock)
@@ -70,32 +71,53 @@ def runserver(host,port):
 			print "Server is close ... "
 			break
 
+def runclient(host,port,name=None):
+	s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+	s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+	s.connect((host,port))
+	if name!=None:
+		s.sendall("NAME:"+name)
+	else:
+		s.sendall("NAME:")
+
+	print s.recv(1024),
+
+	while True:
+		try:
+			readable,writeable,exceptional = select.select([0,s],[],[])
+			for sock in readable:
+				if sock == s:
+					data = sock.recv(1024)
+					if not data:
+						print "Server is closed"
+						sys.exit(0)
+					sys.stdout.write(data)
+					sys.stdout.flush()
+				else:
+					data = sys.stdin.readline()
+					if data.startswith("QUIT"):
+						print "Client is closed"
+						sys.exit(0)
+					s.sendall(data)
+		except KeyboardInterrupt:
+			print "Client is closed"
+			break
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description="socket chatroom")
+	parser.add_argument("--type",help="chose the type",action="store",default="client",dest="type")
 	parser.add_argument("--host",help="input your host",action="store",default="127.0.0.1",dest="host")
 	parser.add_argument("--port",help="input your port",action="store",default=8888,type=int,dest="port")
+	parser.add_argument("--name",help="input your name",action="store",default=None,dest="name")
 	args = parser.parse_args()
+	chattype = args.type
 	host = args.host
 	port = args.port
-	runserver(host,port)
+	name = args.name
+	if chattype.startswith("server"):
+		runserver(host,port)
+	elif chattype.startswith("client"):
+		runclient(host,port,name)
+	else:
+		print "your input is wrong"
 
-
-
-http://blog.csdn.net/jeanwaljean/article/details/5982292
-http://blog.csdn.net/historyasamirror/article/details/5778378
-http://www.cnblogs.com/Anker/p/3254269.html
-http://www.oschina.net/translate/the-future-of-asynchronous-io-in-python?cmp&p=2
-http://www.pythontab.com/html/2013/pythonhexinbiancheng_0325/318.html
-http://blog.chinaunix.net/uid-429659-id-5095161.html
-http://news.tuxi.com.cn/kf/article/jahtt.htm
-http://www.haiyun.me/archives/1056.html
-http://wiki.jikexueyuan.com/project/python-actual-combat/tutorial-23.html
-http://www.linuxidc.com/Linux/2014-02/97152.htm
-http://www.cnblogs.com/coser/archive/2011/12/17/2291160.html
-http://www.cnblogs.com/coser/archive/2012/01/06/2315216.html
-http://www.cnblogs.com/IPrograming/p/Python-socket.html
-http://www.centoscn.com/python/2013/0817/1322.html
-http://www.cnblogs.com/GarfieldTom/archive/2012/12/16/2820143.html
-https://hit-alibaba.github.io/interview/basic/network/Socket-Programming-Basic.html
-http://goodcandle.cnblogs.com/archive/2005/12/10/294652.aspx
-http://www.liaoxuefeng.com/wiki/001374738125095c955c1e6d8bb493182103fac9270762a000/001386832511628f1fe2c65534a46aa86b8e654b6d3567c000
