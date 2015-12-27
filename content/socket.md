@@ -24,6 +24,11 @@ socket对TCP和UDP都支持。
 
 socket抽象层是在TCP与UDP协议的运输层之上的与应用层连接的抽象层，也就是说socket能够通过使用TCP协议或者UDP协议来实现很多相关的应用性协议功能的，比如说http，https，FTP，smtp，DNS等。                             
 
+因为socket起源于Unix，Unix/Linux的基本原则之一就是`一切皆文件`，都可以用`打开(open )-->读写(read/write)-->关闭(close)`模式来进行操作。            
+
+所以socket的使用是非常简单的，如下图所示。                 
+![socket _connection.jpg](images/socket _connection.jpg)                    
+
 网络通信之间都是至少需要一个服务器端和一个客户端的，我们的socket就先从简单的客户端开始。    
 
 ####简单的TCP协议的网络客户端              
@@ -81,45 +86,49 @@ s.close()
 保存为socket_server.py，运行，看一下结果。                  
 ![socket_server](images/socket_server.png)                         
 ![socket_server_client](images/socket_server_client.png)                         
+![socket_server_2.jpg](images/socket_server_2.jpg)
+![socket_server_client_2.jpg](images/socket_server_client_2.jpg)
 
 以上就是我们的socket的一个简单的使用了，接下来我们详细的讲解一下socket客户端和服务器端的相应的功能。                         
 
 ####建立一个socket客户端
-1. 创建socket对象                           
-`socketobject = socket.socket(family[,type])`                 
-family有`AF_INET`包括internet地址，`AF_INET6`包括ipv6的internet地址，`AF_UNIX`同一台机器上。                    
-type有`SOCK_STREAM`数据流套接字，`SOCK_DGRAM`数据报套接字，`SOCK_RAW`原始套接字。                  
+1. 创建socket对象                                     
+`socketobject = socket.socket(family=AF_INET[,type=SOCK_STREAM[,protocal=0]])`                 
+family，协议族，有`AF_INET`包括internet地址，`AF_INET6`包括ipv6的internet地址，`AF_UNIX`同一台机器上,family默认为`AF_INET`。                             
+type，类型，有`SOCK_STREAM`数据流套接字，`SOCK_DGRAM`数据报套接字，`SOCK_RAW`原始套接字,type默认为`SOCK_STREAM`。                             
+protocal，指定协议，有`IPPROTO_TCP`TCP协议，`IPPTOTO_UDP`UDP协议，`IPPROTO_SCTP`SCTP协议,`IPPROTO_TIPC`TIPC协议，默认为0，即自动选择type类型对应的默认协议。                   
 
-2. 根据主机和端口找到socket并连接
-`socketobject.connect((host,port))`
+2. 根据主机和端口找到socket并连接                               
+`socketobject.connect((host,port))`                           
 host和port构成一个元组。                      
 
-3. 发送和接收数据
+3. 发送和接收数据                                  
 `socketobject.recv()`和`socketobject.send()`接收和发送数据。                   
 
-####建立一个socket服务器
-1. 创建一个socket对象
-`socketcobject = socket.socket(family[[,type])`
+####建立一个socket服务器 
+1. 创建一个socket对象                            
+`socketcobject = socket.socket(family[[,type])`                          
 
-2. 将socket绑定到一个指定端口上
-`socketobject.bind((host,port))`
+2. 将socket绑定到一个指定端口上                                
+`socketobject.bind((host,port))`                                 
 host和port构成一个元组，如果host为`0.0.0.0`或者为空时表示其可以接受所有ip的连接,如果port为0,即表示动态的选择一个端口。                 
 
-3. 设置socket监听数目
-`socketobject.listen(number)`number大于0,如果同时有多个客户端连接，即进入队列，若队列已满，则拒绝进入。                  
+3. 设置socket监听数目并开始监听                       
+`socketobject.listen(number)`                                 number大于0,如果同时有多个客户端连接，即进入队列，若队列已满，则拒绝进入。                   
 
-4. 连接客户端
-`client = socketobject.accept()`client是一个socket对象和socket信息的元组。
+4. 连接客户端                             
+`client = socketobject.accept()`                               
+client是一个socket对象和socket信息的元组。                          
 
-5. 发送和接收数据
+5. 发送和接收数据                                              
 `clientobject.recv()`和`clientobject.send()`接收和发送数据。                         
-发送数据还可以用`clientobject.sendall()`
+发送数据还可以用`clientobject.sendall()`                       
 
-6. 关闭客户端连接
-`clientobject.close()`
+6. 关闭客户端连接                         
+`clientobject.close()`                             
 
-7. 关闭socket服务器端
-`socketobject.close()`
+7. 关闭socket服务器端                           
+`socketobject.close()`                         
 
 ####socketobject的其他函数
 1. socketobject.settimeout() 
@@ -251,7 +260,7 @@ s.close()
 保存为socket_server_thread.py，运行，看一下结果。                     
 
 现在可以通过多个telnet来与服务器端相连接了，但是这里有一个新的问题，每一次当关闭服务器端之后，再次打开的时候就会报出端口已被占的错误。        
-![socket_error.png](socket_error.png)                       
+![socket_error.png](images/socket_error.png)                       
 
 因为在你的socket端口在关闭之后系统会自动为你保存一段时间，防止你再次需要时被其他服务占用，那么我们可以通过可重用套接字来解决这个问题。           
 
