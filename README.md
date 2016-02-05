@@ -115,6 +115,8 @@ GUI
 
 ##[py2exe](content/py2exe.md)
 
+##[PyInstaller](content/PyInstaller.md)
+
 ##[Other_thing](content/other_thing.md)
 
 ##[Reference_link](content/reference_link.md)
