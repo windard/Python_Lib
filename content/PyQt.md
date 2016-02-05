@@ -9,7 +9,7 @@
 ####Ubuntu
 
 ```bash
-sudo apt-get install python-qt4
+sudo apt-get install libxext6 libxext-dev libqt4-dev libqt4-gui libqt4-sql qt4-dev-tools qt4-doc qt4-designer qt4-qtconfig "python-qt4-*" python-qt4
 ```
 
 ###测试
@@ -39,6 +39,6 @@ sys.exit(app.exec_())
 
 ###更多
 
-[这里](http://zetcode.com/gui/pyqt4/)有一个比较好的PyQt4的教程，或者是PyQt5在[这里](http://zetcode.com/gui/pyqt5/)。
+[这里](http://zetcode.com/gui/pyqt4/)有一个比较好的PyQt4的教程,或者[这里](http://www.qaulau.com/books/PyQt4_Tutorial/index.html)是中文版，或者是PyQt5在[这里](http://zetcode.com/gui/pyqt5/)。
 
 [这里](https://github.com/1106911190/PyQt_2048)是我用Python2.7 和PyQt4写的2048小游戏
