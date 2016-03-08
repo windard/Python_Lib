@@ -48,6 +48,16 @@ except MySQLdb.Error,e:
 ![mysqldb_first](images/mysqldb_first.jpg)
 可以看到之前，在表单里并没有数据，在执行插入了之后有了一行数据。
 注意，在执行插入之后一定要commmit()才能实行有效操作，不然不能写入数据库。
+
+在这里注意一下，如果在你的数据中使用了中文的话，需要加入一下四行代码，来确定中文的正常读写。
+
+```python
+conn.set_character_set('utf8')
+cur.execute('SET NAMES utf8;')
+cur.execute('SET CHARACTER SET utf8;')
+cur.execute('SET character_set_connection=utf8;')
+```
+
 再来看一个完整的增改删查的代码。
 ```python
 #coding=utf-8
