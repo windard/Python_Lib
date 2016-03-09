@@ -2,11 +2,11 @@
 
 1. PortScan             
 端口扫描器                      
-项目地址：[PortScan](https://github.com/1106911190/Port_Scan)           
+项目地址：[PortScan](https://github.com/windard/Port_Scan)           
 
 2. MailClient            
 邮箱客户端，可以进行收发邮件的功能                
-项目地址：[MailClient](https://github.com/1106911190/MailClient)          
+项目地址：[MailClient](https://github.com/windard/MailClient)          
 
 3. FileList             
 文件扫描器，可以查看相关目录下的文件和文件夹的情况。              
@@ -57,7 +57,11 @@
 **Version:1.1**                  
 增加对AES，DES，DES3，RSA加密算法的支持。
 
-6. SocketChatroom        
+6. 2048&&speedSnake
+2048和贪吃蛇小游戏                           
+项目地址：[PyQt_2048](https://github.com/windard/PyQt_2048)           
+
+7. SocketChatroom        
 内网聊天工具，可以在虚拟机或是在内网内实现简单的聊天室功能          
 **Version:1.0**              
 参数如下：          
@@ -66,7 +70,7 @@
 3. `--port` 可选参数，服务器端口号，默认为`8888`           
 4. `--name` 可选参数，聊天时使用的姓名                    
 
-7. RSSReader
+8. RSSReader
 RSS阅读器，在每天早晚检查指定网站是否有更新，如果有即将最新更新以邮件形式发给我                     
 需配合脚本与crontab使用                    
 脚本如下：

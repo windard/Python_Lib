@@ -1,4 +1,5 @@
 #coding=utf-8
+
 import smtplib
 import MySQLdb
 import feedparser
@@ -13,7 +14,10 @@ password = 'XXXXXX'
 
 def checkMySQL(conn,entry):
 	cur = conn.cursor()
-	cur.execute("SELECT * FROM homework WHERE title=%s AND published=%s",(entry.title,entry.published))
+	cur.execute('SET NAMES utf8;')
+	cur.execute('SET CHARACTER SET utf8;')
+	cur.execute('SET character_set_connection=utf8;')		
+	cur.execute("SELECT * FROM homework WHERE title=%s AND content=%s",(entry.title,entry.description))
 	data = cur.fetchone()
 	cur.close()
 	if data == None:
@@ -23,6 +27,9 @@ def checkMySQL(conn,entry):
 
 def writeMySQL(conn,entry):
 	cur = conn.cursor()
+	cur.execute('SET NAMES utf8;')
+	cur.execute('SET CHARACTER SET utf8;')
+	cur.execute('SET character_set_connection=utf8;')			
 	cur.execute("INSERT INTO homework(title,link,published,content) VALUES(%s,%s,%s,%s)",(entry.title,entry.link,entry.published,entry.description))
 	conn.commit()
 	cur.close()
@@ -53,7 +60,7 @@ if __name__ == '__main__':
 					pass
 				else:
 					writeMySQL(conn,entry)
-					writeDown(log,str(entry.title)+" is new")
+					writeDown(log,"One Article is new")
 					content +="<a href =\""+entry.link+"\" >"+"<h1>"+entry.title+"</h1>"+"</a>"
 					content += entry.description
 					content += "<br />"			
