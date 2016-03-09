@@ -56,3 +56,31 @@
 
 **Version:1.1**                  
 增加对AES，DES，DES3，RSA加密算法的支持。
+
+6. SocketChatroom        
+内网聊天工具，可以在虚拟机或是在内网内实现简单的聊天室功能          
+**Version:1.0**              
+参数如下：          
+1. `--type` 可选参数，实现的功能，默认为`client`，取值范围`server|client`          
+2. `--host` 可选参数，服务器ip，默认为`127.0.0.1`           
+3. `--port` 可选参数，服务器端口号，默认为`8888`           
+4. `--name` 可选参数，聊天时使用的姓名                    
+
+7. RSSReader
+RSS阅读器，在每天早晚检查指定网站是否有更新，如果有即将最新更新以邮件形式发给我                     
+需配合脚本与crontab使用                    
+脚本如下：
+```bash
+echo "Starting Script">>/home/windard/Document/feed/feed.log
+sudo service mysql start
+echo "Starting MySQL">>/home/windard/Document/feed/feed.log
+python /home/windard/Document/feed/feed.py
+sudo service mysql stop
+echo "Ending MySQL">>/home/windard/Document/feed/feed.log
+echo "Ending Script">>/home/windard/Document/feed/feed.log
+```
+开启crontab                 
+`sudo vim /ect/crontab`         
+在最后一行加入                
+`0 9,21    * * *     root    bash /home/windard/Document/feed/init.sh`
+

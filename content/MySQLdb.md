@@ -7,7 +7,7 @@
 import MySQLdb
 
 try:
-	conn = MySQLdb.connect(host='localhost',user='root',passwd='',db='test',port=3406)
+	conn = MySQLdb.connect(host='localhost',user='root',passwd='',db='test',port=3406,charser='utf8')
 	print "Connect Successful !"
 	conn.close()
 except MySQLdb.Error,e:
