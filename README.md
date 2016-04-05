@@ -89,7 +89,6 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 ##itertools
 
 ##Tkinter
-GUI
 
 ##[thread](content/thread.md)                   
 
