@@ -32,7 +32,7 @@ def sendInfo():
 	while True:
 		email_host = raw_input("Please Input Your Email_host:\n")
 		if email_host.lower().startswith("qq"):
-			email_host = "smtp.qq.com"
+			email_host = "smtp.qq.com"	
 		elif email_host.lower().startswith("163"):
 			email_host = "smtp.163.com"
 		else:

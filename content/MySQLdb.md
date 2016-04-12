@@ -45,7 +45,7 @@ except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 ```
 保存为mysqldb_first.py,运行，看一下结果。
-![mysqldb_first](images/mysqldb_first.jpg)
+![mysqldb_first](images/mysqldb_first.jpg)                   
 可以看到之前，在表单里并没有数据，在执行插入了之后有了一行数据。
 注意，在执行插入之后一定要commmit()才能实行有效操作，不然不能写入数据库。
 
