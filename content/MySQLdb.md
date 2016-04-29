@@ -147,7 +147,7 @@ except MySQLdb.Error,e:
 
 ```
 保存为mysqldb_third.py，运行，看一下结果。
-![mysqldb_third](images/mysqldb_third.jpg)
+![mysqldb_third](images/mysqldb_third.jpg)          
 在这里连接数据库的时候也加上了数据库使用的编码格式，utf8，在使用的时候可以避免乱码的出现。
 ```python
 #coding=utf-8
@@ -182,7 +182,7 @@ except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 ```
 保存为mysqldb_error.py，运行，看一下结果。
-![mysqldb_error](images/mysqldb_error.jpg)
+![mysqldb_error](images/mysqldb_error.jpg)               
 这个代码演示了发生错误时候回滚的操作，rollback()能够把游标指针指到错误发生之前的位置。
 还有fetchall()即一次取得全部的数据。
 还有其他几个功能类似的函数fetchone()，一次取得一个数据，fetchmany(num),一次取得num个数据。
