@@ -1,6 +1,6 @@
 #coding=utf-8
 
-def Basedecode(data,method,flag):
+def Basedecode(data,method="base64",flag=True):
     """
     decode Base encoded data
     usage: String Method True|False
@@ -20,7 +20,7 @@ def Basedecode(data,method,flag):
     except Exception, e:
         return data
 
-def Caesardecode(data,flag):
+def Caesardecode(data,flag=True):
     """
     decode Caesar encode data
     usage : String True:False
@@ -50,10 +50,10 @@ def Caesardecode(data,flag):
         return results
 
 if __name__ == '__main__':
-    # ans = Basedecode("Vm0wd1QyVkhVWGhVYmxKV1YwZDRXRmxVUm5kVlJscHpXa2M1VjFKdGVGWlZNbmhQWVd4YWMxZHViRmROYWxaeVdWZDRZV014WkhGU2JIQk9VbTVDZVZkV1pEUlRNazE0Vkc1T2FWSnVRazlWYWtwdlZWWmtWMWt6YUZSTlZUVkpWbTEwYzJGV1NuVlJiR2hYWWxSV1JGcFdXbXRXTVZwMFpFWlNUbFp1UWpaV2Fra3hVakZaZVZOcmJGSmlWR3hXVm01d1IyUldjRmhsUjBacVZtczFNVmt3WkRSVk1ERkZWbXBXVjFKc2NGaFdha3BIVTBaYWRWSnNTbGRTTTAwMQ==","base64",True)
+    # ans = Basedecode("Vm0wd1QyVkhVWGhVYmxKV1YwZDRXRmxVUm5kVlJscHpXa2M1VjFKdGVGWlZNbmhQWVd4YWMxZHViRmROYWxaeVdWZDRZV014WkhGU2JIQk9VbTVDZVZkV1pEUlRNazE0Vkc1T2FWSnVRazlWYWtwdlZWWmtWMWt6YUZSTlZUVkpWbTEwYzJGV1NuVlJiR2hYWWxSV1JGcFdXbXRXTVZwMFpFWlNUbFp1UWpaV2Fra3hVakZaZVZOcmJGSmlWR3hXVm01d1IyUldjRmhsUjBacVZtczFNVmt3WkRSVk1ERkZWbXBXVjFKc2NGaFdha3BIVTBaYWRWSnNTbGRTTTAwMQ==")
     # print "Result Is %s"%ans
 
-    # ans = Caesardecode("Jr1p0zr2VfPp",False)
+    # ans = Caesardecode("Jr1p0zr2VfPp")
     # for i in ans:
     #     if "we" in i or "We" in i:
     #         print i
