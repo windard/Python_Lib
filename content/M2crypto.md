@@ -5,7 +5,7 @@
 ```python
 #coding=utf-8
 
-from M2Crypto import RSA
+from M2Crypto import RSA,BIO
 
 rsa = RSA.gen_key(1024, 3, lambda *agr:None)
 pub_bio = BIO.MemoryBuffer()
@@ -19,8 +19,8 @@ priv_key = RSA.load_key_bio(priv_bio)
 
 message = 'This is message'
 
-encrypted = pub_key.public_encrypt(message, RSA.pkcs1_padding)
-decrypted = priv_key.private_decrypt(encrypted, RSA.pkcs1_padding)
+encrypted = pub_key.public_encrypt(message, RSA.pkcs1_padding).encode("base64")
+decrypted = priv_key.private_decrypt(encrypted.decode("base64"), RSA.pkcs1_padding)
 
 print encrypted
 print decrypted
@@ -61,7 +61,7 @@ def Decrypt(data):
   buf = cipher.update(data)
   buf = buf + cipher.final()
   del cipher
-  return buf 
+  return buf
 
 print Encrypt("This is a message")
 ```
@@ -73,13 +73,13 @@ print Encrypt("This is a message")
 
 from M2Crypto.EVP import MessageDigest
 
-def md5(buf): 
-	b = MessageDigest('md5') 
-	b.update(buf) 
-	b.update('888') 
-	c = b.digest() 
-	s = '' 
-	for i in c: s = s + '%02x' % ord(i) 
+def md5(buf):
+	b = MessageDigest('md5')
+	b.update(buf)
+	b.update('888')
+	c = b.digest()
+	s = ''
+	for i in c: s = s + '%02x' % ord(i)
 	return s
 
 print md5("thisismessage")

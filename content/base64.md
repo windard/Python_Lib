@@ -44,25 +44,25 @@ print new_decode
 ```
 保存为base64_encode.py，运行，看一下结果。
 ![base64_encode.jpg](images/base64_encode.jpg)
-可以看出来，效果是与base64模块解码编码一样的结果。
+可以看出来，效果是与base64模块解码编码一样的结果,但是用这个方法在使用的时候会自动在行尾加一个换行符\n，而且每76个字符就会自动加上一个换行符\n，虽然这是RFC国际标准，但是总会让人感觉不太好。
 >decode标准语法：str.decode(encoding='UTF-8',errors='strict')
 >- encoding -- 要使用的编码，如"UTF-8"。
 >- errors -- 设置不同错误的处理方案。默认为 'strict',意为编码错误引起一个UnicodeError。 其他可能得值有 'ignore', 'replace', 'xmlcharrefreplace', 'backslashreplace' 以及通过 codecs.register_error() 注册的任何值。
 - 各种转化
 ```python
-int(x [,base ])         #将x转换为一个整数  
-long(x [,base ])        #将x转换为一个长整数  
-float(x )               #将x转换到一个浮点数  
-complex(real [,imag ])  #创建一个复数  
-str(x )                 #将对象 x 转换为字符串  
-repr(x )                #将对象 x 转换为表达式字符串  
-eval(str )              #用来计算在字符串中的有效Python表达式,并返回一个对象  
-tuple(s )               #将序列 s 转换为一个元组  
-list(s )                #将序列 s 转换为一个列表  
-chr(x )                 #将一个整数转换为一个ASCII字符  
-unichr(x )              #将一个整数转换为Unicode字符  
-ord(x )                 #将一个ASCII字符转换为它的整数值  
-hex(x )                #将一个整数转换为一个十六进制字符串  
-oct(x )                 #将一个整数转换为一个八进制字符串  
+int(x [,base ])         #将x转换为一个整数
+long(x [,base ])        #将x转换为一个长整数
+float(x )               #将x转换到一个浮点数
+complex(real [,imag ])  #创建一个复数
+str(x )                 #将对象 x 转换为字符串
+repr(x )                #将对象 x 转换为表达式字符串
+eval(str )              #用来计算在字符串中的有效Python表达式,并返回一个对象
+tuple(s )               #将序列 s 转换为一个元组
+list(s )                #将序列 s 转换为一个列表
+chr(x )                 #将一个整数转换为一个ASCII字符
+unichr(x )              #将一个整数转换为Unicode字符
+ord(x )                 #将一个ASCII字符转换为它的整数值
+hex(x )                #将一个整数转换为一个十六进制字符串
+oct(x )                 #将一个整数转换为一个八进制字符串
 ```
 其中chr(),ord(),hex()等比较常用。

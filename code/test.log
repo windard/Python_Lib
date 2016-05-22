@@ -1,0 +1,25 @@
+endlesscode  Sun, 22 May 2016 22:40:51 ERROR    fuckgfw
+endlesscode  Sun, 22 May 2016 22:40:51 ERROR    fuckgov
+endlesscode  Sun, 22 May 2016 22:42:48 INFO     This is an info message
+endlesscode  Sun, 22 May 2016 22:42:48 WARNING  This is a warning message
+endlesscode  Sun, 22 May 2016 22:42:48 ERROR    This is an error message
+endlesscode  Sun, 22 May 2016 22:42:48 CRITICAL This is a critical error message
+Test Logging Sun, 22 May 2016 22:44:03 INFO     This is an info message 14
+Test Logging Sun, 22 May 2016 22:44:03 WARNING  This is a warning message 15
+Test Logging Sun, 22 May 2016 22:44:03 ERROR    This is an error message 16
+Test Logging Sun, 22 May 2016 22:44:03 CRITICAL This is a critical error message 18
+Test Logging Sun, 22 May 2016 22:44:13 INFO     This is an info message 14   
+Test Logging Sun, 22 May 2016 22:44:13 WARNING  This is a warning message 15   
+Test Logging Sun, 22 May 2016 22:44:13 ERROR    This is an error message 16   
+Test Logging Sun, 22 May 2016 22:44:13 CRITICAL This is a critical error message 18   
+Test Logging Sun, 22 May 2016 22:44:30 INFO     14    This is an info message
+Test Logging Sun, 22 May 2016 22:44:30 WARNING  15    This is a warning message
+Test Logging Sun, 22 May 2016 22:44:30 ERROR    16    This is an error message
+Test Logging Sun, 22 May 2016 22:44:30 CRITICAL 18    This is a critical error message
+Test Logging Sun, 22 May 2016 22:44:41 INFO     14   This is an info message
+Test Logging Sun, 22 May 2016 22:44:41 WARNING  15   This is a warning message
+Test Logging Sun, 22 May 2016 22:44:41 ERROR    16   This is an error message
+Test Logging Sun, 22 May 2016 22:44:41 CRITICAL 18   This is a critical error message
+Test Logging Sun, 22 May 2016 22:49:46 WARNING  22   This is a warning message
+Test Logging Sun, 22 May 2016 22:49:46 ERROR    23   This is an error message
+Test Logging Sun, 22 May 2016 22:49:46 CRITICAL 26   This is a critical error message

@@ -1,5 +1,7 @@
 ##文件的读写
+
 ####打开文件的方式
+
 f.open('file'[,'mode'])
 
 |模式		|描述				  			 |
@@ -13,6 +15,7 @@ f.open('file'[,'mode'])
 |b		|以二进制模式打开文件，而不是以文本模式。该模式只对Windows或Dos有效，类Unix的文件是用二进制模式进行操作的。|
 
 ####打开文件的方法
+
 |方法		|描述			|
 |------	  |---------		|
 |f.open() |打开文件				|
@@ -32,15 +35,16 @@ f.open('file'[,'mode'])
 |f.truncate([size])|把文件裁成规定的大小，默认的是裁到当前文件操作标记的位置。如果size比文件的大小还要大，依据系统的不同可能是不改变文件，也可能是用0把文件补到相应的大小，也可能是以一些随机的内容加上去。|
 
 
->按行读取文件的方法
->```python
->file = open("sample.txt")
+按行读取文件的方法
+
+```python
+file = open("sample.txt","r")
 while 1:
     line = file.readline()
     if not line:
         break
     pass # do something
->```
+```
 
 
 *2015-10-17*
