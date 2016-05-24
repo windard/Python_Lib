@@ -23,3 +23,8 @@ Test Logging Sun, 22 May 2016 22:44:41 CRITICAL 18   This is a critical error me
 Test Logging Sun, 22 May 2016 22:49:46 WARNING  22   This is a warning message
 Test Logging Sun, 22 May 2016 22:49:46 ERROR    23   This is an error message
 Test Logging Sun, 22 May 2016 22:49:46 CRITICAL 26   This is a critical error message
+Test Logging Tue, 24 May 2016 08:59:17 DEBUG    20   This is a debug message
+Test Logging Tue, 24 May 2016 08:59:17 INFO     21   This is an info message
+Test Logging Tue, 24 May 2016 08:59:17 WARNING  22   This is a warning message
+Test Logging Tue, 24 May 2016 08:59:17 ERROR    23   This is an error message
+Test Logging Tue, 24 May 2016 08:59:17 CRITICAL 26   This is a critical error message
