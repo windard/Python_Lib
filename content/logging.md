@@ -35,7 +35,7 @@ import sys
 import logging
 
 logger = logging.getLogger("Test Logging")
-formatter = logging.Formatter('%(name)-12s %(asctime)s %(levelname)-8s %(lineno)-4d %(message)s', '%a, %d %b %Y %H:%M:%S',)
+formatter = logging.Formatter('%(name)-12s %(asctime)s %(levelname)-8s %(lineno)-4d %(message)s', '%Y%b%d %a %H:%M:%S',)
 file_handler = logging.FileHandler("test.log")
 file_handler.setFormatter(formatter)
 file_handler.setLevel(logging.DEBUG)

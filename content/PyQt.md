@@ -20,7 +20,7 @@ sudo apt-get install libxext6 libxext-dev libqt4-dev libqt4-gui libqt4-sql qt4-d
 #coding=utf-8
 import sys
 from PyQt4 import QtGui
- 
+
 app = QtGui.QApplication(sys.argv)
 widget = QtGui.QWidget()
 widget.resize(250, 150)
@@ -36,6 +36,10 @@ sys.exit(app.exec_())
 当然，也可以双击运行，执行的时候会有一个黑色的cmd窗口出现，将文件后缀名改为pyw就没有了。
 
 ![testPyQt4](images/testPyQt4.png)
+
+### Tips
+
+在 PyQt 中使用中文的话会出现乱码的情况，最好是将中文字符串进行 unicode 转码一下，转成 Unicode 编码就可以了。
 
 ###更多
 
