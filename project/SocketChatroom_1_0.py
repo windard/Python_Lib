@@ -11,9 +11,9 @@ def runserver(host,port):
 	s.bind((host,port))
 	s.listen(10)
 
-	print "Server is running ... "
+	print unicode("Server is running ... ","utf-8")
 
-	inputs = [0,s]
+	inputs = [s]
 	outputs = []
 	clients = {}
 
@@ -24,12 +24,12 @@ def runserver(host,port):
 				if sock == s:
 					clientsock,clientaddr = sock.accept()
 					recvname = clientsock.recv(1024)
-					if recvname.endswith("NAME:"):
-						clientname = str(clientaddr)
-					else:
+					if recvname.startswith("NAME:"):
 						clientname = recvname.split('NAME:')[1]
+					else:
+						clientname = str(clientaddr)
 					clientsock.sendall("Welcome " + clientname + "\n")
-					print clientname + " Come In"
+					print unicode(clientname + " Come In","utf-8")
 					clients[clientsock] = (clientname,clientaddr,clientsock)
 					inputs.append(clientsock)
 					for output in outputs:
@@ -38,7 +38,7 @@ def runserver(host,port):
 				elif sock == 0:
 					message = sys.stdin.readline()
 					if message.startswith("QUIT"):
-						print "Server is close ... "
+						print unicode("Server is close ... ","utf-8")
 						sys.exit(0)
 					for output in outputs:
 						output.sendall("Server : " + message)			
@@ -46,29 +46,28 @@ def runserver(host,port):
 					data = sock.recv(1024)
 					if data:
 						if data.startswith("SECRECT"):
-							print "SECRECT " + clients[sock][0] + " : " + data,
+							print unicode("SECRECT " + clients[sock][0] + " : " + data,"utf-8")
 							output = data.split(" ")[1]
 							message = data.split(" ")[2]
 							for client in clients.values():
 								if client[0] == output:
 									client[2].sendall("SECRECT " + clients[sock][0] + " : " + message)
 						else:
-							print clients[sock][0] + " : " + data,
+							print unicode(clients[sock][0] + " : " + data,"utf-8")
 							for output in outputs:
 								if output != sock:
 									output.sendall(clients[sock][0] + " : " + data)
 					else:
 						name = clients[sock][0]
-						print name+" leaved "
+						print unicode(name+" leaved ","utf-8")
 						for output in outputs:
 							output.sendall(name+" leaved \n")
 						inputs.remove(sock)
 						outputs.remove(sock)
 						del clients[sock]
 
-
 		except KeyboardInterrupt:
-			print "Server is close ... "
+			print unicode("Server is close ... ","utf-8")
 			break
 
 def runclient(host,port,name=None):
@@ -80,27 +79,27 @@ def runclient(host,port,name=None):
 	else:
 		s.sendall("NAME:")
 
-	print s.recv(1024),
+	print unicode(s.recv(1024),"utf-8")
 
 	while True:
 		try:
-			readable,writeable,exceptional = select.select([0,s],[],[])
+			readable,writeable,exceptional = select.select([s],[],[])
 			for sock in readable:
 				if sock == s:
 					data = sock.recv(1024)
 					if not data:
-						print "Server is closed"
+						print unicode("Server is closed","utf-8")
 						sys.exit(0)
 					sys.stdout.write(data)
 					sys.stdout.flush()
 				else:
 					data = sys.stdin.readline()
 					if data.startswith("QUIT"):
-						print "Client is closed"
+						print unicode("Client is closed","utf-8")
 						sys.exit(0)
 					s.sendall(data)
 		except KeyboardInterrupt:
-			print "Client is closed"
+			print unicode("Client is closed","utf-8")
 			break
 
 if __name__ == '__main__':
@@ -119,5 +118,5 @@ if __name__ == '__main__':
 	elif chattype.startswith("client"):
 		runclient(host,port,name)
 	else:
-		print "your input is wrong"
+		print unicode("your input is wrong","utf-8")
 
