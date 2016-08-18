@@ -1,16 +1,20 @@
-##socket
+## socket
 
 socket网络编程，我其实一直是拒绝讲这个的，因为这个socket涉及到的知识面之广，我怕我个人也难以解释清楚。
 
 socket是一种基于TCP/IP协议的，在传输层与应用层之间进行信息交流的网络通信方式，它主要用于在同一台主机或不同的主机的进程之间的通信。
+
 TCP/IP协议是一套使用使用广泛的通信协议的合集。
+
 正如在全中国推行普通话一样，通信协议就是通信标准，不同的语言或者信息在同样的标准下可以相互传输并正常交流，这就是通信协议的功能。
 
 在这里我们就不再深入的研究TCP/IP协议，它包括很多的内容，具体的可以看一下：
 《TCP/IP协议详解》
+
 [协议森林](http://www.cnblogs.com/vamei/archive/2012/12/05/2802811.html)
 
 这是一张TCP/IP参考模型图。
+
 ![tcp.jpg](images/tcp.jpg)
 
 可以看到图中除了TCP协议还有UDP协议。
@@ -20,6 +24,7 @@ UDP协议是快速的，简单的，少量的。
 socket对TCP和UDP都支持。
 
 那么接下来让我们看一下socket在哪里呢。
+
 ![socket.jpg](images/socket.jpg)
 
 socket抽象层是在TCP与UDP协议的运输层之上的与应用层连接的抽象层，也就是说socket能够通过使用TCP协议或者UDP协议来实现很多相关的应用性协议功能的，比如说http，https，FTP，smtp，DNS等。
@@ -27,11 +32,12 @@ socket抽象层是在TCP与UDP协议的运输层之上的与应用层连接的�
 因为socket起源于Unix，Unix/Linux的基本原则之一就是`一切皆文件`，都可以用`打开(open )-->读写(read/write)-->关闭(close)`模式来进行操作。
 
 所以socket的使用是非常简单的，如下图所示。
+
 ![socket _connection.jpg](images/socket _connection.jpg)
 
 网络通信之间都是至少需要一个服务器端和一个客户端的，我们的socket就先从简单的客户端开始。
 
-####简单的TCP协议的网络客户端
+#### 简单的TCP协议的网络客户端
 
 ```python
 #coding=utf-8
@@ -54,10 +60,12 @@ print "Received From Sercer : " + buf
 ```
 
 保存为socket_client.py，运行，看一下结果。
+
 ![socket_client.jpg](images/socket_client.png)
+
 可以看到，我先是在本机开了一个ftp服务器，用socket可以成功连接上去，然后就是连接百度的http服务器，看到也连接成功了，最后一个是连接后面的socket服务器，同样的返回了服务器的回复。可是为什么百度的http服务器没有回复呢？因为我们向它发送的请求不对,如果想要得到返回数据，我们需要发送一个GET请求,`GET / \HTTP1.1\r\n\r\n`。
 
-####简单的TCP协议的网络服务器
+#### 简单的TCP协议的网络服务器
 
 ```python
 #coding=utf-8
@@ -84,14 +92,18 @@ s.close()
 ```
 
 保存为socket_server.py，运行，看一下结果。
+
 ![socket_server](images/socket_server.png)
+
 ![socket_server_client](images/socket_server_client.png)
+
 ![socket_server_2.jpg](images/socket_server_2.jpg)
+
 ![socket_server_client_2.jpg](images/socket_server_client_2.jpg)
 
 以上就是我们的socket的一个简单的使用了，接下来我们详细的讲解一下socket客户端和服务器端的相应的功能。
 
-####建立一个socket客户端
+#### 建立一个socket客户端
 1. 创建socket对象
 `socketobject = socket.socket(family=AF_INET[,type=SOCK_STREAM[,protocal=0]])`
 family，协议族，有`AF_INET`包括internet地址，`AF_INET6`包括ipv6的internet地址，`AF_UNIX`同一台机器上,family默认为`AF_INET`。
@@ -105,7 +117,7 @@ host和port构成一个元组。
 3. 发送和接收数据
 `socketobject.recv()`和`socketobject.send()`接收和发送数据。
 
-####建立一个socket服务器
+#### 建立一个socket服务器
 1. 创建一个socket对象
 `socketcobject = socket.socket(family[[,type])`
 
@@ -130,7 +142,7 @@ client是一个socket对象和socket信息的元组。
 7. 关闭socket服务器端
 `socketobject.close()`
 
-####socketobject的其他函数
+#### socketobject的其他函数
 1. socketobject.settimeout()
 2. socketobject.gettimeout()
 3. socketobject.getpeername()
@@ -166,9 +178,10 @@ print "Received From Sercer : " + buf
 ```
 
 保存为socket_client_improve.py，运行，看一下结果。
+
 ![socket_client_improve.png](images/socket_client_improve.png)
 
-####socket的其他功能函数
+#### socket的其他功能函数
 1. socket.gethostname()
 2. socket.gethostbyname(host)
 3. socket.gethostbyaddr(host)
@@ -219,9 +232,10 @@ for item in addrinfo:
 ```
 
 保存为socket_get.py，运行，看一下结果。
+
 ![socket_get](images/socket_get.png)
 
-####可复用的服务器端
+#### 可复用的服务器端
 我们现在的服务器端虽然是可以监听多个客户端连接，但是如果有一个客户端已经连接上却长时间占据着不结束的话，就会阻塞后面客户端的连接。
 
 所以为了可复用的服务器端，我们想到可以用多线程，来避免客户端阻塞。
@@ -260,6 +274,7 @@ s.close()
 保存为socket_server_thread.py，运行，看一下结果。
 
 现在可以通过多个telnet来与服务器端相连接了，但是这里有一个新的问题，每一次当关闭服务器端之后，再次打开的时候就会报出端口已被占的错误。
+
 ![socket_error.png](images/socket_error.png)
 
 因为在你的socket端口在关闭之后系统会自动为你保存一段时间，防止你再次需要时被其他服务占用，那么我们可以通过可重用套接字来解决这个问题。
@@ -305,9 +320,10 @@ s.close()
 ```
 
 保存为socket_server_sockopt.py，运行，看一下结果。
+
 ![socket_server_sockopt.png](images/socket_server_sockopt.png)
 
-####socket聊天服务器
+#### socket聊天服务器
 
 聊天服务器用到了一个新的库，select,用于动态的监听所有的io网络，并返回可用的io。这里涉及到一些同步异步，阻塞非阻塞的内容，在我的另一片博客里有详细的讲解。
 
@@ -437,7 +453,87 @@ if __name__ == '__main__':
 
 ```
 
-保存为socket_chatroom.py，运行，看一下结果。
+保存为socket_chatroom.py。
+
+#### socket HTTP 服务器
+
+```python
+# coding=utf-8
+# Written by Vamei
+# A messy HTTP server based on TCP socket 
+
+import socket
+
+# Address
+HOST = ''
+PORT = 8001
+
+text_content = '''
+HTTP/1.x 200 OK  
+Content-Type: text/html
+
+<head>
+<title>WOW</title>
+</head>
+<html>
+<body>
+<p>Wow, Python Server</p>
+<IMG src="test.jpg"/>
+<form name="input" action="/" method="post">
+First name:<input type="text" name="firstname"><br>
+<input type="submit" value="Submit">
+</form> 
+</body>
+</html>
+'''
+
+f = open('image1.png','rb')
+pic_content = '''
+HTTP/1.x 200 OK  
+Content-Type: image/jpg
+
+'''
+pic_content = pic_content + f.read()
+
+# Configure socket
+s    = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind((HOST, PORT))
+
+# Serve forever
+while True:
+    s.listen(5)
+    conn, addr = s.accept()                    
+    request    = conn.recv(1024)         # 1024 is the receiving buffer size
+    method     = request.split(' ')[0]
+    src        = request.split(' ')[1]
+
+    print 'Connected by', addr
+    print 'Request is:', request
+
+    # if GET method request
+    if method == 'GET':
+        # if ULR is /test.jpg
+        if src == '/test.jpg':
+            content = pic_content
+        else:
+            content = text_content
+        # send message
+        conn.sendall(content)
+    # if POST method request
+    if method == 'POST':
+        form = request.split('\r\n')
+        idx = form.index('')             # Find the empty line
+        entry = form[idx:]               # Main content of the request
+
+        value = entry[-1].split('=')[-1]
+        conn.sendall(text_content + '\n <p>' + value + '</p>')
+        ######
+        # More operations, such as put the form into database
+        # ...
+        ######
+    # close connection
+    conn.close()
+```
 
 ## socket 常见错误标志
 

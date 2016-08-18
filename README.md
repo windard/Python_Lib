@@ -96,7 +96,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [Queue](content/Queue.md)
 
-## subprocess
+## [subprocess](content/subprocess.md)
 
 ## multiprocessing
 
@@ -127,6 +127,10 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 ## [pyscreenshot](content/pyscreenshot.md)
 
 ## [PyHook](content/PyHook.md)
+
+## [SimpleHTTPServer](content/SimpleHTTPServer.md)
+
+## [CGIHTTPServer](content/CGIHTTPServer.md)
 
 ## [Other_thing](content/other_thing.md)
 
