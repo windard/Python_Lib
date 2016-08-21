@@ -79,9 +79,9 @@ C:\Users\dell\Downloads\pyinstaller-2.0\pyinstaller-2.0>python pyinstaller.py he
 参数说明：
 
 ```bash
--F, --onefile Py代码只有一个文件
+-F, --onefile EXE只有一个文件
 
--D, --onedir Py代码放在一个目录中（默认是这个）
+-D, --onedir EXE放在同一个目录中（默认是这个）
 
 -K, --tk 包含TCL/TK
 
