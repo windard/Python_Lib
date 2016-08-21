@@ -11,7 +11,7 @@ try:
 	cur.execute("SELECT VERSION()")
 	#使用fetchone()获得一条数据库
 	data = cur.fetchone()
-	print "Datebase Version : %s" %data 
+	print "Datebase Version : %s" %data
 	conn.close()
 except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])

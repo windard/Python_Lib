@@ -80,3 +80,24 @@ logger.critical('This is a critical error message')
 |%(process)d                    |  进程ID。可能没有                                        |
 |%(message)s                 |  用户输出的消息                                     |
 
+一般常用的 logging
+
+```
+import sys
+import logging
+
+logger = logging.getLogger("Socket Logging")
+formatter = logging.Formatter('%(name)-12s %(asctime)s %(levelname)-8s %(lineno)-4d %(message)s', '%Y%b%d %a %H:%M:%S',)
+
+file_handler = logging.FileHandler("SocketServer.log")
+file_handler.setFormatter(formatter)
+
+logger.addHandler(file_handler)
+
+stream_handler = logging.StreamHandler(sys.stderr)
+stream_handler.setFormatter(formatter)
+
+logger.addHandler(stream_handler)
+
+logger.setLevel(logging.DEBUG)
+```
