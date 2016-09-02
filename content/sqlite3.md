@@ -116,7 +116,7 @@ class Database(object):
     def __init__(self, db=":memory:"):
         self.db = db
         try:
-            self.conn = sqlite3.connect(db=self.db)
+            self.conn = sqlite3.connect(self.db)
             self.cur = self.conn.cursor()
         except Exception,e:
             print e
@@ -148,7 +148,7 @@ class Database(object):
             if option.get("where",""):
                 where = []
                 for key,value in option.get("where").items():
-                    where.append("%s='%s'"%(str(key),str(value)))
+                    where.append("%s='%s'"%(unicode(key),unicode(value)))
                 conds += "WHERE "
                 conds += " AND ".join(where)
             if option.get("order",""):
@@ -160,7 +160,7 @@ class Database(object):
             if option.get("limit",""):
                 limit = ""
                 if type(option.get("limit")) == str:
-                    limit = " LIMIT "+str(option.get("limit"))
+                    limit = " LIMIT "+unicode(option.get("limit"))
                 else:
                     limit = " LIMIT " + ",".join(option.get("limit"))
                 conds += limit
@@ -172,10 +172,10 @@ class Database(object):
         try:
             where = []
             for key,value in option.items():
-                where.append("%s='%s'"%(str(key),str(value)))
+                where.append("%s='%s'"%(unicode(key),unicode(value)))
             conds = []
             for key,value in values.items():
-                conds.append("%s='%s'"%(str(key),str(value)))
+                conds.append("%s='%s'"%(unicode(key),unicode(value)))
             if len(where):
                 return self.exec_("UPDATE %s SET %s WHERE %s"%(table," AND ".join(conds)," AND ".join(where)))
             else:
@@ -185,10 +185,16 @@ class Database(object):
 
     def new(self,table,values,option=[]):
         try:
+            conds = ""
+            for i in values:
+                if type(i) == int:
+                    conds += " %d,"
+                else:
+                    conds += " '%s',"
             if option:
-                return self.exec_("INSERT INTO %s(%s) VALUES(%s)"%(table," , ".join(option),str(values)[1:-1]))
+                return self.exec_("INSERT INTO %s(%s) VALUES(%s)"%(table," , ".join(option),conds[:-1]%(tuple(values))))
             else:
-                return self.exec_("INSERT INTO %s VALUES(%s)"%(table,str(values)[1:-1]))
+                return self.exec_("INSERT INTO %s VALUES(%s)"%(table,conds[:-1]%(tuple(values))))
         except Exception,e:
             return {"code":"04","content":tuple(e)}
 
@@ -196,7 +202,7 @@ class Database(object):
         try:
             where = []
             for key,value in option.items():
-                where.append("%s='%s'"%(str(key),str(value)))
+                where.append("%s='%s'"%(unicode(key),unicode(value)))
             if where:
                 return self.exec_("DELETE FROM %s WHERE %s"%(table," AND ".join(where)))
             else:
@@ -211,5 +217,22 @@ class Database(object):
             self.conn.close()
         except Exception,e:
             print e
+
+
+"""
+db = Database()
+
+print db.new("user",[2,'姓名','年龄'])
+
+print db.new("user",[2,'name','year'])
+
+print db.get('user')
+
+print db.set("user",{"name":"baobao"},{"int":2})
+
+print db.get("user",option={"int":2})
+
+print db.del_("user",{"int":1})
+"""
 
 ```

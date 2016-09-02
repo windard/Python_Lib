@@ -230,6 +230,7 @@ class Database(object):
         self.db = db
         try:
             self.conn = MySQLdb.connect(host=self.host,user=self.user,passwd=self.password,db=self.db,port=self.port,charset=self.charset)
+            self.conn.set_character_set('utf8')
             self.cur = self.conn.cursor()
             self.cur.execute('SET NAMES utf8;')
             self.cur.execute('SET CHARACTER SET utf8;')
@@ -264,7 +265,7 @@ class Database(object):
             if option.get("where",""):
                 where = []
                 for key,value in option.get("where").items():
-                    where.append("%s='%s'"%(str(key),str(value)))
+                    where.append("%s='%s'"%(unicode(key),unicode(value)))
                 conds += "WHERE "
                 conds += " AND ".join(where)
             if option.get("order",""):
@@ -275,8 +276,8 @@ class Database(object):
                 conds += order
             if option.get("limit",""):
                 limit = ""
-                if type(option.get("limit")) == str:
-                    limit = " LIMIT "+str(option.get("limit"))
+                if type(option.get("limit")) == unicode:
+                    limit = " LIMIT "+unicode(option.get("limit"))
                 else:
                     limit = " LIMIT " + ",".join(option.get("limit"))
                 conds += limit
@@ -288,10 +289,10 @@ class Database(object):
         try:
             where = []
             for key,value in option.items():
-                where.append("%s='%s'"%(str(key),str(value)))
+                where.append("%s='%s'"%(unicode(key),unicode(value)))
             conds = []
             for key,value in values.items():
-                conds.append("%s='%s'"%(str(key),str(value)))
+                conds.append("%s='%s'"%(unicode(key),unicode(value)))
             if len(where):
                 return self.exec_("UPDATE %s SET %s WHERE %s"%(table," AND ".join(conds)," AND ".join(where)))
             else:
@@ -301,10 +302,16 @@ class Database(object):
 
     def new(self,table,values,option=[]):
         try:
+            conds = ""
+            for i in values:
+                if type(i) == int:
+                    conds += " %d,"
+                else:
+                    conds += " '%s',"
             if option:
-                return self.exec_("INSERT INTO %s(%s) VALUES(%s)"%(table," , ".join(option),str(values)[1:-1]))
+                return self.exec_("INSERT INTO %s(%s) VALUES(%s)"%(table," , ".join(option),conds[:-1]%(tuple(values))))
             else:
-                return self.exec_("INSERT INTO %s VALUES(%s)"%(table,str(values)[1:-1]))
+                return self.exec_("INSERT INTO %s VALUES(%s)"%(table,conds[:-1]%(tuple(values))))
         except Exception,e:
             return {"code":"04","content":tuple(e)}
 
@@ -312,7 +319,7 @@ class Database(object):
         try:
             where = []
             for key,value in option.items():
-                where.append("%s='%s'"%(str(key),str(value)))
+                where.append("%s='%s'"%(unicode(key),unicode(value)))
             if where:
                 return self.exec_("DELETE FROM %s WHERE %s"%(table," AND ".join(where)))
             else:
@@ -327,5 +334,27 @@ class Database(object):
             self.conn.close()
         except Exception,e:
             print e
+
+"""
+
+import databasescontrol
+
+a = databasescontrol.Database(password="XXXXXX")
+
+print a.exec_("show databases")
+
+print a.exec_("use test")
+
+# print a.get("user",option={"where":{"password":"haha"},"limit":["2","2"],"order":["id","DESC"]})
+# print a.set("user",{"username":"wocao"})
+
+print a.new("user",["name","password"],["username","password"])
+
+# print a.del_("user")
+
+print a.get("user")
+
+"""
+
 
 ```
