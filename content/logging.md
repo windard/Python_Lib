@@ -87,7 +87,7 @@ import sys
 import logging
 
 logger = logging.getLogger("Socket Logging")
-formatter = logging.Formatter('%(name)-12s %(asctime)s %(levelname)-8s %(lineno)-4d %(message)s', '%Y%b%d %a %H:%M:%S',)
+formatter = logging.Formatter('%(name)-12s %(asctime)s %(levelname)-8s %(lineno)-4d %(message)s', '%Y %b %d %a %H:%M:%S',)
 
 file_handler = logging.FileHandler("SocketServer.log")
 file_handler.setFormatter(formatter)
