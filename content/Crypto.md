@@ -1,8 +1,8 @@
-##Crypto
+## Crypto
 
 这是一个很强大的信息安全库，可以做很多的高级加密，包括但不限于AES，DES，RSA，MD5，sha-1等等加密算法。               
 
-####md5和SHA-1
+#### md5和SHA-1
 
 ```python
 #coding=utf-8
@@ -16,12 +16,16 @@ h = SHA.new()
 h.update("This is decode string")
 print h.hexdigest()
 ```
-保存为crypto.md5.py，运行，看一下结果。                           
-![crypto_md5.jpg](images/crypto_md5.jpg)                     
 
-####AES
+保存为crypto.md5.py，运行，看一下结果。   
 
-接下来是AES加密，美国标准加密协议。             
+![crypto_md5.jpg](images/crypto_md5.jpg)      
+
+
+#### AES
+
+接下来是AES加密，美国标准加密协议。     
+
 ```python
 #coding=utf-8
 from Crypto.Cipher import AES
@@ -49,13 +53,16 @@ ciphertext = base64.b64decode(results)
 plain = decryptor.decrypt(ciphertext)
 print plain
 ```
-保存为crypto_aes.py，运行，看一下结果。             
+
+保存为crypto_aes.py，运行，看一下结果。      
+
 ![crypto_aes.jpg](images/crypto_aes.jpg)     
 
-####DES
+#### DES
 
 接下来就是DES加密算法，但是DES算法的安全性已经不那么可靠，穷举法还是能够计算出来，现在一般采用三重的DES加密来保证安全性。                                     
-两种DES加密算法的实现，分别用crypto库和pyDes库。                        
+两种DES加密算法的实现，分别用crypto库和pyDes库。     
+
 ```python
 #coding=utf-8
 from pyDes import *
@@ -79,8 +86,11 @@ cipytext = base64.b64decode(results)
 plain = m.decrypt(cipytext)
 print plain
 ```
-保存为pydes_des.py，运行，看一下结果。              
-![pydes_des.jpg](images/pydes_des.jpg)                      
+
+保存为pydes_des.py，运行，看一下结果。        
+
+![pydes_des.jpg](images/pydes_des.jpg)             
+
 ```python
 #coding=utf-8
 from Crypto.Cipher import DES
@@ -99,11 +109,15 @@ cipher = base64.b64decode(results)
 plain = m.decrypt(cipher)
 print plain
 ```
-保存为crypto_des.py，运行，看一下结果。                           
+
+保存为crypto_des.py，运行，看一下结果。            
+
 ![crypto_des.jpg](images/crypto_des.jpg)                  
+
 可以看到两个DES加密的结果是一样的，但是这个安全性不高。
 
-####DES3
+#### DES3
+
 那么接下来就是我们的三重DES加密。用crypto库创建三重DES是非常容易的，只需要将DES换成3DES即可，还有就是密钥的长度由8位变成了16位。              
 ```python
 #coding=utf-8
@@ -124,6 +138,8 @@ cipher = base64.b64decode(results)
 plain = m.decrypt(cipher)
 print plain
 ```
-保存为crypto_3des.py，运行，看一下结果。        
+
+保存为crypto_3des.py，运行，看一下结果。       
+ 
 ![crypto_3des.jpg](images/crypto_3des.jpg)
 
