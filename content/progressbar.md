@@ -176,7 +176,7 @@ import sys,time
 import progressbar
 total = 1000
  
-#基本用法
+# 基本用法
 progress = progressbar.ProgressBar()
 for i in progress(range(total)):
   time.sleep(0.01)
@@ -187,7 +187,7 @@ for i in range(1,1000):
     time.sleep(0.01)
 pbar.finish()
  
-#高级用法
+# 高级用法
 widgets = ['Progress: ', progressbar.Percentage(), ' ', Bar(marker=progressbar.RotatingMarker('>-=')),
            ' ', progressbar.ETA(), ' ', progressbar.FileTransferSpeed()]
 pbar = progressbar.ProgressBar(widgets=widgets, maxval=10000000).start()
@@ -207,7 +207,7 @@ pbar.finish()
 效果如下
 
 ```
-# python code\progressbar_first.py
+$ python code\progressbar_first.py
 100% |########################################################################|
 100% |########################################################################|
 Progress: 100% |>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>| Time: 0:00:02   3.82 MB/s
@@ -434,3 +434,16 @@ except KeyboardInterrupt:
 
 不知道为什么第十八个和十九个失败了。
 
+## tqdm
+
+tqdm 也可以实现一种比较好的实现命令行动态进度条的效果
+
+```
+# coding=utf-8
+
+from time import sleep
+from tqdm import tqdm
+
+for i in tqdm(range(1, 500)):
+    sleep(0.01)
+```
