@@ -1,8 +1,8 @@
-##PyInstaller
+## PyInstaller
 
 将Python文件打包编译成exe文件Python库，除了py2exe比较常用之外，还有就是PyInstaller了，而且这个库的使用比py2exe更简单一些。
 
-###安装
+### 安装
 
 1. 下载pyinstaller并解压。[这里](http://nchc.dl.sourceforge.net/project/pyinstaller/2.0/pyinstaller-2.0.zip)是在sourceforge下载，或者在[这里](../others/pyinstaller-2.0.zip)下载。
 
@@ -20,7 +20,7 @@ Usage: python pyinstaller.py [opts] <scriptname> [ <scriptname> ...] | <specfile
 pyinstaller.py: error: Requires at least one scriptname file or exactly one .spec-file
 ```
 
-###一个简单的例子
+### 一个简单的例子
 
 ```
 #coding=utf-8
@@ -74,7 +74,7 @@ C:\Users\dell\Downloads\pyinstaller-2.0\pyinstaller-2.0>python pyinstaller.py he
 
 然后就会在当前目录下生成一个hello的文件夹，进入文件夹，有两个文件，一个build，一个dist，在dist中即有编译好了的hello.exe文件。
 
-###更详细的使用
+### 更详细的使用
 
 参数说明：
 
@@ -101,7 +101,7 @@ C:\Users\dell\Downloads\pyinstaller-2.0\pyinstaller-2.0>python pyinstaller.py he
 
 比如说我编译一个PyQt4的带ico的Python文件`python pyinstaller.py  -w  --onefile --icon="2048.ico" 2048.py`
 
-###其他
+### 其他
 
 注意一点，我在使用的时候，准备加入一个ico图标，结果出现下面的报错
 

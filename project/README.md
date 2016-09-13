@@ -71,6 +71,9 @@
 4. `--name` 可选参数，聊天时使用的姓名                    
 
 8. RSSReader
+
+**Version:1.0**      
+
 RSS阅读器，在每天早晚检查指定网站是否有更新，如果有即将最新更新以邮件形式发给我                     
 需配合脚本与crontab使用                    
 脚本如下：
@@ -88,3 +91,17 @@ echo "Ending Script">>/home/windard/Document/feed/feed.log
 在最后一行加入                
 `0 9,21    * * *     root    bash /home/windard/Document/feed/init.sh`
 
+**Version:2.0**      
+
+使用 sqlite3 代替 MySQL 存储，更适合嵌入式设备，使用时间函数来代替 crontab 。
+
+8. FindMovie
+**Version:1.0**              
+
+自动抓取睿思上最新的电影名单，默认抓取前五页的分类为电影的名单，也可以选择其他的分类。
+
+参数如下：          
+1. `--pages` 可选参数，选择抓取前多少页的内容，默认为 5          
+2. `--type` 可选参数，选择抓取某分类的内容，默认为 1 即电影           
+ 
+分类：0:全部,1:电影,2:剧集,3:音乐,4:动漫,5:游戏,6:综艺,7:体育,8:软件,9:学习,10:纪录片,11:西电,12:其他               
