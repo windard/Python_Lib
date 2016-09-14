@@ -2,6 +2,7 @@
 # Author: Windard
 # Date: 2016-09-13
 
+import os
 import codecs
 import requests
 import argparse
@@ -22,6 +23,7 @@ def main(pages=5,cate=1):
     			'Q8qA_2132_lastvisit':'1472340056','Q8qA_2132_lastcheckfeed':'293064%7C1472343673','Q8qA_2132_auth':'01fdDpJmghoUeHWIo%2Ftu2zezLTC%2F9rS1LWVwrKM7Fmb8JRJBcXjJ4kpoCxxv7ArNA14zua5Smj2HKIoN2w5aEVMg3U4',
     			'Q8qA_2132_visitedfid':'551D72D141D110D20D108D157D13D554D145','Q8qA_2132_smile':'16D1','Q8qA_2132_myrepeat_rr':'R0','Q8qA_2132_ulastactivity':'375dtmEp97ZVEG456H%2FxJ1WTpHtbMPJeCpeTYjh%2BIMBAUT9jXzT%2F',
     			'Q8qA_2132_lip':'10.170.68.194%2C1473742408','Q8qA_2132_sid':'iK355Z','Q8qA_2132_sendmail':'1','Q8qA_2132_checkpm':'1','Q8qA_2132_lastact':'1473742557%09misc.php%09patch'}
+
 
     for page in xrange(1,pages+1):
         movirurl = "http://rs.xidian.edu.cn/bt.php?mod=browse&t=all&page="+str(page)
@@ -44,24 +46,26 @@ def main(pages=5,cate=1):
                     f.write(tbody.find_all('td')[5].span['title']+'--------------')
                 else:
                     f.write(tbody.find_all('td')[5].getText()+'--------------')
-                f.write(tbody.find_all('td')[6].getText()+'\n\t\n')
+                f.write(tbody.find_all('td')[6].getText()+linebreak*2)
 
 if __name__ == '__main__':
-    # parser = argparse.ArgumentParser(description="Find Resource In RS")
-    # parser.add_argument("--pages",help="how many pages do you want to find",action="store",default=5,type=int)
-    # parser.add_argument("--type",help="which type resource do you want to find ",action="store",default=1,type=int)
-    # args = parser.parse_args()
-    # pages = args.pages
-    # filetype = args.type
+    parser = argparse.ArgumentParser(description="Find Resource In RS")
+    parser.add_argument("--pages",help="how many pages do you want to find",action="store",default=5,type=int)
+    parser.add_argument("--type",help="which type resource do you want to find ",action="store",default=1,type=int)
+    args = parser.parse_args()
+    pages = args.pages
+    filetype = args.type
 
-    print unicode("请输入需要选取的页数","utf-8")
-    pages = int(raw_input())
-    print unicode("请选择需要选取的类型","utf-8")
-    print unicode("0:全部,1:电影,2:剧集,3:音乐,4:动漫,5:游戏,6:综艺,7:体育,8:软件,9:学习,10:纪录片,11:西电,12:其他","utf-8")
-    filetype = int(raw_input())
+    # print unicode("请输入需要选取的页数","utf-8")
+    # pages = int(raw_input())
+    # print unicode("请选择需要选取的类型","utf-8")
+    # print unicode("0:全部,1:电影,2:剧集,3:音乐,4:动漫,5:游戏,6:综艺,7:体育,8:软件,9:学习,10:纪录片,11:西电,12:其他","utf-8")
+    # filetype = int(raw_input())
 
+    linebreak = os.linesep
+    
     with codecs.open('result.txt', 'w', "utf-8") as f:
-        f.write(u"名称------------------------------------------------------------------------------------------------大小-----------发布时间------------------------种子数\n")
+        f.write(u"名称------------------------------------------------------------------------------------------------大小-----------发布时间------------------------种子数"+linebreak)
         if filetype:
             main(pages,filetype)
         else:
