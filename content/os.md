@@ -1,4 +1,4 @@
-##os
+## os
 
 非常基础的一个库，但是却实现了我一个想了很久了功能，识别目录下的所有文件。
 
@@ -11,7 +11,7 @@
 1. 获取目录中的文件及子目录的列表-- os.listdir("path")		隐藏文件也会显示出来
 3. 删除一个文件-- os.remove()
 4. 文件或者文件夹重命名-- os.rename(old， new)
-6. 获取文件大小-- os.path.getsize（filename）
+6. 获取文件大小-- os.path.getsize(filename)
 7. 获取文件属性-- os.stat(file)
 8. 修改文件权限与时间戳-- os.chmod(file)
 9. 路径中加入新的内容-- os.path.join(path,file)

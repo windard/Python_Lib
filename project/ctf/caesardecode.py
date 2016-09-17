@@ -11,12 +11,12 @@ def Caesardecode(data,flag=True):
     for j in range(0,27):
         result = ""
         for i in data:
-            if ord(i) > ord('A') and ord(i) < ord('Z'):
+            if ord(i) >= ord('A') and ord(i) <= ord('Z'):
                 if ord(i)+j > ord('Z'):
                     result += chr((ord(i)+j)%ord('Z')+ord('A')-1)
                 else:
                     result += chr(ord(i)+j)
-            elif ord(i) > ord('a') and ord(i) < ord('z'):
+            elif ord(i) >= ord('a') and ord(i) <= ord('z'):
                 if ord(i)+j > ord('z'):
                     result += chr((ord(i)+j)%ord('z')+ord('a')-1)
                 else:
@@ -31,3 +31,4 @@ def Caesardecode(data,flag=True):
 
 if __name__ == '__main__':
     # ans = Caesardecode("Jr1p0zr2VfPp")
+    print Caesardecode("PDA MQEYG XNKSJ BKT FQILO KRAN PDA HWVU ZKC KB YWAOWN WJZ UKQN QJEMQA OKHQPEKJ EO YDJCNIKDJBHL")
