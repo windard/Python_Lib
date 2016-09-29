@@ -26,13 +26,14 @@
 9. 读取和设置环境变量-- os.getenv() 与os.putenv()
 10. 指示你正在使用的平台-- os.name       对于Windows，它是'nt'，而对于Linux/Unix用户，它是'posix'
 11. 给出当前平台使用的行终止符--os.linesep    Windows使用'\r\n',Linux使用'\n',而Mac使用'\r'
-12. 运行shell命令-- os.system()  
- >但是这个执行命令行没有返回值，直接输出，不管你有没有print                            
-13. 执行shell命令-- os.popen() 
+12. 运行shell命令-- os.system()
+ >但是这个执行命令行没有返回值，直接输出，不管你有没有print
+13. 执行shell命令-- os.popen()
 >执行命令行，返回一个file open的对象，需要read才能得到执行结果，但是还是没有返回值，如果需要更多的命令行操作，可以使用commands库
-13. 终止当前进程-- os._exit(0)      
+13. 终止当前进程-- os._exit(0)
 14. 循环遍历目录-- os.walk()  返回一个三元组，第一个是路径，第二个是路径下的目录，第三个是路径下的非目录。
 15. 系统环境变量-- os.environ 返回系统环境变量，或者是在 HTTP 请求中的请求头。
+16. 生成随机字符串-- os.urandom(num) 返回 num 个随机字符串，在 ASCII 中，不一定是可打印字符。
 
 ```python
 #coding=utf-8
@@ -40,7 +41,7 @@ import os
 
 currentpath = os.getcwd()
 print currentpath
-changedpath = 'C:\\Users\\dell\\Desktop' 
+changedpath = 'C:\\Users\\dell\\Desktop'
 os.chdir(changedpath)
 currentpath = os.getcwd()
 print currentpath
@@ -125,11 +126,11 @@ os.system('dir')
 
 保存为os_improve.py
 
-保存为os_demo.py，运行，看一下结果      
+保存为os_demo.py，运行，看一下结果
 
-![os_demo](images/os_demo.jpg)              
+![os_demo](images/os_demo.jpg)
 
-重点是还可以运行shell命令。          
+重点是还可以运行shell命令。
 
 ```python
 import os
@@ -137,11 +138,11 @@ shell = "dir"
 print os.system(shell)
 ```
 
-保存为os_shell.py，运行，看一下结果。       
+保存为os_shell.py，运行，看一下结果。
 
-![os_shell.jpg](images/os_shell.jpg)           
+![os_shell.jpg](images/os_shell.jpg)
 
-试一下用`os.walk()`来遍历文件。        
+试一下用`os.walk()`来遍历文件。
 
 ```python
 import os
@@ -162,11 +163,11 @@ print filenum
 print dirnum
 ```
 
-保存为os_walk.py，运行，看一下结果。         
+保存为os_walk.py，运行，看一下结果。
 
-![os_walk.jpg](images/os_walk.jpg)      
+![os_walk.jpg](images/os_walk.jpg)
 
-给一个查看目录下的所有文件的代码，如果有目录则空格表示递进关系         
+给一个查看目录下的所有文件的代码，如果有目录则空格表示递进关系
 
 ```python
 # coding=utf-8
@@ -213,56 +214,56 @@ for i,j in environment.items():
 我的电脑的环境变量
 
 ```
-TMP : C:\Users\dell\AppData\Local\Temp 
-COMPUTERNAME : YANGWENQIANG 
-USERDOMAIN : YANGWENQIANG 
-GOROOT : C:\Go\ 
-PSMODULEPATH : C:\Users\dell\Documents\WindowsPowerShell\Modules;C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules\ 
-COMMONPROGRAMFILES : C:\Program Files (x86)\Common Files 
-PROCESSOR_IDENTIFIER : Intel64 Family 6 Model 69 Stepping 1, GenuineIntel 
-PROGRAMFILES : C:\Program Files (x86) 
-PROCESSOR_REVISION : 4501 
-PATH : C:\Python27\Lib\site-packages\PyQt4;C:\ProgramData\Oracle\Java\javapath;C:\Program Files\Dell\DW WLAN Card;C:\Perl64\site\bin;C:\Perl64\bin;C:\Program Files (x86)\Common Files\Intel\Shared Files\cpp\bin\Intel64;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\WIDCOMM\Bluetooth Software\;C:\Program Files\WIDCOMM\Bluetooth Software\syswow64;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;D:\Program Files (x86)\QuickTime\QTSystem\;D:\Program Files\TortoiseSVN\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Python34;C:\Python27;C:\Perl64;C:\Program Files\Java\jdk1.8.0_60\bin;D:\Program Files (x86)\Sublime text2\Sublime2\Sublime2\Sublime;C:\Users\dell\AppData\Local\Google\Chrome\Application;C:\mingw;C:\Python27\Scripts;C:\Ruby22-x64;C:\PHP;C:\curl-7.33.0-win64-ssl-sspi;C:\curl-7.33.0-win64-ssl-sspi;C:\Program Files (x86)\MySQL\MySQL Server 5.7\bin;D:\Program Files (x86)\MySQL\MySQL Server 5.7\bin;C:\sqlite3;C:\Apache24\bin;C:\gunwin32\GetGnuWin32\bin;D:\Program Files (x86)\Tesseract-OCR;C:\Users\dell\.ssh\Python_Lib\project;C:\MinGW\bin;D:\Program Files\cmder\bin;D:\Program Files\cmder;C:\Users\dell\.ssh\Python_Lib\project;C:\Go\bin;C:\Program Files (x86)\Google\Chrome\Application;D:\Program Files\nodejs\;D:\Program Files\VMare\OVFTool;D:\Program Files (x86)\Git\cmd;D:\Program Files (x86)\Git\bin;C:\Ruby22-x64\bin;D:\Program Files (x86)\Nmap;C:\Users\dell\AppData\Roaming\npm 
-SYSTEMROOT : C:\WINDOWS 
-PROGRAMFILES(X86) : C:\Program Files (x86) 
-C_EM64T_REDIST11 : C:\Program Files (x86)\Common Files\Intel\Shared Files\cpp\ 
-ASL.LOG : Destination=file 
-TESSDATA_PREFIX : D:\Program Files (x86)\Tesseract-OCR\ 
-TEMP : C:\Users\dell\AppData\Local\Temp 
-WINDIR : C:\WINDOWS 
-COMMONPROGRAMFILES(X86) : C:\Program Files (x86)\Common Files 
-PROCESSOR_ARCHITECTURE : x86 
-ALLUSERSPROFILE : C:\ProgramData 
-LOCALAPPDATA : C:\Users\dell\AppData\Local 
-FPS_BROWSER_USER_PROFILE_STRING : Default 
-HOMEPATH : \Users\dell 
-USERDOMAIN_ROAMINGPROFILE : YANGWENQIANG 
-JAVA_HOME : C:\Program Files\Java\jdk1.8.0_60 
-PROGRAMW6432 : C:\Program Files 
-USERNAME : dell 
-LOGONSERVER : \\MicrosoftAccount 
-COMSPEC : C:\WINDOWS\system32\cmd.exe 
-PROGRAMDATA : C:\ProgramData 
-CLASSPATH : .;D:\Program Files (x86)\QuickTime\QTSystem\QTJava.zip;C:\Program Files\Java\jdk1.8.0_60\bin;C:\Program Files\Java\jdk1.8.0_60\lib\tools.jar;C:\Users\dell\Desktop\python\java 
-FPS_BROWSER_APP_PROFILE_STRING : Internet Explorer 
-AWE_DIR : D:\Program Files (x86)\Khrona LLC\Awesomium SDK\1.6.6\ 
-SESSIONNAME : Console 
-PATHEXT : .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.PY;.RB;.RBW;.CPL 
-CONFIGSETROOT : C:\WINDOWS\ConfigSetRoot 
-FP_NO_HOST_CHECK : NO 
-QTJAVA : D:\Program Files (x86)\QuickTime\QTSystem\QTJava.zip 
-OPENSSL_CONF : C:\OpenSSL-Win32\bin\openssl.cfg 
-MOZ_PLUGIN_PATH : C:\Program Files (x86)\Foxit Software\Foxit Reader Plus\plugins\ 
-HOMEDRIVE : C: 
-SYSTEMDRIVE : C: 
-NUMBER_OF_PROCESSORS : 4 
-APPDATA : C:\Users\dell\AppData\Roaming 
-PROCESSOR_LEVEL : 6 
-PROCESSOR_ARCHITEW6432 : AMD64 
-COMMONPROGRAMW6432 : C:\Program Files\Common Files 
-OS : Windows_NT 
-PUBLIC : C:\Users\Public 
-USERPROFILE : C:\Users\dell 
+TMP : C:\Users\dell\AppData\Local\Temp
+COMPUTERNAME : YANGWENQIANG
+USERDOMAIN : YANGWENQIANG
+GOROOT : C:\Go\
+PSMODULEPATH : C:\Users\dell\Documents\WindowsPowerShell\Modules;C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules\
+COMMONPROGRAMFILES : C:\Program Files (x86)\Common Files
+PROCESSOR_IDENTIFIER : Intel64 Family 6 Model 69 Stepping 1, GenuineIntel
+PROGRAMFILES : C:\Program Files (x86)
+PROCESSOR_REVISION : 4501
+PATH : C:\Python27\Lib\site-packages\PyQt4;C:\ProgramData\Oracle\Java\javapath;C:\Program Files\Dell\DW WLAN Card;C:\Perl64\site\bin;C:\Perl64\bin;C:\Program Files (x86)\Common Files\Intel\Shared Files\cpp\bin\Intel64;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\WIDCOMM\Bluetooth Software\;C:\Program Files\WIDCOMM\Bluetooth Software\syswow64;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;D:\Program Files (x86)\QuickTime\QTSystem\;D:\Program Files\TortoiseSVN\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Python34;C:\Python27;C:\Perl64;C:\Program Files\Java\jdk1.8.0_60\bin;D:\Program Files (x86)\Sublime text2\Sublime2\Sublime2\Sublime;C:\Users\dell\AppData\Local\Google\Chrome\Application;C:\mingw;C:\Python27\Scripts;C:\Ruby22-x64;C:\PHP;C:\curl-7.33.0-win64-ssl-sspi;C:\curl-7.33.0-win64-ssl-sspi;C:\Program Files (x86)\MySQL\MySQL Server 5.7\bin;D:\Program Files (x86)\MySQL\MySQL Server 5.7\bin;C:\sqlite3;C:\Apache24\bin;C:\gunwin32\GetGnuWin32\bin;D:\Program Files (x86)\Tesseract-OCR;C:\Users\dell\.ssh\Python_Lib\project;C:\MinGW\bin;D:\Program Files\cmder\bin;D:\Program Files\cmder;C:\Users\dell\.ssh\Python_Lib\project;C:\Go\bin;C:\Program Files (x86)\Google\Chrome\Application;D:\Program Files\nodejs\;D:\Program Files\VMare\OVFTool;D:\Program Files (x86)\Git\cmd;D:\Program Files (x86)\Git\bin;C:\Ruby22-x64\bin;D:\Program Files (x86)\Nmap;C:\Users\dell\AppData\Roaming\npm
+SYSTEMROOT : C:\WINDOWS
+PROGRAMFILES(X86) : C:\Program Files (x86)
+C_EM64T_REDIST11 : C:\Program Files (x86)\Common Files\Intel\Shared Files\cpp\
+ASL.LOG : Destination=file
+TESSDATA_PREFIX : D:\Program Files (x86)\Tesseract-OCR\
+TEMP : C:\Users\dell\AppData\Local\Temp
+WINDIR : C:\WINDOWS
+COMMONPROGRAMFILES(X86) : C:\Program Files (x86)\Common Files
+PROCESSOR_ARCHITECTURE : x86
+ALLUSERSPROFILE : C:\ProgramData
+LOCALAPPDATA : C:\Users\dell\AppData\Local
+FPS_BROWSER_USER_PROFILE_STRING : Default
+HOMEPATH : \Users\dell
+USERDOMAIN_ROAMINGPROFILE : YANGWENQIANG
+JAVA_HOME : C:\Program Files\Java\jdk1.8.0_60
+PROGRAMW6432 : C:\Program Files
+USERNAME : dell
+LOGONSERVER : \\MicrosoftAccount
+COMSPEC : C:\WINDOWS\system32\cmd.exe
+PROGRAMDATA : C:\ProgramData
+CLASSPATH : .;D:\Program Files (x86)\QuickTime\QTSystem\QTJava.zip;C:\Program Files\Java\jdk1.8.0_60\bin;C:\Program Files\Java\jdk1.8.0_60\lib\tools.jar;C:\Users\dell\Desktop\python\java
+FPS_BROWSER_APP_PROFILE_STRING : Internet Explorer
+AWE_DIR : D:\Program Files (x86)\Khrona LLC\Awesomium SDK\1.6.6\
+SESSIONNAME : Console
+PATHEXT : .COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.PY;.RB;.RBW;.CPL
+CONFIGSETROOT : C:\WINDOWS\ConfigSetRoot
+FP_NO_HOST_CHECK : NO
+QTJAVA : D:\Program Files (x86)\QuickTime\QTSystem\QTJava.zip
+OPENSSL_CONF : C:\OpenSSL-Win32\bin\openssl.cfg
+MOZ_PLUGIN_PATH : C:\Program Files (x86)\Foxit Software\Foxit Reader Plus\plugins\
+HOMEDRIVE : C:
+SYSTEMDRIVE : C:
+NUMBER_OF_PROCESSORS : 4
+APPDATA : C:\Users\dell\AppData\Roaming
+PROCESSOR_LEVEL : 6
+PROCESSOR_ARCHITEW6432 : AMD64
+COMMONPROGRAMW6432 : C:\Program Files\Common Files
+OS : Windows_NT
+PUBLIC : C:\Users\Public
+USERPROFILE : C:\Users\dell
 ```
 
 若是作为 cgi 脚本则也会显示 header 的请求头

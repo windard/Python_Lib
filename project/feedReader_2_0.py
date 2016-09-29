@@ -213,7 +213,8 @@ class FeedGrab(object):
             logger.info("End FeedGrab")
 
 if __name__ == '__main__':
-    fg = FeedGrab("http://1418019.top/atom.xml","homework.db","18607571914@163.com","XXXXXXS","1106911190@qq.com")
-    fg.run()
-    time.sleep(60*60)
+    while 1:
+        fg = FeedGrab("http://1418019.top/atom.xml","homework.db","18607571914@163.com","XXXXXXS","1106911190@qq.com")
+        fg.run()
+        time.sleep(60*60)
 

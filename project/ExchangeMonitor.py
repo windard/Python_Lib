@@ -138,13 +138,13 @@ class ExchangeMonitor(object):
 
 		if float(price) <= self.level:
 			self.content = u" 北京时间："+unicode(datetime)+u"，欧元只要 "+unicode(price)+u" 元人民币。"
-			self.mc.setSubject(u"欧元降价了，原价七块的，八块的欧元，现价还是八块")
+			self.mc.setSubject(u"欧元降价了")
 			self.mc.setReceive(self.receive)
 			self.mc.setContent(self.content)
 			self.mc.send()
 
 def main():
-	em = ExchangeMonitor(7.40,"exchangemonitor.db","18607571914@163.com","yang1106911190","1106911190@qq.com")
+	em = ExchangeMonitor(7.40,"exchangemonitor.db","18607571914@163.com","XXXXXX","1106911190@qq.com")
 	em.run()
 
 if __name__ == '__main__':

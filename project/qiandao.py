@@ -3,6 +3,7 @@
 # Date: 2016-09-13
 
 import os
+import time
 import requests
 
 def main():
@@ -33,4 +34,6 @@ def main():
         print "Successful !"
 
 if __name__ == '__main__':
-    main()
+    while 1:
+        main()
+        time.sleep(60*60*24)
