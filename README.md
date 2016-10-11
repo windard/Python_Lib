@@ -86,7 +86,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## functools
 
-## itertools
+## [itertools](content/itertools.md)
 
 ## Tkinter
 

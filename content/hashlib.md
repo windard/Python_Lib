@@ -1,20 +1,30 @@
-##hashlib
+## hashlib
 
 在Python中有内置模块hashlib可以用来生成安全散列算法SHA-1,SHA224,SHA256,SHA384,SHA512及RSA的md5算法。  
 
-####我们来试一下生成一个sha-1的密文.
+#### 我们来试一下生成一个sha-1的密文.
+
 ```python
+# coding=utf-8
+
 import hashlib
+
 decode = "data to be encode"
+
 encode = hashlib.sha1()
 encode.update(decode)
+
 print encode.hexdigest()
+
 ```
+
 保存为hash_sha1.py，运行，看一下结果。   
-![hash_sha1.jpg](images/hash_sha1.jpg)                              
+
+![hash_sha1.jpg](images/hash_sha1.jpg)            
+                  
 确实生成了四十位的hash密文。   
 
-####让我们来看一下hashlib的内置函数有哪些
+#### 让我们来看一下hashlib的内置函数有哪些
 >- hashlib.algorithms。一个元组，提供该模块保证支持的哈希算法的名称。
 >- hash.digest_size  。以字节为单位的哈希结果的大小。
 >- hash.block_size   。以字节为单位的哈希算法的内部块的大小。
