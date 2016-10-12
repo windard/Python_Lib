@@ -4,13 +4,25 @@
 
 #### 我们来试一下生成一个sha-1的密文.
 
+<<<<<<< HEAD
+=======
+#### 我们来试一下生成一个sha-1的密文.
+
+>>>>>>> 9467e1f31bb4743144f249aa9e8e7b2aa74815cf
 ```python
+# coding=utf-8
+
 import hashlib
+
 decode = "data to be encode"
+
 encode = hashlib.sha1()
 encode.update(decode)
+
 print encode.hexdigest()
+
 ```
+<<<<<<< HEAD
 
 保存为hash_sha1.py，运行，看一下结果。
 
@@ -20,6 +32,16 @@ print encode.hexdigest()
 
 #### 让我们来看一下hashlib的内置函数有哪些
 
+=======
+
+保存为hash_sha1.py，运行，看一下结果。   
+
+![hash_sha1.jpg](images/hash_sha1.jpg)            
+                  
+确实生成了四十位的hash密文。   
+
+#### 让我们来看一下hashlib的内置函数有哪些
+>>>>>>> 9467e1f31bb4743144f249aa9e8e7b2aa74815cf
 >- hashlib.algorithms。一个元组，提供该模块保证支持的哈希算法的名称。
 >- hash.digest_size  。以字节为单位的哈希结果的大小。
 >- hash.block_size   。以字节为单位的哈希算法的内部块的大小。

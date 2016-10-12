@@ -1,0 +1,74 @@
+# coding=utf-8
+
+from BaseHTTPServer import HTTPServer,BaseHTTPRequestHandler
+import time
+
+starttime = time.time()
+
+class RequestHandler(BaseHTTPRequestHandler):
+
+	def _writeheaders(self,doc):
+		if doc is None:
+			self.send_response(404)
+		else:
+			self.send_response(200)
+
+		self.send_header('Content-type','text/html')
+		self.end_headers()
+
+	def _getdoc(self,filename):
+		global starttime
+		if filename == '/':
+			return """
+				<html>
+					<head><title>Home Page</title></head>
+					<body>
+						<h3>This is Home Page</h3>
+						<p>Home Page Like This and Nobody Care</p>
+					</body>
+				</html>
+			"""
+		elif filename == '/stats.html':
+			return """
+				<html>
+					<head><title>Statistics</title></head>
+					<body>
+						<h3>This is Statistics Page</h3>
+						<p>This server has been running for %d seconds</p>
+					</body>
+				</html>
+			"""%int(time.time()-starttime)
+		elif filename == '/headers':
+			result = ""
+			for header in self.headers:
+				result += header+":"+self.headers.get(header)+"<br />"
+			return result
+		else:
+			return None
+
+	def do_HEAD(self):
+		doc = self._getdoc(self.path)
+		self._writeheaders(doc)
+
+	def do_GET(self):
+		doc = self._getdoc(self.path)
+		self._writeheaders(doc)
+		# time.sleep(10)
+		if doc is None:
+			self.wfile.write("""
+					<html>
+						<head><title>No Found</title></head>
+						<body>
+							This requested document '%s' was no found 
+						</body>
+					</html>
+				"""%self.path)
+		else:
+			self.wfile.write(doc)
+
+serveraddr = ('',7890)
+srvr = HTTPServer(serveraddr,RequestHandler)
+srvr.serve_forever()
+
+
+
