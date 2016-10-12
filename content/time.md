@@ -2,7 +2,7 @@
 
 
 
-时间函数time，使用起来也非常简单，一般用来取得当前时间，和计算一段时间差。      
+时间函数time，使用起来也非常简单，一般用来取得当前时间，和计算一段时间差。
 
 输出当前时间
 
@@ -12,8 +12,29 @@
 import time
 
 print "Time:%s\n" % time.strftime('%Y-%m-%d %H:%M:%S',time.localtime())
+
+print time.strftime('%Y-%m-%d %H:%M:%S')
+
 ```
 
+```
+Time:2016-09-29 11:46:53
+2016-09-29 11:46:53
+```
+
+时间格式转换
+
+```
+from time import ctime
+from datetime import datetime
+print datetime.strptime(ctime(), '%a %b %d %H:%M:%S %Y').strftime('%Y-%m-%d %H:%M:%S')
+```
+
+```
+2016-09-29 11:49:05
+```
+
+获得时分秒
 
 ```python
 #coding=utf-8
@@ -48,11 +69,11 @@ print "This year day is : " + str(time.localtime(time.time()).tm_yday)
 print calendar.month(2008, 1)
 ```
 
-保存为time_demo.py，运行，看一下效果。        
+保存为time_demo.py，运行，看一下效果。
 
-![time_demo.jpg](images/time_demo.jpg)       
+![time_demo.jpg](images/time_demo.jpg)
 
-计算时间差。          
+计算时间差。
 
 ```python
 import time
@@ -60,11 +81,11 @@ import time
 start_time = time.clock()
 time.sleep(3)
 end_time   = time.clock()
-print "%.4f second"%(end_time - start_time) 
+print "%.4f second"%(end_time - start_time)
 ```
 
-保存为time_time.py，运行，看一下结果。         
+保存为time_time.py，运行，看一下结果。
 
-![time_time.jpg](images/time_time.jpg)         
+![time_time.jpg](images/time_time.jpg)
 
-可以看到每次执行的时间都不一样，但是都在3秒左右。          
+可以看到每次执行的时间都不一样，但是都在3秒左右。
