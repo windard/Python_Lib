@@ -132,6 +132,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [CGIHTTPServer](content/CGIHTTPServer.md)
 
+## [SocketServer](content/SocketServer.md)
+
 ## [progressbar](content/progressbar.md)
 
 ## [Sphinx](content/Sphinx.md)
