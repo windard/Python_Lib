@@ -1,6 +1,6 @@
-##文件的读写
+## 文件的读写
 
-####打开文件的方式
+#### 打开文件的方式
 
 f.open('file'[,'mode'])
 
@@ -14,7 +14,7 @@ f.open('file'[,'mode'])
 |a+		|以读写方式打开文件，并把文件指针移到文件尾。|
 |b		|以二进制模式打开文件，而不是以文本模式。该模式只对Windows或Dos有效，类Unix的文件是用二进制模式进行操作的。|
 
-####打开文件的方法
+#### 打开文件的方法
 
 |方法		|描述			|
 |------	  |---------		|
@@ -51,16 +51,21 @@ while 1:
 打开不含英文名的文件一般都没有什么问题，主要是文件名含中文的就比较复杂了。
 主要有两种方法：
 1. unicode转码
+
 ```python
 filepath=unicode(filepath,'utf8')
 fobj=open(filepath,"r")
 ```
+
 2. 使用u
+
 ```python
 filepath = u'中文路径'
 fobj = open(filepath)
 ```
+
 我们来试一下
+
 ```python
 #coding=utf-8
 filepath = unicode('测试文档.txt','utf8')
@@ -72,10 +77,14 @@ file2 = open(filepath,'r')
 print file2.read()
 file2.close()
 ```
+
 保存为openfile.py，运行，看一下结果。
-![openfile](images/openfile.jpg)
+
+![openfile](images/openfile.jpg) 
+
 确实可以，显示挺好的。
 但是这里又有一个问题了，如果我想要把中文打印出来呢？把刚才的代码稍微改一下
+
 ```python
 #coding=utf-8
 filepath = unicode('测试文档.txt','utf8')
@@ -87,11 +96,17 @@ file2 = open(filepath,'r')
 print file2.read().decode('utf8')
 file2.close()
 ```
+
 保存为openfile2.py，运行，看一下结果。
+
 ![openfile](images/openfile2.jpg)
+
 真的能够显示，但是或许有同学的显示是这样的。
+
 ![openfile2_error](images/openfile2_error.jpg)
+
 使用`decode('utf8')`正常显示的Windows的cmd的chcp是936的。decode()是指文件内容以何种方式编码，现在则以同样的这种方式解码。
+
 3.encode()转码
 
 这是因为微软的中文操作系统默认的中文编码格式是GBK，所以正常的cmd里面只能显示GBK格式编码的中文，无法显示utf-8格式编码的中文。
@@ -99,10 +114,19 @@ file2.close()
 如果想要显示utf-8格式的中文，需要在cmd内键入`chcp 65001`，这是将cmd的显示中文编码改为utf-8。
 或者你也可以将`decode('utf8')`改为`decode('gbk')`。
 
+4. 直接使用 gbk
+
 *2015-10-18*
 既然我们已经试过了用Python打开文件的问题，你们接下来就是用PHP打开中文文件的问题了！
 
 因为微软的Windows是默认中文编码格式GBK，需要转码成utf-8才可以正常的看到。
 
-`$filename=iconv('utf-8','gb2312',$filename);`或者是
-`file_get_contents(mb_convert_encoding($filename, 'gbk', 'utf-8'));`
+```
+$filename=iconv('utf-8','gb2312',$filename);
+``` 
+
+或者是 
+
+```
+file_get_contents(mb_convert_encoding($filename, 'gbk', 'utf-8'));
+```

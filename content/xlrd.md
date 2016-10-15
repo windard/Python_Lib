@@ -1,6 +1,7 @@
-##xlrd
+## xlrd
 
 用Python打开Excel并读取,但是这个只能读。不能写入。         
+
 ```python
 #coding=utf-8
 import xlrd
@@ -29,6 +30,9 @@ print cell
 #也可以使用行列索引
 cell = table2.row(10)[10].value
 print cell
+
 ```
+
 保存为xlrd_demo.py，运行，看一下结果。   
+
 ![xlrd_demo.jpg](images/xlrd_demo.jpg)   

@@ -1,4 +1,4 @@
-##poplib
+## poplib
 
 pop也是邮箱服务的，和SMTP一起用，smtplib用来连接邮箱服务器发送邮件，poplib用来连接服务器接受邮件。  
 ```python
@@ -20,9 +20,13 @@ status = p.stat()
 print "MailBox has %d message for a total of %s bytes"%(status[0],status[1])
 p.quit()
 ```
+
 保存为pop_demo.py，运行，看一下结果。    
+
 ![pop_demo.jpg](images/pop_demo.jpg)      
+
 好吧，这只是个开始，接下来我们来点复杂的。      
+
 ```python
 #coding=utf-8
 
@@ -68,8 +72,11 @@ except:
 
 p.quit()
 ```
+
 保存为pop_second.py，运行，看一下结果。   
+
 算了，结果就不放图了，这里已经基本上能够看到大概的邮箱的情况了，但是这还不够，我们需要查看邮件的具体内容。而具体的邮件内容就是我们发邮件时的msg对象的逆向解析了,当然，如果你在发送的时候是直接使用字符串发送过去的，那么接受到的就直接是可以识别的字符串。    
+
 ```python
 #coding=utf-8
 

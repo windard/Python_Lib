@@ -1,18 +1,18 @@
-##PyQt
+## PyQt
 
-###安装
+### 安装
 
-####Windows
+#### Windows
 
 在[这里](https://riverbankcomputing.com/software/pyqt/download)下载对应系统和Python版本的PyQt4安装即可
 
-####Ubuntu
+#### Ubuntu
 
 ```bash
 sudo apt-get install libxext6 libxext-dev libqt4-dev libqt4-gui libqt4-sql qt4-dev-tools qt4-doc qt4-designer qt4-qtconfig "python-qt4-*" python-qt4
 ```
 
-###测试
+### 测试
 
 一个简单的例子
 
@@ -41,7 +41,7 @@ sys.exit(app.exec_())
 
 在 PyQt 中使用中文的话会出现乱码的情况，最好是将中文字符串进行 unicode 转码一下，转成 Unicode 编码就可以了。
 
-###更多
+### 更多
 
 [这里](http://zetcode.com/gui/pyqt4/)有一个比较好的PyQt4的教程,或者[这里](http://www.qaulau.com/books/PyQt4_Tutorial/index.html)是中文版，或者是PyQt5在[这里](http://zetcode.com/gui/pyqt5/)。
 

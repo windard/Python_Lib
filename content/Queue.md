@@ -1,4 +1,4 @@
-##Queue
+## Queue
 
 队列库，队列就是先进先出(First Input First Output)型的一种数据结构，但是这个库也可以表示栈，就是先进后出型(Last Input First Output)的数据结构，不仅如此，还有一种按优先级别的队列结构。
 
@@ -68,6 +68,7 @@ for i in range(4):
 ```
 
 保存为queue_demo.py，运行，看一下结果。
+
 ![queue_demo.jpg](images/queue_demo.jpg)
 
 

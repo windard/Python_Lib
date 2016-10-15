@@ -1,6 +1,7 @@
-##xlwt
+## xlwt
 
 强大的Python与Excel交互，可以用xlwt打开Excel表单并写入，但是只能写入，不能读取。  
+
 ```python
 #coding=utf-8
 import xlwt
@@ -27,5 +28,7 @@ style.font = font
 table2.write(10,10,"This is ten_ten cell",style)
 excel.save('test.xls')
 ```
+
 保存为xlwt_demo.py，运行，看一下结果。   
+
 ![xlwt_demo.jpg](images/xlwt_demo.jpg)   

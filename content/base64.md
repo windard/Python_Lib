@@ -1,6 +1,6 @@
-##base64
+## base64
 
-####基本使用
+#### 基本使用
 
 - base64.b64encode(s[, altchars])
 >对字符串使用 Base64 进行编码。返回已编码的字符串。s是要编码的字符串。可选的altchars必须是一个长度至少为2的字符串（多余的字符将被忽略），它表示`+`和`/`字符的替代字母表。这允许应用程序生成的URL或文件系统安全的Base64字符串。默认值为None表示使用标准的Base64字母表。
@@ -31,9 +31,12 @@ print encode
 new_decode = base64.b64decode(encode)
 print new_decode
 ```
+
 保存为base64_demo.py，运行，看一下效果。
+
 ![base64_demo.jpg](images/base64_demo.jpg)
-####其他函数
+
+#### 其他函数
 - encode()函数也可以进行base64的编码和解码操作
 ```python
 old_decode =  "data to be encode"

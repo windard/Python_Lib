@@ -1,4 +1,4 @@
-##random
+## random
 
 功能非常简单，就是生成随机数了。               
 1. random.random()用于生成一个0到1之间的随机浮点数：0<=n<=1 。      
@@ -44,4 +44,5 @@ print random.sample(p,3)
 ```
 
 保存为random_demo.py，运行，看一下结果。              
+
 ![random_demo.jpg](images/random_demo.jpg)          

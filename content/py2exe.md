@@ -1,14 +1,14 @@
-##py2exe
+## py2exe
 
 如果你写好了一个软件，想给更多的人使用，那么公布你的源代码是个不错的主意，但可能不是最好的主意，把它做成二进制可执行文件公布出去，想必会更好一些。
 
 那么py2exe就是这样一个工具，将你的Python文件编译为可执行文件，方便在没有安装Python的Windows上运行。
 
-###安装
+### 安装
 
 在[这里](http://sourceforge.net/projects/py2exe/files/py2exe/0.6.9/)下载对应的系统和Python版本安装。
 
-###一个简单的例子
+### 一个简单的例子
 
 ```python
 #coding=utf-8
@@ -32,7 +32,7 @@ setup(console=['hello.py'])
 
 ![py2exe_demo](images/py2exe_demo.png)
 
-###PyQt的编译
+### PyQt的编译
 
 ```python
 #coding=utf-8
@@ -63,7 +63,7 @@ setup(
       )
 ```
 
-###pygame的编译
+### pygame的编译
 
 ```python
 #coding=utf-8

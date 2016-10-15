@@ -1,4 +1,4 @@
-#python 库的学习
+# python 库的学习
 
 -----
 
@@ -106,7 +106,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [commands](content/commands.md)
 
-## [OpenSSL](content/OpenSSL.md)
+## [X] [OpenSSL](content/OpenSSL.md)
 
 ## [markdown](content/markdown.md)
 
@@ -140,11 +140,11 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [sqlite3](content/sqlite3.md)
 
-## [docopt](content/docopt.md)
+## [X] [docopt](content/docopt.md)
 
-## [Numpy](content/numpy.md)
+## [X] [Numpy](content/numpy.md)
 
-## [libtorrent](content/libtorrent.md)
+## [X] [libtorrent](content/libtorrent.md)
 
 ## [string](content/string.md)
 
@@ -152,9 +152,9 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [StringIO](content/StringIO.md)
 
-## [pyquery](content/pyquery.md)
+## [X] [pyquery](content/pyquery.md)
 
-## [lxml](content/lxml.md)
+## [X] [lxml](content/lxml.md) 
 
 ## [Other_thing](content/other_thing.md)
 

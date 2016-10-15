@@ -1,4 +1,4 @@
-##envelopes
+## envelopes
 
 这是将email和smtplib两个库进行封装，使其发送邮件更加方便。    
 不过一般Python并不自带，需要自行安装。
@@ -33,8 +33,11 @@ print "Sending Successful"
 ```
 
 保存为envelopes_demo.py，运行，看一下结果。   
+
 ![envelopes_demo.jpg](images/envelopes_demo.jpg)   
+
 ![envelopes_demo_successful.jpg](images/envelopes_demo_successful.jpg)   
+
 发送邮件的地方也可以不用`envelope.send()`而用原生的`SMTP.SMTP()`，只需要在开始的时候导入`SMTP`，然后就可以`qq=SMTP(host="XXX",login="XXX",password="XXX")`,再用`qq.send(envelope)`来发送出去。   
 >envelope也可以进行群发，只需要在设定`to_addr=(u"XXX@XX.com",u"XXX",u"XXX@XX.com",u"XXX")`即可。
 >envelope也可以用来发送HTML，只需在对象中使用`html_body=u'XXX',`即可发送HTML文本。
