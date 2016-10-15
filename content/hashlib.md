@@ -4,11 +4,6 @@
 
 #### 我们来试一下生成一个sha-1的密文.
 
-<<<<<<< HEAD
-=======
-#### 我们来试一下生成一个sha-1的密文.
-
->>>>>>> 9467e1f31bb4743144f249aa9e8e7b2aa74815cf
 ```python
 # coding=utf-8
 
@@ -22,7 +17,6 @@ encode.update(decode)
 print encode.hexdigest()
 
 ```
-<<<<<<< HEAD
 
 保存为hash_sha1.py，运行，看一下结果。
 
