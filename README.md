@@ -156,6 +156,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [X] [lxml](content/lxml.md) 
 
+## [webbrowser](content/webbrowser.md)
+
 ## [Other_thing](content/other_thing.md)
 
 ## [Reference_link](content/reference_link.md)
