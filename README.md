@@ -154,9 +154,15 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [-] [pyquery](content/pyquery.md)
 
+<<<<<<< HEAD
 ## [-] [lxml](content/lxml.md) 
 
 ## [webbrowser](content/webbrowser.md)
+=======
+## [X] [lxml](content/lxml.md)
+
+## [unidecode](content/unidecode.md)
+>>>>>>> 8356de91958dd586fe5b33306aa49b012bd76769
 
 ## [Other_thing](content/other_thing.md)
 
