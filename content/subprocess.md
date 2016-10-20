@@ -120,7 +120,7 @@ class TargetServer(object):
             client_thread.start()
 
     def client_handler(self,client_socket):
-        client_socket.sendall("<@ %s $ >"%self.host)
+        client_socket.sendall("<@ %s \$ >"%self.host)
         while 1:
             try:
                 cmd_buffer = client_socket.recv(1024)
