@@ -10,6 +10,7 @@
 5. 删除多个目录,删除目录及其下内容-- os.removedirs（"path）
 1. 获取目录中的文件及子目录的列表-- os.listdir("path")		隐藏文件也会显示出来
 3. 删除一个文件-- os.remove()
+3. 删除一个文件-- os.unlink()
 4. 文件或者文件夹重命名-- os.rename(old， new)
 6. 获取文件大小-- os.path.getsize(filename)
 7. 获取文件属性-- os.stat(file)
@@ -30,10 +31,16 @@
  >但是这个执行命令行没有返回值，直接输出，不管你有没有print
 13. 执行shell命令-- os.popen()
 >执行命令行，返回一个file open的对象，需要read才能得到执行结果，但是还是没有返回值，如果需要更多的命令行操作，可以使用commands库
+14. 执行 shell 命令 -- os.exec*() 如 os.execlp('ls','') 并替换当前进程
 13. 终止当前进程-- os._exit(0)
 14. 循环遍历目录-- os.walk()  返回一个三元组，第一个是路径，第二个是路径下的目录，第三个是路径下的非目录。
 15. 系统环境变量-- os.environ 返回系统环境变量，或者是在 HTTP 请求中的请求头。
 16. 生成随机字符串-- os.urandom(num) 返回 num 个随机字符串，在 ASCII 中，不一定是可打印字符。
+17. 检查文件系统权限-- os.access(filename,privilege)
+18. 创建一个新的进程 -- os.fork() 只在 linux 和 unix 上使用，windows 用不了
+19. 获得当前进程的 pid -- os.getpid()
+20. 获得父进程的 pid -- os.getppid()
+20. 杀死一个进程 -- os.kill()
 
 ```python
 #coding=utf-8
@@ -129,6 +136,77 @@ os.system('dir')
 保存为os_demo.py，运行，看一下结果
 
 ![os_demo](images/os_demo.jpg)
+
+测试一下系统权限
+
+```python
+# coding=utf-8
+
+import os
+
+print "File Name: ",__file__
+print "Exist File ? ",os.access(__file__,os.F_OK)
+print "Read File ? ",os.access(__file__,os.R_OK)
+print "Write File ? ",os.access(__file__,os.W_OK)
+print "Execute File ? ",os.access(__file__,os.X_OK)
+```
+
+结果是
+
+```
+File Name:  /home/windard/github/Python_Lib/code/os_access.py
+Exist File ?  True
+Read File ?  True
+Write File ?  True
+Execute File ?  False
+```
+
+试一下关于进程，ubuntu 下
+
+```
+# coding=utf-8
+
+import os
+
+# pid = os.fork()
+
+# if pid:
+#     print "Child Pid : %s, Current Pid %s"%(pid,os.getpid())
+# else:
+#     print "I am the child,Current Pid %s"%(os.getpid())
+
+def create_child():
+    pid0=os.getpid()
+    print '主进程',pid0
+
+    try:
+        pid1=os.fork()
+    except OSError:
+        print u'你的系统不支持fork'
+        exit()
+
+    if pid1 <0:
+        print u'创建子进程失败'
+    elif pid1==0:
+        print '这是在子进程里，看不到子进程的 pid:%d，因为那就是自己的 pid: %d，父进程就是主进程: %d '%(pid1,os.getpid(),os.getppid())
+    else:
+        print '这是在主进程里，可以看到子进程的 pid:%d ，和自己的进程:%d ,父进程也是其他的进程: %d '%(pid1,os.getpid(),os.getppid())
+
+    print '这句话,父进程和子进程都会执行'
+
+create_child()
+
+```
+
+结果是
+
+```
+主进程 29511
+这是在主进程里，可以看到子进程的 pid:29512 ，和自己的进程:29511 ,父进程也是其他的进程: 9372
+这句话,父进程和子进程都会执行
+这是在子进程里，看不到子进程的 pid:0，因为那就是自己的 pid: 29512，父进程就是主进程: 29511
+这句话,父进程和子进程都会执行
+```
 
 重点是还可以运行shell命令。
 

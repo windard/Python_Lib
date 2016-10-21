@@ -2,7 +2,10 @@
 
 #### 基本使用
 
-在thread的库里还需要我们自己的去设定锁，并且在主线程里阻塞主线程的进行来判断锁是否已经释放。但是在threading库里，因为守护线程的存在，主线程会自动等待子线程全部结束才会继续下去，不过在这里还是需要手动的将子线程加入(join)到主线程中。
+在thread的库里还需要我们自己的去设定锁，并且在主线程里阻塞主线程的进行来判断锁是否已经释放。但是在threading库里，因为每一个子线程都被默认为是守护线程，所以主线程不会等待子线程结束，我们需要手动的将子线程加入(join)到主线程中，然后主线程就会等待子线程全部结束才会继续下去。
+
+守护线程的意思就是说这个线程独立于主线程，主线程看可以先于守护线程结束而不用等候守护线程结束，也可以设定 `threading.Thread.setDaemon(False)`
+
 还是上一个例子，我们用threading来试一下。
 
 ```python
@@ -38,6 +41,37 @@ print "all end   at: ",ctime()
 保存为threading_demo.py，运行，看一下结果。
 
 ![threading_demo.jpg](images/threading_demo.jpg)
+
+```python
+#coding=utf-8
+
+import threading
+from time import ctime,sleep
+
+def loop(nloop,nsec):
+    print "loop",nloop," start at: ",ctime()
+    sleep(nsec)
+    print "loop",nloop,"end    at: ",ctime()
+
+print "all start at: ",ctime()
+loops = [4,2]
+threads = []
+nloops = range(len(loops))
+
+#创建两个线程
+for i in nloops:
+    t = threading.Thread(target=loop,args=(i,loops[i]))
+    t.setDaemon(False)
+    threads.append(t)
+
+#让两个线程同时开始
+for i in nloops:
+    threads[i].start()
+
+print "all end   at: ",ctime()
+```
+
+这样的写法与上面的效果一致。
 
 #### 创建多线程的几种方法
 

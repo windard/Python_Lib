@@ -30,5 +30,5 @@ for i in nloops:
 #还是一个线程一个线程的执行
 for i in nloops:
 	threads[i].join()
-	
+
 print "all end   at: ",ctime()

@@ -24,6 +24,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [shutil](content/shutil.md)
 
+## [platform](content/platform.md)
+
 ## [argparse](content/argparse.md)
 
 ## [sys](content/sys.md)
@@ -98,7 +100,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [subprocess](content/subprocess.md)
 
-## multiprocessing
+## [multiprocessing](content/multiprocessing.md)
 
 ## [logging](content/logging.md)
 
@@ -155,7 +157,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 ## [-] [pyquery](content/pyquery.md)
 
 <<<<<<< HEAD
-## [-] [lxml](content/lxml.md) 
+## [-] [lxml](content/lxml.md)
 
 ## [webbrowser](content/webbrowser.md)
 =======

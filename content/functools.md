@@ -2,7 +2,7 @@
 
 功能类似于 Python 的装饰器，可以用来为函数添加一些新的返回或调用。
 
-#### partial 
+#### partial
 
 partial 的源代码，反正我是没看懂
 
@@ -85,7 +85,7 @@ Thu Oct 20 20:54:38 2016
 Good Morning
 Thu Oct 20 20:54:39 2016
 Good Afternon
-show the time when func run 
+show the time when func run
 getnow
 ```
 
@@ -202,4 +202,5 @@ greet
 #### 参考链接
 
 [PYTHON-进阶-FUNCTOOLS模块小结](http://www.wklken.me/posts/2013/08/18/python-extra-functools.html)
+
 [Higher-order functions and operations on callable objects](https://docs.python.org/2/library/functools.html)
