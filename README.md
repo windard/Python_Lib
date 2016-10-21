@@ -90,7 +90,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [itertools](content/itertools.md)
 
-## Tkinter
+## [Tkinter](content/Tkinter.md)
 
 ## [thread](content/thread.md)
 
@@ -100,7 +100,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [subprocess](content/subprocess.md)
 
-## [multiprocessing](content/multiprocessing.md)
+## [ X ] [multiprocessing](content/multiprocessing.md)
 
 ## [logging](content/logging.md)
 
@@ -108,7 +108,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [commands](content/commands.md)
 
-## [-] [OpenSSL](content/OpenSSL.md)
+## [ X ] [OpenSSL](content/OpenSSL.md)
 
 ## [markdown](content/markdown.md)
 
@@ -142,11 +142,11 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [sqlite3](content/sqlite3.md)
 
-## [-] [docopt](content/docopt.md)
+## [ X ] [docopt](content/docopt.md)
 
-## [-] [Numpy](content/numpy.md)
+## [ X ] [Numpy](content/numpy.md)
 
-## [-] [libtorrent](content/libtorrent.md)
+## [ X ] [libtorrent](content/libtorrent.md)
 
 ## [string](content/string.md)
 
@@ -154,17 +154,13 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [StringIO](content/StringIO.md)
 
-## [-] [pyquery](content/pyquery.md)
+## [ X ] [pyquery](content/pyquery.md)
 
-<<<<<<< HEAD
-## [-] [lxml](content/lxml.md)
+## [ X ] [lxml](content/lxml.md)
 
 ## [webbrowser](content/webbrowser.md)
-=======
-## [X] [lxml](content/lxml.md)
 
 ## [unidecode](content/unidecode.md)
->>>>>>> 8356de91958dd586fe5b33306aa49b012bd76769
 
 ## [Other_thing](content/other_thing.md)
 
