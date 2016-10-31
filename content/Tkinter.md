@@ -264,3 +264,7 @@ if __name__ == '__main__':
 效果 
 
 ![Tkinter_Driectory](images/Tkinter_Driectory.png)
+
+有一个 Tkinter 的不错的网上的教程 
+
+[Tkinter tutorial](http://zetcode.com/gui/tkinter/)
