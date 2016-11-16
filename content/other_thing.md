@@ -5,10 +5,23 @@
 ```python
 python -m SimpleHTTPServer 8080
 ```
+
 还有CGI服务器。
 
 ```python
 python -m CGIHTTPServer 8080
+```
+
+还有 FTP 服务器
+
+```
+python -m pyftpdlib
+```
+
+还有在线文档
+
+```
+python -m pydoc -p 8000
 ```
 
 2. 还可以不用进入 Python shell 执行 Python 语句,`python -c "import request" `。

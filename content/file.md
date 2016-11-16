@@ -46,6 +46,14 @@ while 1:
     pass # do something
 ```
 
+写入文件除了有正常的 file.write(data) 之外，还可以使用 print >> 进行输出重定向到文件中
+
+```
+string = "Haha"
+with open('test.txt','w') as f:
+	print >> f,string
+
+```
 
 *2015-10-17*
 打开不含英文名的文件一般都没有什么问题，主要是文件名含中文的就比较复杂了。
