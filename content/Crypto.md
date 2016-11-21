@@ -58,6 +58,52 @@ print plain
 
 ![crypto_aes.jpg](images/crypto_aes.jpg)     
 
+或者是这样写
+
+```
+# coding=utf-8
+
+from Crypto.Cipher import AES
+from Crypto import Random
+
+length = 16
+
+BS = AES.block_size
+pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS)
+def unpad(raw):
+  pad = ord(raw[-1])
+  if raw[-pad:] != chr(pad) * pad:
+    return False
+  return raw[:-pad]
+
+
+key = 'aaaaaaaaaaaaaaaa'
+data = '0123456789abcdef'*4
+
+
+def GetRandomStr(msg,key):
+	padmsg = pad(msg) #padding the msg
+
+	iv = Random.new().read(AES.block_size)
+	cipher = AES.new(key, AES.MODE_CBC, iv)
+	msg = iv + cipher.encrypt(padmsg)
+	return msg,iv
+
+def DecryptCheckPadding(msg,iv,key):
+	msg = msg[16::]
+	cipher = AES.new(key, AES.MODE_CBC, iv)
+	msg = cipher.decrypt(msg)
+	if unpad(msg):
+		return unpad(msg)
+	else :
+		return False
+
+ciphertext,iv = GetRandomStr(data,key)
+msg= DecryptCheckPadding(ciphertext,iv,key)
+
+print msg
+```
+
 #### DES
 
 接下来就是DES加密算法，但是DES算法的安全性已经不那么可靠，穷举法还是能够计算出来，现在一般采用三重的DES加密来保证安全性。                                     
