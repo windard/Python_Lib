@@ -1,0 +1,13 @@
+1480565888958	geckodriver	INFO	Listening on 127.0.0.1:1649
+1480565890927	mozprofile::profile	INFO	Using profile path C:\Users\dell\AppData\Local\Temp\rust_mozprofile.cX5rSkFByfly
+1480565890942	geckodriver::marionette	INFO	Starting browser D:\Program Files (x86)\Mozilla Firefox\firefox.exe
+1480565891028	geckodriver::marionette	INFO	Connecting to Marionette on localhost:1655
+JavaScript error: resource://gre/components/SanityTest.js, line 287: NS_ERROR_FILE_ACCESS_DENIED: Component returned failure code: 0x801480565894270	addons.productaddons	WARN	Failed downloading via XHR, status: 0, reason: error
+NFO	Listening on port 1655
+1480565895587	Marionette	INFO	startBrowser ce85d289-89a2-4122-be00-38becb24b1ef
+[Child 21768] WARNING: pipe error: 109: file c:/builds/moz2_slave/m-rel-w32-00000000000000000000/build/src/ipc/chromium/src/chrome/common/ipc_channel_win.cc, line 346
+93df-15e93e59b147
+1480559845437	Marionette	INFO	sendAsync bde2128d-fcb4-4777-93df-15e93e59b147
+1480559845523	Marionette	INFO	sendAsync bde2128d-fcb4-4777-93df-15e93e59b147
+1480559845750	Marionette	INFO	sendAsync bde2128d-fcb4-4777-93df-15e93e59b147
+1480559962688	addons.productaddons	WARN	Failed downloading via XHR, status: 0, reason: error

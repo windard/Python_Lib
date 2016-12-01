@@ -535,6 +535,35 @@ while True:
     conn.close()
 ```
 
+#### Socket HTTP 转发
+
+将 8080 端口转发到 80 端口
+
+```
+# coding=utf-8
+
+import time
+import socket
+import urllib
+
+host = '127.0.0.1'
+port = 8080
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind((host,port))
+print "server is running ... "
+
+while 1:
+	server.listen(5)
+	conn,addr = server.accept()
+	url = "http://127.0.0.1:5002/"
+	request = conn.recv(1024).split(" ")[1]
+	page = urllib.urlopen(url+request).read()
+	print time.strftime('%Y-%m-%d %H:%M:%S')," [%s:%s] %s"%(addr[0],addr[1],request)
+	conn.sendall(page)
+	conn.close()
+
+```
+
 ## socket 常见错误标志
 
 [Errno 9] Bad file descriptor
@@ -550,6 +579,8 @@ while True:
 [Errno 107] 传输端点尚未连接
 
 [Errno 111] 拒绝连接
+
+[Errno 10053] 服务器端断开一个已经建立的连接
 
 [Errno 10057] 由于套接字没有连接并且(当使用一个 sendto 调用发送数据报套接字时)
 
