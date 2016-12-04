@@ -103,6 +103,10 @@ s.close()
 
 以上就是我们的socket的一个简单的使用了，接下来我们详细的讲解一下socket客户端和服务器端的相应的功能。
 
+> 在 Windows 下无法使用 Ctrl + C 停止 socket 服务器，需要使用 Ctrl + Break。 <br>
+> 然而在很多笔记本上没有 Break 键，使用 Fn + B 代替 Break 键，即 Ctrl + Fn + B 停止 socket 服务器端。
+
+
 #### 建立一个socket客户端
 1. 创建socket对象
 `socketobject = socket.socket(family=AF_INET[,type=SOCK_STREAM[,protocal=0]])`
@@ -236,6 +240,7 @@ for item in addrinfo:
 ![socket_get](images/socket_get.png)
 
 #### 可复用的服务器端
+
 我们现在的服务器端虽然是可以监听多个客户端连接，但是如果有一个客户端已经连接上却长时间占据着不结束的话，就会阻塞后面客户端的连接。
 
 所以为了可复用的服务器端，我们想到可以用多线程，来避免客户端阻塞。
@@ -322,6 +327,158 @@ s.close()
 保存为socket_server_sockopt.py，运行，看一下结果。
 
 ![socket_server_sockopt.png](images/socket_server_sockopt.png)
+
+#### 异步 IO 的 socket 程序
+
+在多个客户端连接的时候，服务器就会阻塞，一般可以采用的解决办法有 多线程，多进程，异步 IO ，协程等，我们来试一下 异步 IO 的操作，常用的异步 IO 操作有 select ， poll ，epoll ， kqueue 等，可以在 Windows 上使用的只有 select ，支持 Linux 设备的是select ， poll ，epoll 等，而 kqueue 是 Mac 上的。
+
+用来测试 异步 IO 的服务器端
+
+```
+# coding=utf-8
+
+import socket, traceback, time
+
+host = ''
+port = 8081
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+s.bind((host, port))
+s.listen(5)
+
+while 1:
+	try:
+		clientsock, clientaddr = s.accept()
+	except KeyboardInterrupt:
+		raise
+	except:
+		traceback.print_exc()
+		continue
+
+	try:
+		print "Got connection from", clientsock.getpeername()
+		while 1:
+			try:
+				clientsock.sendall(time.asctime()+'\n')
+			except:
+				break
+			time.sleep(5)
+	except (KeyboardInterrupt, SystemExit):
+		raise
+	except:
+		traceback.print_exc()
+
+	try:
+		clientsock.close()
+	except KeyboardInterrupt:
+		raise
+	except:
+		traceback.print_exc()
+
+```
+
+使用 poll 的异步 IO 操作，在 Windows 下无法运行
+
+```
+# coding=utf-8 
+
+import socket, sys, select
+
+port = 8081
+host = 'localhost'
+
+spinsize = 10
+spinpos  = 0
+spindir  = 1
+
+def spin():
+	global spinsize, spinpos, spindir
+	spinstr = '.'*spinpos + '|' +'.'*(spinsize -spinpos -1)
+	sys.stdout.write('\r' + spinstr + ' ')
+	sys.stdout.flush()
+
+	spinpos += spindir
+
+	if spinpos < 0:
+		spindir = 1
+		spinpos = 1
+	elif spinpos >= spinsize:
+		spinpos -= 2
+		spindir = -1
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((host, port))
+
+p = select.poll()
+p.register(s.fileno(), select.POLLIN | select.POLLERR | select.POLLHUP)
+
+while 1:
+	results = p.poll(50)
+	if len(results):
+		if results[0][1] == select.POLLIN:
+			data = s.recv(4096)
+			if not len(data):
+				print "\rRemote end closed and connection; exiting."
+				break
+			sys.stdout.write('\rReceived: '+data)
+			sys.stdout.flush()
+		else:
+			print "\rProblem occured; exiting."
+			sys.exit(0)
+	spin()
+
+```
+
+使用 select 的异步 IO 操作，跨平台。
+
+```
+# coding=utf-8
+
+import socket, sys, select
+
+port = 8081
+host = 'localhost'
+
+spinsize = 10
+spinpos  = 0
+spindir  = 1
+
+def spin():
+	global spinsize, spinpos, spindir
+	spinstr = '.'*spinpos + '|' +'.'*(spinsize -spinpos -1)
+	sys.stdout.write('\r' + spinstr + ' ')
+	sys.stdout.flush()
+
+	spinpos += spindir
+
+	if spinpos < 0:
+		spindir = 1
+		spinpos = 1
+	elif spinpos >= spinsize:
+		spinpos -= 2
+		spindir = -1
+
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((host, port))
+
+while 1:
+	infds, outfds, errfds = select.select([s], [], [s], 0.05)
+	if len(infds):
+		data = s.recv(4096)
+		if not len(data):
+			print "\rRemote end closed connection:exiting."
+			break
+
+		sys.stdout.write('\rReceived: '+data)
+		sys.stdout.flush()
+
+	if len(errfds):
+		print "\rProblem occured;exiting."
+		sys.exit(0)
+
+	spin()
+```
 
 #### socket聊天服务器
 
@@ -584,3 +741,4 @@ while 1:
 
 [Errno 10057] 由于套接字没有连接并且(当使用一个 sendto 调用发送数据报套接字时)
 
+[Error 10061] 目标机器积极拒绝连接，未启动服务器或服务器已关闭

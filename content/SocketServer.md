@@ -409,3 +409,71 @@ srvr.serve_forever()
 这是一个简单的 时间服务器，使用 Telnet 连接并发送相应的字符，会按格式回复相应的时间。
 
 如果想使用 IPv6 的话，在 TimeServer 类下添加 IPv6 的协议族 `address_family = socket.AF_INET6` 即可。
+
+## Twisted
+
+Twisted 是一个完全的事件驱动的网络框架，可以使用它来开发完全异步的网络应用程序和协议。它可以创建包括 SSH，DNS，FTP，MAIL，SOCKS，WEB 等网络应用。我们来创建一个简单的 TCP 服务器。
+
+默认采用的异步 IO 操作采用的是 select ，以实现跨平台的使用，不过其也支持 poll，epoll 等高级 IO 操作。
+
+Twisted 服务器端
+
+```
+# coding=utf-8
+
+from time import ctime
+from twisted.internet import protocol, reactor
+
+port = 8099
+
+class TSServProtocol(protocol.Protocol):
+	def connectionMade(self):
+		clnt = self.clnt = self.transport.getPeer().host
+		print "... connected from:",clnt
+
+	def dataReceived(self, data):
+		self.transport.write('[%s] %s'%(ctime(), data))
+
+factory = protocol.Factory()
+factory.protocol = TSServProtocol
+print "waiting for connection ..."
+reactor.listenTCP(port,factory)
+reactor.run()
+
+```
+
+Twisted 客户端
+
+```
+# coding=utf-8
+
+from twisted.internet import protocol, reactor
+
+HOST = 'localhost'
+PORT = 8099
+
+class TSClntProtocol(protocol.Protocol):
+	def sendData(self):
+		data = raw_input('> ')
+		if data:
+			print "... sending %s ..."%data
+			self.transport.write(data)
+		else:
+			self.transport.loseConnection()
+
+	def connectionMade(self):
+		self.sendData()
+
+	def dataReceived(self, data):
+		print data
+		self.sendData()
+
+class TSClntFactory(protocol.ClientFactory):
+	protocol = TSClntProtocol
+	clientConnectionLost = ClientConnectionFailed = lambda self, connector, reason:reactor.stop()
+
+reactor.connectTCP(HOST, PORT, TSClntFactory())
+reactor.run()
+
+
+```

@@ -18,4 +18,5 @@ while 1:
 	page = urllib.urlopen(url+request).read()
 	print time.strftime('%Y-%m-%d %H:%M:%S')," [%s:%s] %s"%(addr[0],addr[1],request)
 	ss.sendall(page)
+	# print page
 	ss.close()

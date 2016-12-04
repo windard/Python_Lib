@@ -46,3 +46,9 @@ sys.exit(app.exec_())
 [这里](http://zetcode.com/gui/pyqt4/)有一个比较好的PyQt4的教程,或者[这里](http://www.qaulau.com/books/PyQt4_Tutorial/index.html)是中文版，或者是PyQt5在[这里](http://zetcode.com/gui/pyqt5/)。
 
 [这里](https://github.com/1106911190/PyQt_2048)是我用Python2.7 和PyQt4写的2048小游戏
+
+### CSS stylesheet
+
+除了正常的设计你的 Qt GUI 之外，Qt 还支持使用 CSS 设计。
+
+ 

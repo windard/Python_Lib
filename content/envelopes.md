@@ -38,8 +38,15 @@ print "Sending Successful"
 
 ![envelopes_demo_successful.jpg](images/envelopes_demo_successful.jpg)   
 
-发送邮件的地方也可以不用`envelope.send()`而用原生的`SMTP.SMTP()`，只需要在开始的时候导入`SMTP`，然后就可以`qq=SMTP(host="XXX",login="XXX",password="XXX")`,再用`qq.send(envelope)`来发送出去。   
->envelope也可以进行群发，只需要在设定`to_addr=(u"XXX@XX.com",u"XXX",u"XXX@XX.com",u"XXX")`即可。
->envelope也可以用来发送HTML，只需在对象中使用`html_body=u'XXX',`即可发送HTML文本。
->envelope也可以设定字符编码，只需在对象中使用` charset=u'XXX',`即可设定编码格式。
->envelope也可设定抄送人，只需在对象中设定` cc_addr=u'XXX',`即可设定抄送人，也可以是多个形式的列表。
+发送邮件的地方也可以不用`envelope.send()`而用原生的`SMTP.SMTP()`，只需要在开始的时候导入`SMTP`，然后就可以`qq=SMTP(host="XXX",login="XXX",password="XXX")`,再用`qq.send(envelope)`来发送出去。   <br>
+>envelope也可以进行群发，只需要在设定`to_addr=(u"XXX@XX.com",u"XXX",u"XXX@XX.com",u"XXX")`即可。<br>
+>envelope也可以用来发送HTML，只需在对象中使用`html_body=u'XXX',`即可发送HTML文本。<br>
+>envelope也可以设定字符编码，只需在对象中使用` charset=u'XXX',`即可设定编码格式。<br>
+>envelope也可设定抄送人，只需在对象中设定` cc_addr=u'XXX',`即可设定抄送人，也可以是多个形式的列表。<br>
+
+发现很多很好用的 Python 发邮件的库，比如说 yagmail ，发邮件只需两步
+
+```
+yag = yagmail.SMTP(user='18607571914@163.com', password='xxxx', host='smtp.163.com', port='25')
+yag.send(to='1106911190@qq.com', subject = "I now can send an attachment", contents='This is contents', attachments=['a.txt', 'b.jpg'])  
+```
