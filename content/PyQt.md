@@ -18,6 +18,7 @@ sudo apt-get install libxext6 libxext-dev libqt4-dev libqt4-gui libqt4-sql qt4-d
 
 ```python
 #coding=utf-8
+
 import sys
 from PyQt4 import QtGui
 

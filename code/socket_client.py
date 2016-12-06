@@ -1,8 +1,8 @@
 #coding=utf-8
 import socket,sys
 
-host = sys.argv[1]
-port = int(sys.argv[2])
+host = "127.0.0.1"
+port = 8081
 
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 try:

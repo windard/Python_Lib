@@ -239,6 +239,16 @@ for item in addrinfo:
 
 ![socket_get](images/socket_get.png)
 
+
+#### IP 地址与数字的相互转换
+
+IPv4 的地址与数字相互转换
+
+```
+ip2num = lambda x:sum([256**j*int(i) for j,i in enumerate(x.split('.')[::-1])])
+num2ip = lambda x: '.'.join([str(x/(256**i)%256) for i in range(3,-1,-1)])
+```
+
 #### 可复用的服务器端
 
 我们现在的服务器端虽然是可以监听多个客户端连接，但是如果有一个客户端已经连接上却长时间占据着不结束的话，就会阻塞后面客户端的连接。
@@ -478,6 +488,60 @@ while 1:
 		sys.exit(0)
 
 	spin()
+```
+
+#### UDP 连接
+UDP 是数据报协议，非面向连接的协议。
+
+socket_udp_server.py
+
+```
+# coding=utf-8
+
+import socket
+from time import ctime
+
+host = '127.0.0.1'
+port = 1234
+bufsize = 1024
+
+udpsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+udpsock.bind((host, port))
+
+while 1:
+	print "Waiting for message ... "
+	data , addr = udpsock.recvfrom(bufsize)
+	udpsock.sendto('[%s] %s'%(ctime(), data), addr)
+	print ' ... received from and teturned to:', addr
+
+udpsock.close()
+```
+
+socket_udp_client.py
+
+```
+# coding=utf-8
+
+import socket
+
+host = '127.0.0.1'
+port = 1234
+
+bufsize = 1024
+
+udpsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+while 1:
+	data = raw_input(">")
+	if not data:
+		break
+	udpsock.sendto(data, (host, port))
+	data, addr = udpsock.recvfrom(bufsize)
+	if not data:
+		break
+	print data
+
+udpsock.close()
 ```
 
 #### socket聊天服务器
@@ -738,6 +802,8 @@ while 1:
 [Errno 111] 拒绝连接
 
 [Errno 10053] 服务器端断开一个已经建立的连接
+
+[Errno 10054] 远程主机强迫关闭了一个现有的连接
 
 [Errno 10057] 由于套接字没有连接并且(当使用一个 sendto 调用发送数据报套接字时)
 
