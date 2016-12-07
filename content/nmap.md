@@ -11,7 +11,9 @@ nmap 的简单使用
 - `--spoof-mac <mac address>` 伪装你的 Mac 地址
 - `-sU` UDP 端口扫描
 - `-sn|sP` Ping 测试 ，可以 `nmap -sn 10.177.233.31/24` ，可以 `nmap -sn 10.177.233.1-255`
+- `-PE/PP/PM` 使用ICMP echo, timestamp, and netmask 请求包发现主机
 - `-sT` TCP 连接扫描，会在目标主机中有请求记录
+- `-sA` TCP ACK 扫描，探查目标主机防火墙过滤情况
 - `-sS` TCP SYN 扫描，只进行TCP三次握手的前两步，很少有系统计入日志，默认使用，需要root权限
 - `-sF` TCP FIN 模式探查，不被目标主机计入日志
 - `-sX` 圣诞树(Xmas Tree) 模式探查
