@@ -5,24 +5,32 @@
 创建ftp-tls对象的工厂函数`class ftplib.FTP_TLS([host[, user[, passwd[, acct[, keyfile[, certfile[, context[, timeout]]]]]]]])`           
 
 ```python
+
 #coding=utf-8
 import ftplib
+
 #连接ftp服务器
 f = ftplib.FTP('192.168.137.142')
 #如果一开始只是构建ftp对象没有连接远程服务器的话，可以使用f.connect()来连接远程服务器
+
 #打印ftp服务器的欢迎信息
 print f.getwelcome()
+
 #上面就是使用anonymous帐号匿名登录的
 #如果使用帐号登录可以在上面加进去，也可以使用login函数
 f.login('windard','windard')
+
 #查看当前目录
 print f.pwd()
 #查看当前目录文件,这个函数返回值为None
+
 print f.dir()
 #进入ftp服务器上某一个文件夹
 f.cwd('Desktop')
+
 print f.dir()
 f.quit()
+
 ```
 
 保存为ftplib_demo.py,运行，看一下结果。                
@@ -33,24 +41,31 @@ f.quit()
 
 ```python
 #coding=utf-8
+
 import ftplib
 #设置缓存区大小
+
 bufsize = 2048
 def writeline(data):
 	localfile2.write(data+'\n')
 f = ftplib.FTP('localhost')
+
 #这次以匿名身份登录
 f.login()
+
 print f.dir()
 #以二进制格式下载非文本格式文件
+
 #先创建本地文件
 localfile1 = open('readme.tar.gz','wb')
 f.retrbinary('RETR readme.tar.gz',localfile1.write,bufsize)
 localfile1.close()
+
 #以ASCII格式下载文本文件
 localfile2 = open('readme.md','w')
 f.retrlines('RETR readme.md',writeline)
 localfile2.close()
+
 f.quit()
 ```
 
@@ -65,20 +80,27 @@ f.quit()
 
 ```python
 #coding=utf-8
+
 import ftplib
+
 f = ftplib.FTP('localhost')
 f.login('windard','windard')
+
 #以二进制格式上传
 localfile1 = open('demo.tar.gz','rb')
 f.storbinary('STOR demo.tar.gz',localfile1)
 localfile1.close()
+
 以ASCII格式上传
 localfile2 = open('demo.txt','r')
 f.storlines('STOR demo.txt',localfile2)
 localfile2.close()
+
 f.quit()
 ```
 
 保存为ftplib_upload.py。                                 
+
 在这里的二进制文件上传就是对文件使用`read()`而ASCII就是使用`readline()`。 
+
 其他的还有一些关于大容量文件上传及下载和文件改名，删除，创建和删除文件夹等等操作就不做更多的演示了。  
