@@ -1,7 +1,8 @@
 ## re
 这是python的正则表达式库，现在几乎所有的编程语言都支持正则表达式了，无可否认，正则表达式确实强大。
 
-###正则表达式基本语法
+### 正则表达式基本语法
+
 与其他编程语言的正则表达式基本类似。
 
 |特殊字符|匹配说明|
@@ -25,16 +26,21 @@
 |{m}       |匹配前一个字符m次|
 |{m,n}   |匹配前一个字符m次到n次|
 |^         |匹配字符串的开头，也可以在一个字符集内表示取非|
-|$          |匹配字符串的结尾|
-|[……] |表示一个字符集|
-|(……) |表示一个分组|
+|\$          |匹配字符串的结尾|
+|[……]		 |表示一个字符集|
+|(……) 	|表示一个分组|
+
 
 ## 基本使用
-python提供了两种不同的基本正则匹配，分别是match和search。                       match是从字符串开头做匹配，search是从字符串中做任意匹配，返回值都是一个Match实例,他们的用法基本一致，`match(pattern, string, flags=0)`和`search(pattern, string, flags=0)`。
+
+python提供了两种不同的基本正则匹配，分别是match和search。                       
+
+match是从字符串开头做匹配，search是从字符串中做任意匹配，返回值都是一个Match实例,他们的用法基本一致，`match(pattern, string, flags=0)`和`search(pattern, string, flags=0)`。
 
 在python里面为了避免反斜杠\\的困扰，一般都使用原生字符串，即使用r'XXX'
 
-```python
+```
+
 >>> a = re.match(r"he","hello , world")
 >>> a
 <_sre.SRE_Match object at 0xb70afdb0>
@@ -49,22 +55,26 @@ python提供了两种不同的基本正则匹配，分别是match和search。   
 >>> c
 >>> type(c)
 <type 'NoneType'>
+
 ```
 
 但是这种匹配一般只能找到匹配的一个，有时我们需要找到所有的匹配，这就需要findall函数，用法也与上面的两个一样`findall(pattern, string, flags=0)`,直接返回一个数组，数组的每一项都是字符串。
 
-```python
+```
+
 >>> d = re.findall(r"wo","hello , world")
 >>> d
 ['wo']
 >>> e = re.findall(r"\w","hello , world")
 >>> e
 ['h', 'e', 'l', 'l', 'o', 'w', 'o', 'r', 'l', 'd']
+
 ```
 
 除了查找之外，正则表达式还有两个很重要的功能就是分割与替换，在这里分别是sub和split，用法是`sub(pattern, repl, string, count=0, flags=0)`和`split(pattern, string, maxsplit=0, flags=0)`,返回改变之后的字符串，传入值保持不变。
 
-```python
+```
+
 >>> a = "hello , world"
 >>> b = re.sub(r"o","0","hello , world")
 >>> b
@@ -80,7 +90,8 @@ python提供了两种不同的基本正则匹配，分别是match和search。   
 
 关于sub函数，还有一个subn函数，用法与sub一致，但是返回一个元祖，由改变之后的字符串和改变的个数组成
 
-```python
+```
+
 >>> b = re.subn(r"o","0","hello , world")
 >>> b
 ('hell0 , w0rld', 2)
@@ -91,7 +102,8 @@ python提供了两种不同的基本正则匹配，分别是match和search。   
 ## 高级使用
 高级使用是先将正则表达式的字符串形式编译成Pattern实例，然后用Pattern实例处理字符串并得到一个Match实例，再对这个Match实例进行处理。
 
-```python
+```
+
 #coding=utf-8
 import re
 
@@ -108,12 +120,12 @@ if match:
 ![re_demo](images/re_demo.png)
 
 compile函数`compile(pattern, flags=0)`，这里的参数flags和上面的函数里的flags都是匹配模式，可以使用`|`表示同时生效，可选的参数有：
-1. re.I(re.IGNORECASE): 忽略大小写
-2. re.M(re.MULTILINE): 多行模式，改变'^'和'$'的行为
-3. re.S(re.DOTALL): 点任意匹配模式，改变'.'的行为
-4. re.L(re.LOCALE): 使预定字符类 \w \W \b \B \s \S 取决于当前区域设定
-5. re.U(re.UNICODE): 使预定字符类 \w \W \b \B \s \S \d \D 取决于unicode定义的字符属性
-6. re.X(re.VERBOSE): 详细模式。这个模式下正则表达式可以是多行，忽略空白字符，并可以加入注释
+1. re.I(re.IGNORECASE): 忽略大小写 <br>
+2. re.M(re.MULTILINE): 多行模式，改变'^'和'\$'的行为 <br>
+3. re.S(re.DOTALL): 点任意匹配模式，改变'.'的行为 <br>
+4. re.L(re.LOCALE): 使预定字符类 \w \W \b \B \s \S 取决于当前区域设定 <br>
+5. re.U(re.UNICODE): 使预定字符类 \w \W \b \B \s \S \d \D 取决于unicode定义的字符属性 <br>
+6. re.X(re.VERBOSE): 详细模式。这个模式下正则表达式可以是多行，忽略空白字符，并可以加入注释 <br>
 
 Match对象 是一次匹配的结果，包含很多关于此次匹配的信息
 
@@ -161,5 +173,6 @@ print "m.span(2):", m.span(2)
 ```
 
 保存为re_complex.py，运行，看一下结果。
+
 ![re_complex](images/re_complex.png)
 
