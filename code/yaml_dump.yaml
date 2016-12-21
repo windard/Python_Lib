@@ -1,0 +1,5 @@
+host:
+  ip00: 192.168.1.1
+  ip01: {one: 192.168.1.2, two: 192.168.1.254}
+name: Server
+soft: {apache: 2.2, mysql: 5.2, php: 5.3}
