@@ -6,7 +6,7 @@
 
 >不过想要使用你的邮箱通过SMTP发送邮件需要先确认你的邮箱服务器开通了SMTP服务。
 >以QQ邮箱为例，开通SMTP服务这样的。
->![](images/qqmail_SMTP.jpg)
+>![qqmail](images/qqmail_SMTP.jpg)
 
 #### 基本使用
 
@@ -48,16 +48,6 @@ print "Sending Successful"
 smtpObj.close()
 ```
 
-<<<<<<< HEAD
-保存为qqmail_smtp_demo.py，运行，看一下结果。
-
-![qqmail_smtp_demo.jpg](images/qqmail_smtp_demo.jpg)
-
-这样就可以发送一个简单的邮件了，其实真正核心的代码只有四行。
-
-1. smtplib.SMTP( [host [, port [, local_hostname]]] )
-这句代码用来创建一个SMTP对象，并连接邮件服务器。
-=======
 保存为qqmail_smtp_demo.py，运行，看一下结果。    
 
 ![qqmail_smtp_demo.jpg](images/qqmail_smtp_demo.jpg)         
@@ -66,8 +56,7 @@ smtpObj.close()
 
 1. smtplib.SMTP( [host [, port [, local_hostname]]] )     
 这句代码用来创建一个SMTP对象，并连接邮件服务器。     
->>>>>>> 2231a0060b9939d2c67d44da771808c7c24c9df6
->在此处，也可以化为两步。
+>在此处，也可以化为两步。<br>
 >先创建对象`smtpObj = smtplib.SMTP()`，再连接服务器 `smtpObj.connect(host)`
 2. SMTP.login(user,password)
 用上一句创建的SMTP对象，登陆发邮件的邮箱
@@ -102,26 +91,13 @@ print "Sending Successful"
 smtpObj.close()
 ```
 
-<<<<<<< HEAD
 保存为163mail_smtp_demo.py，运行，看一下结果。
 
 ![163mail_smtp_demo.jpg](images/163mail_smtp_demo.jpg)
 
-#### 进阶操作
-
-###### 发送HTML格式的邮件
-
-其实发送HTML格式的邮件也非常简单，在MIMETest对象里面指定文本为HTML即可。
-=======
-保存为163mail_smtp_demo.py，运行，看一下结果。    
-
-![163mail_smtp_demo.jpg](images/163mail_smtp_demo.jpg)     
-
-#### 进阶操作
-
 ##### 发送HTML格式的邮件   
+
 其实发送HTML格式的邮件也非常简单，在MIMETest对象里面指定文本为HTML即可。   
->>>>>>> 2231a0060b9939d2c67d44da771808c7c24c9df6
 
 ```python
 #coding=utf-8
@@ -151,73 +127,15 @@ print "Sending Successful"
 smtpObj.close()
 ```
 
-<<<<<<< HEAD
 保存为163mail_smtp_html.py，运行，看一下结果。
 
 ![163mail_smtp_html.jpg](images/163mail_smtp_html.jpg)
 
 ![163mail_smtp_html_successful.jpg](images/163mail_smtp_html_successful.jpg)
 
-###### 发送附件
-
-发送附件则需要创建MIMEMultipart实例，然后构造附件发送。
-=======
-保存为163mail_smtp_html.py，运行，看一下结果。   
-
-![163mail_smtp_html.jpg](images/163mail_smtp_html.jpg)   
-
-![163mail_smtp_html_successful.jpg](images/163mail_smtp_html_successful.jpg)   
-
-##### 在邮件中显示图片
-发送图片并在邮件正文中显示出来，需要用到 email 的 MIMEImage 实例，并选用 HTML 格式的正文。
-
-```python
-#coding=utf-8
-
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.image import MIMEImage
-from email.mime.multipart import MIMEMultipart
-
-smtpObj = smtplib.SMTP("smtp.163.com")
-from_name = '18607571914@163.com'
-to_name = '1106911190@qq.com'
-password = 'XXXXXX'
-
-# 先创建一个带附件的对象
-message = MIMEMultipart()
-
-# 构造图像
-image = MIMEImage(open('puzzle.jpg','rb').read())
-image.add_header('Content-ID','<imagename>')
-
-# 将图像加入邮件中
-message.attach(image)
-
-# 在邮件中加入内容
-content = MIMEText("这是一封带有图有真相的邮件<br /><img src='cid:imagename'>","html","utf-8")
-message.attach(content)
-
-# 邮件的收件人，发件人及主题
-message["Subject"] = "千秋万载，一统江湖"
-message["From"] = from_name
-message["To"] = to_name
-
-smtpObj.login(from_name,password)
-# 这个地方需要把message对象转化为字符串
-smtpObj.sendmail(from_name,to_name,message.as_string())
-print "Sending Successful"
-smtpObj.close()
-```
-
-
-保存为163mail_smtp_image.py，运行，看一下结果。   
-
-![163mail_smtp_image](images/163mail_smtp_image.png)    
-
 ##### 发送附件
+
 发送附件则需要创建 MIMEMultipart 实例，然后构造附件发送。    
->>>>>>> 2231a0060b9939d2c67d44da771808c7c24c9df6
 
 ```python
 #coding=utf-8
@@ -259,7 +177,6 @@ print "Sending Successful"
 smtpObj.close()
 ```
 
-<<<<<<< HEAD
 保存为163mail_smtp_multipart.py，运行，看一下结果。
 
 ![163mail_smtp_multipart.jpg](images/163mail_smtp_multipart.jpg)
@@ -268,24 +185,58 @@ smtpObj.close()
 
 如果需要发送多个附件则依次创建附件对象并加入邮件即可。
 
+##### 在邮件中显示图片
+
+发送图片并在邮件正文中显示出来，需要用到 email 的 MIMEImage 实例，并选用 HTML 格式的正文。
+
+```python
+#coding=utf-8
+
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
+from email.mime.multipart import MIMEMultipart
+
+smtpObj = smtplib.SMTP("smtp.163.com")
+from_name = '18607571914@163.com'
+to_name = '1106911190@qq.com'
+password = 'XXXXXX'
+
+# 先创建一个带附件的对象
+message = MIMEMultipart()
+
+# 构造图像
+image = MIMEImage(open('puzzle.jpg','rb').read())
+image.add_header('Content-ID','<imagename>')
+
+# 将图像加入邮件中
+message.attach(image)
+
+# 在邮件中加入内容
+content = MIMEText("这是一封带有图有真相的邮件<br /><img src='cid:imagename'>","html","utf-8")
+message.attach(content)
+
+# 邮件的收件人，发件人及主题
+message["Subject"] = "千秋万载，一统江湖"
+message["From"] = from_name
+message["To"] = to_name
+
+smtpObj.login(from_name,password)
+# 这个地方需要把message对象转化为字符串
+smtpObj.sendmail(from_name,to_name,message.as_string())
+print "Sending Successful"
+smtpObj.close()
+```
+
+保存为163mail_smtp_image.py，运行，看一下结果。   
+
+![163mail_smtp_image](images/163mail_smtp_image.png)    
+
 ###### SSL与TLS
 
 python支持SSL/TLS的安全邮件。
 
 使用`smtpObj.starttls()`即可开启ssl，就像这样。
-=======
-保存为163mail_smtp_multipart.py，运行，看一下结果。   
-
-![163mail_smtp_multipart.jpg](images/163mail_smtp_multipart.jpg)    
-
-![163mail_smtp_multipart_successful.jpg](images/163mail_smtp_multipart_successful.jpg)   
-
-如果需要发送多个附件则依次创建附件对象并加入邮件即可。    
-
-##### SSL与TLS
-python支持SSL/TLS的安全邮件。       
-使用`smtpObj.starttls()`即可开启ssl，就像这样。     
->>>>>>> 2231a0060b9939d2c67d44da771808c7c24c9df6
 
 ```python
 #coding=utf-8
@@ -361,7 +312,7 @@ class MailControl(object):
         if hasattr(self,"message"):
             self.message["Subject"] = self.subject
 
-    def setReceive(self,receive):
+    def setReceiver(self,receive):
         self.receive = receive
         if hasattr(self,"message"):
             self.message["To"] = self.receive
@@ -388,7 +339,7 @@ a = mailcontrol.MailControl(username="18607571914@163.com",password="XXXXXX")
 
 a.setSubject("How Are You?")
 
-a.setReceive("1106911190@qq.com")
+a.setReceiver("1106911190@qq.com")
 
 a.setContent("这是我给你的信")
 

@@ -79,3 +79,34 @@ print python_str.others[1]
 ![json_object.jpg](images/json_object.jpg)    
 
 在解码json的时候可以采用`pprint`来获得一个比较漂亮的输出，在编码json的时候也可以在`dumps()`函数里加上参数`indent=X`来缩进从而获得一个比较漂亮的输出。     
+
+2016-01-13 更新
+
+在 Python 中 eval 和 str(unicode) 的功能也可以做 json 数据格式的转化
+
+```
+>>> data = {
+...     'name' : 'ACME',
+...     'shares' : 100,
+...     'price' : 542.23,
+...     'others': ["first thing","second thing","third thing"]
+... }
+>>> json_str = str(data)
+>>> json_str
+"{'price': 542.23, 'name': 'ACME', 'shares': 100, 'others': ['first thing', 'second thing', 'third thing']}"
+>>> eval(json_str)
+{'price': 542.23, 'name': 'ACME', 'shares': 100, 'others': ['first thing', 'second thing', 'third thing']}
+```
+
+但是有一个问题，正确在 json 中为 true，但是在 Python 中为 True，失败在 json 中为 false ，但是在 Python 是为 False。
+
+```
+>>> data = "{'name':'ACMA','status':false}"
+>>> eval(data)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<string>", line 1, in <module>
+NameError: name 'false' is not defined
+```
+
+对于 json 数据格式的操作还是让专业的库来干吧。

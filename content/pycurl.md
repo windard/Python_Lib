@@ -174,3 +174,16 @@ c.close()
 
 ```
 
+在访问 HTTPS 网站时可以会遇到证书错误 `pycurl.error: (60, 'SSL certificate problem: unable to get local issuer certificate')`
+
+可以用 certifi 来定位证书的位置
+
+```
+import pycurl
+import certifi
+
+curl = pycurl.Curl()
+curl.setopt(pycurl.CAINFO, certifi.where())
+curl.setopt(pycurl.URL, 'https://www.quora.com')
+curl.perform()
+``` 

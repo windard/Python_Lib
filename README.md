@@ -180,8 +180,16 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [csv](content/csv.md)
 
+## [] [signal](content/signal.md)
+
+## [] [asyncore](content/asyncore.md)
+
 ## [Other_thing](content/other_thing.md)
 
 ## [Reference_link](content/reference_link.md)
 
-上面有些库是需要自己安装，而安装这些库一般都用pip比较快，在windows下安装pip可以通过先安装easy_install，再通过安装pip的办法。
+上面有些库是需要自己安装，而安装这些库一般都用pip比较方便，在windows下安装pip可以通过先安装easy_install，再通过安装pip的办法。
+
+然后可以使用 `-i http://pypi.douban.com/simple --trusted-host pypi.douban.com` 来为 pip 加速。
+
+有一些库在 Windows 下可能不好安装，需要自行编译，可以下载别人已经编译好的可执行文件 whl 安装，Python 第三方库网站 [http://www.lfd.uci.edu/~gohlke/pythonlibs/](http://www.lfd.uci.edu/~gohlke/pythonlibs/) ，下载好之后 `pip install XXX.whl` 即可。
