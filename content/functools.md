@@ -31,13 +31,13 @@ basetwo.__doc__ = 'Convert base 2 string to an int.'
 
 basetwo('10010')
 
-def fun(name,greet):
+def greet(name, year, words):
 	print name,year,words
 
-hello=partial(greet,year=' 2016 ',words=' hello')
-
+hello=partial(greet, year='2016', words='hello')
 hello('foo')
 
+hello=partial(greet, '2016', 'hello')
 hello('bar!')
 
 ```

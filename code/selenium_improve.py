@@ -37,9 +37,10 @@ browser.forward()
 time.sleep(2)
 browser.quit()
 
+print u'下面以微博来进行上面的综合应用'
+
 browser = webdriver.Chrome()
 
-print u'下面以微博来进行上面的综合应用'
 browser.get('http://weibo.com/')
 time.sleep(5)
 browser.find_element_by_id('loginname').clear()
