@@ -221,15 +221,16 @@ import MySQLdb
 
 class Database(object):
     """docstring for Database"""
-    def __init__(self, host="localhost",user="root",password="",db="",port=3306,charset="utf8"):
+    def __init__(self, host="127.0.0.1", user="root", password="", db="",port=3306, charset="utf8", use_unicode=True, debug=False):
         self.host = host
         self.user = user
         self.password = password
         self.port = port
         self.charset = charset
         self.db = db
+        self.debug = debug
         try:
-            self.conn = MySQLdb.connect(host=self.host,user=self.user,passwd=self.password,db=self.db,port=self.port,charset=self.charset)
+            self.conn = MySQLdb.connect(host=self.host, user=self.user, passwd=self.password, db=self.db, port=self.port, charset=self.charset )
             self.conn.set_character_set('utf8')
             self.cur = self.conn.cursor()
             self.cur.execute('SET NAMES utf8;')
@@ -238,8 +239,10 @@ class Database(object):
         except Exception,e:
             print e
 
-    def exec_(self,query):
+    def exec_(self, query):
         try:
+            if self.debug:
+                print query
             self.cur.execute(query)
             result = {"code":"00","content":[]}
             for x in self.cur.fetchall():
@@ -252,43 +255,44 @@ class Database(object):
                     result["content"].append(children)
             return result
         except Exception,e:
+            self.conn.rollback()
             result = {"code":"01","content":tuple(e)}
             return result
 
-    def get(self,table,filed=["*"],option={}):
+    def get(self, table, filed=["*"], options={}):
         try:
             if "*" in filed:
                 filed = "*"
             else:
                 filed = ",".join(filed)
             conds = ""
-            if option.get("where",""):
+            if options.get("where",""):
                 where = []
-                for key,value in option.get("where").items():
+                for key,value in options.get("where").items():
                     where.append("%s='%s'"%(unicode(key),unicode(value)))
                 conds += "WHERE "
                 conds += " AND ".join(where)
-            if option.get("order",""):
+            if options.get("order",""):
                 order = ""
-                order += " ORDER BY "+ option.get("order")[0]
-                if len(option.get("order")) == 2:
-                    order += " "+option.get("order")[1]
+                order += " ORDER BY "+ options.get("order")[0]
+                if len(options.get("order")) == 2:
+                    order += " "+options.get("order")[1]
                 conds += order
-            if option.get("limit",""):
+            if options.get("limit",""):
                 limit = ""
-                if type(option.get("limit")) == unicode:
-                    limit = " LIMIT "+unicode(option.get("limit"))
+                if type(options.get("limit")) == unicode:
+                    limit = " LIMIT "+unicode(options.get("limit"))
                 else:
-                    limit = " LIMIT " + ",".join(option.get("limit"))
+                    limit = " LIMIT " + ",".join(options.get("limit"))
                 conds += limit
             return self.exec_("SELECT %s FROM %s %s"%(filed,table,conds))
         except Exception,e:
             return {"code":"02","content":tuple(e)}
 
-    def set(self,table,values,option={}):
+    def set(self, table, values, options={}):
         try:
             where = []
-            for key,value in option.items():
+            for key,value in options.items():
                 where.append("%s='%s'"%(unicode(key),unicode(value)))
             conds = []
             for key,value in values.items():
@@ -300,7 +304,7 @@ class Database(object):
         except Exception,e:
             return {"code":"03","content":tuple(e)}
 
-    def new(self,table,values,option=[]):
+    def new(self, table, values, options=[]):
         try:
             conds = ""
             for i in values:
@@ -308,17 +312,17 @@ class Database(object):
                     conds += " %d,"
                 else:
                     conds += " '%s',"
-            if option:
-                return self.exec_("INSERT INTO %s(%s) VALUES(%s)"%(table," , ".join(option),conds[:-1]%(tuple(values))))
+            if options:
+                return self.exec_("INSERT INTO %s(%s) VALUES(%s)"%(table," , ".join(options),conds[:-1]%(tuple(values))))
             else:
                 return self.exec_("INSERT INTO %s VALUES(%s)"%(table,conds[:-1]%(tuple(values))))
         except Exception,e:
             return {"code":"04","content":tuple(e)}
 
-    def del_(self,table,option={}):
+    def del_(self, table, options={}):
         try:
             where = []
-            for key,value in option.items():
+            for key,value in options.items():
                 where.append("%s='%s'"%(unicode(key),unicode(value)))
             if where:
                 return self.exec_("DELETE FROM %s WHERE %s"%(table," AND ".join(where)))
@@ -345,7 +349,7 @@ print a.exec_("show databases")
 
 print a.exec_("use test")
 
-# print a.get("user",option={"where":{"password":"haha"},"limit":["2","2"],"order":["id","DESC"]})
+# print a.get("user",options={"where":{"password":"haha"},"limit":["2","2"],"order":["id","DESC"]})
 # print a.set("user",{"username":"wocao"})
 
 print a.new("user",["name","password"],["username","password"])
@@ -355,8 +359,6 @@ print a.new("user",["name","password"],["username","password"])
 print a.get("user")
 
 """
-
-
 ```
 
 
