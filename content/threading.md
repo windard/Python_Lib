@@ -381,5 +381,12 @@ if __name__ == '__main__':
 
 ![threading_lock.jpg](images/threading_lock.jpg)
 
+使用 进程锁的话需要手动的获取和释放，也可以采用简洁的方法,使用 上下文管理器。
 
-
+```
+def run(self):
+	with lock:
+		global counter
+		counter -= 1
+		print "  "+str(counter)+"  "
+```

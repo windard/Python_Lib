@@ -164,7 +164,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [ ] [matplotlib](content/matplotlib.md)
 
-## contextlib
+## [contextlib](context/contextlib.md)
 
 ## panda
 
@@ -189,6 +189,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 ## [Other_thing](content/other_thing.md)
 
 ## [Reference_link](content/reference_link.md)
+
+安装 pip 最简单的方法还是下载 [get-pip.py](https://bootstrap.pypa.io/get-pip.py),然后运行，简单方便跨平台。
 
 上面有些库是需要自己安装，而安装这些库一般都用pip比较方便，在windows下安装pip可以通过先安装easy_install，再通过安装pip的办法。
 
