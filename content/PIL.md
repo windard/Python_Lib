@@ -117,3 +117,27 @@ pic1.save("../images/test9.jpg")
 保存为imageFilter_demo.py，运行，看一下结果。     
 
 ![imageFilter_demo.jpg](images/imageFilter_demo.jpg)
+
+#### 转换 JPEG 文件
+
+将标准型 JPEG (Baseline JPEG)文件转换为 渐进式 JPEG (Progressive JPEG)文件。
+
+```
+# coding=utf-8
+
+from PIL import Image, ImageFile
+
+from exceptions import IOError
+
+img = Image.open("code.jpg")
+des = "code_progress.jpg"
+
+try:
+	img.save(des, "JPEG", quality=80, optimize=True, progressive=True)
+except IOError:
+	ImageFile.MAXBLOCK = img.size[0] * img.size[1]
+	img.save(des, "JPEG", quality=80, optimize=True, progressive=True)
+
+```
+
+也可以使用 `jpegtran -copy none -progressive <inputfile> <outputfile>`

@@ -5,7 +5,9 @@
 可以通过
 
 ```
-cv2.__version__
+>>> import cv2
+>>> cv2.__version__
+'3.0.0'
 ```
 
 查看 openCV 的版本
@@ -16,7 +18,7 @@ cv2.__version__
 
 在 `/opencv/sources/samples/python` 有一些 opencv 的示例源码，可以尝试运行一下，可能需要安装 numpy 库。
 
-下面使用的 openCV 若未特殊强调，都是使用 `3.0.0` 的版本
+下面使用的 openCV 若未特殊强调，都是使用 `2.4.13` 的版本
 
 ### 图片处理
 
@@ -36,9 +38,30 @@ cv2.destroyAllWindows()
 
 ### 视频处理
 
+### 打开视频
+
+```
+import numpy as np
+import cv2
+
+cap = cv2.VideoCapture('vtest.avi')
+
+while(cap.isOpened()):
+    ret, frame = cap.read()
+
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    cv2.imshow('frame',gray)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
+```
+
 ### 打开摄像头
 
-`S` 键保存图像，`Q` 键退出 
+`s` 键保存图像，`q` 键退出 
 
 ```
 # coding=utf-8
@@ -66,7 +89,7 @@ while(True):
         cv2.imwrite(filename, frame)
 ```
 
-用 openCV 2.4.13 的话，是这样
+用 `openCV 3.0.0` 的话，是这样
 
 ```
 coding=utf-8
@@ -89,3 +112,67 @@ while 1:
     if c == 27:
         break
 ```
+
+### 录视频
+
+其中最主要的函数为 `CreateVideoWriter`，`fourcc` 为编码格式，fps (frame per second) 每秒帧数
+
+```
+CreateVideoWriter(...)
+    CreateVideoWriter(filename, fourcc, fps, frame_size [, is_color]) -> CvVideoWriter*
+```
+
+`fourcc` 可选的编码格式为 
+
+```
+CV_FOURCC('P','I','M','1') = MPEG-1 codec
+CV_FOURCC('M','J','P','G') = motion-jpeg codec
+CV_FOURCC('M', 'P', '4', '2') = MPEG-4.2 codec
+CV_FOURCC('D', 'I', 'V', '3') = MPEG-4.3 codec
+CV_FOURCC('D', 'I', 'V', 'X') = MPEG-4 codec
+CV_FOURCC('U', '2', '6', '3') = H263 codec
+CV_FOURCC('I', '2', '6', '3') = H263I codec
+CV_FOURCC('F', 'L', 'V', '1') = FLV1 codec
+```
+
+一般当 fps 大于 24 时，人眼无法区分，这也是电影的播放率，当 fps 低于 10 时，人眼会觉得略卡顿。
+
+```
+# coding=utf-8
+
+import cv2.cv as cv
+
+capture = cv.CaptureFromCAM(0)
+temp = cv.QueryFrame(capture)
+writer = cv.CreateVideoWriter("output.avi", cv.CV_FOURCC("D", "I", "B", " "), 25, cv.GetSize(temp), 1)
+
+count = 0
+while count < 500:
+    image = cv.QueryFrame(capture)
+    cv.WriteFrame(writer, image)
+    cv.ShowImage('Image_Window',image)
+    cv.WaitKey(1)
+    count += 1
+```
+
+这是以 25 fps 记录 500 帧的视频，即 25 秒，也可以自定义记录，手动按 `q` 停止。
+
+```
+# coding=utf-8
+
+import cv2
+import cv2.cv as cv
+
+capture = cv.CaptureFromCAM(0)
+temp = cv.QueryFrame(capture)
+writer = cv.CreateVideoWriter("output.avi", cv.CV_FOURCC("M","J","P","G"), 25, cv.GetSize(temp), 1)
+
+while 1:
+    image = cv.QueryFrame(capture)
+    cv.WriteFrame(writer, image)
+    cv.ShowImage('Image_Window',image)
+    cv.WaitKey(1)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+```
+

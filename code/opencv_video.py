@@ -37,5 +37,6 @@ while(True):
     # 当按下 s 键时保存图像
     key = cv2.waitKey(1)
     if key == ord('s'):
+    # if cv2.waitKey(1) & 0xFF == ord('s'):
         filename = time.strftime('%Y%m%d-%H%M%S') + ".jpg"
         cv2.imwrite(filename, frame)
