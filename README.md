@@ -142,11 +142,11 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [sqlite3](content/sqlite3.md)
 
-## [ ] [docopt](content/docopt.md)
+## [docopt](content/docopt.md)
 
 ## [ ] [Numpy](content/numpy.md)
 
-## [ ] [libtorrent](content/libtorrent.md)
+## [libtorrent](content/libtorrent.md)
 
 ## [string](content/string.md)
 
@@ -154,7 +154,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [StringIO](content/StringIO.md)
 
-## [ ] [pyquery](content/pyquery.md)
+## [pyquery](content/pyquery.md)
 
 ## [ ] [lxml](content/lxml.md)
 
@@ -185,6 +185,12 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 ## [] [asyncore](content/asyncore.md)
 
 ## [] [collections](content/collections.md)
+
+## [] [redis](content/redis.md)
+
+## [] [jieba](content/jieba.md)
+
+## [] [wordcloud](content/wordcloud.md)
 
 ## [Other_thing](content/other_thing.md)
 
