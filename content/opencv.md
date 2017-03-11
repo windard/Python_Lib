@@ -28,17 +28,75 @@
 # coding=utf-8
 
 import cv2   
-  
-img = cv2.imread("code.jpg")   
-cv2.namedWindow("Image")   
-cv2.imshow("Image", img)   
-cv2.waitKey (0)
-cv2.destroyAllWindows()  
+
+# 打开并读取图片
+img = cv2.imread("code.jpg")
+
+# 为显示界面导航栏命名   
+cv2.namedWindow("Image")
+
+# 显示图片   
+cv2.imshow("Image", img)
+
+# 等待键盘输入   
+key = cv2.waitKey(0)
+
+# 按 q 键则直接退出
+if key == 27:
+    cv2.destroyAllWindows()
+# 按 s 键则保存退出
+elif key == ord('s'):
+    cv2.imwrite("code.png", img)
+    cv2.destroyAllWindows()
+```
+
+还可以使用 matplotlib 显示图片
+
+```
+# coding=utf-8
+
+import cv2
+from matplotlib import pyplot as plt
+
+img = cv2.imread("code.jpg", cv2.IMREAD_COLOR)
+
+plt.imshow(img)
+plt.show()
+```
+
+但是在 openCV 中三原色的显示是 BGR 顺序，而 matplotlib 是 RGB 顺序，所以在显示中颜色会有一些差异，我们需要调整一下颜色。
+
+```
+# coding=utf-8
+
+import numpy as np
+import cv2
+from matplotlib import pyplot as plt
+
+img=cv2.imread('lena.png',cv2.IMREAD_COLOR)
+
+#method1
+b,g,r=cv2.split(img)
+img2=cv2.merge([r,g,b])
+plt.imshow(img2)
+plt.show()
+
+#method2
+img3=img[:,:,::-1]
+plt.imshow(img3)
+plt.show()
+
+#method3
+img4=cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+plt.imshow(img4)
+plt.show()
 ```
 
 ### 视频处理
 
 ### 打开视频
+
+不知为何，使用 openCV 打开视频的颜色都不对，还会视频对半分开错位。
 
 ```
 import numpy as np
@@ -51,12 +109,68 @@ while(cap.isOpened()):
 
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    cv2.imshow('frame',gray)
+    cv2.imshow('Video frame',gray)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 cap.release()
 cv2.destroyAllWindows()
+```
+
+```
+# coding=utf-8
+
+import cv2.cv as cv
+
+capture = cv.CaptureFromFile('output.avi')
+
+nbFrames = int(cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FRAME_COUNT))
+
+#CV_CAP_PROP_FRAME_WIDTH Width of the frames in the video stream
+#CV_CAP_PROP_FRAME_HEIGHT Height of the frames in the video stream
+
+fps = cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_FPS)
+
+wait = int(1/fps * 1000/1)
+
+duration = (nbFrames * fps) / 1000
+
+print 'Num. Frames = ', nbFrames
+print 'Frame Rate = ', fps, 'fps'
+print 'Duration = ', duration, 'sec'
+
+for f in xrange( nbFrames ):
+    frameImg = cv.QueryFrame(capture)
+    print cv.GetCaptureProperty(capture, cv.CV_CAP_PROP_POS_FRAMES)
+    cv.ShowImage("The Video", frameImg)
+    cv.WaitKey(wait)
+
+```
+
+```
+# coding=utf-8
+
+import cv2
+
+#获得视频的格式
+videoCapture = cv2.VideoCapture('output.avi')
+
+#获得码率及尺寸
+fps = videoCapture.get(cv2.cv.CV_CAP_PROP_FPS)
+size = (int(videoCapture.get(cv2.cv.CV_CAP_PROP_FRAME_WIDTH)), 
+        int(videoCapture.get(cv2.cv.CV_CAP_PROP_FRAME_HEIGHT)))
+
+#指定写视频的格式, I420-avi, MJPG-mp4 ,在 Windows 下无法保存
+videoWriter = cv2.VideoWriter('output_convert.mp4', cv2.cv.CV_FOURCC('M', 'J', 'P', 'G'), fps, size)
+
+#读帧
+success, frame = videoCapture.read()
+
+while success :
+    cv2.imshow('videoCapture', frame) #显示
+    cv2.waitKey(1000/int(fps)) #延迟
+    videoWriter.write(frame) #写视频帧
+    success, frame = videoCapture.read() #获取下一帧
 ```
 
 ### 打开摄像头
@@ -176,3 +290,36 @@ while 1:
         break
 ```
 
+使用 `openCV 3.0.0` 进行视频拍摄
+
+```
+# coding=utf-8
+
+import numpy as np
+import cv2
+
+cap = cv2.VideoCapture(0)
+
+# Define the codec and create VideoWriter object
+fourcc = cv2.VideoWriter_fourcc(*'DIVX')
+out = cv2.VideoWriter('output.avi',fourcc, 20.0, (640,480))
+
+while(cap.isOpened()):
+    ret, frame = cap.read()
+    if ret==True:
+        frame = cv2.flip(frame,0)
+
+        # write the flipped frame
+        out.write(frame)
+
+        cv2.imshow('frame',frame)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    else:
+        break
+
+# Release everything if job is finished
+cap.release()
+out.release()
+cv2.destroyAllWindows()
+```

@@ -20,7 +20,7 @@ pip install sphinx
 
 ## 用 sphinx 来生成文档
 
-用来生成文档的一般是 `sphinx-build` ，用法是 `sphinx-build.exe sourcedir outputdir `
+用来生成文档的一般是 `sphinx-build` ，用法是 `sphinx-build.exe sourcedir outputdir ` 或者是 `make html`
 
 注意 sourcedir 指的是库文档的 index.rst 文件所在的目录，outputdir 指的是你想要生成的 HTML 文件放的文件夹。
 

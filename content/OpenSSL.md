@@ -1,6 +1,6 @@
 ## OpenSSL
 
-SSL ( Secure Sockets Layer) 也称为 TLS ( Transport Layer Security) ，是利用现代加密技术和密码认证技术来保障网络通信安全的技术，在网络上有广泛的应用。
+SSL ( Secure Sockets Layer) 也称为 TLS ( Transport Layer Security) ，是利用现代加密技术和密码认证技术来保障网络通信安全的技术，在网络上有广泛的应用。如 HTTPS，SSH，SMTP，openVPN，Git 等。
 
 SSL 是采用的是 公钥加密技术，公钥加密技术中有一个密钥对，一个公钥和一个私钥。在加密时，采用公钥加密，私钥解密，在认证时则相反，采用私钥加密，公钥解密。
 

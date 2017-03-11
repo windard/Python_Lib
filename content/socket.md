@@ -63,7 +63,7 @@ print "Received From Sercer : " + buf
 
 ![socket_client.jpg](images/socket_client.png)
 
-可以看到，我先是在本机开了一个ftp服务器，用socket可以成功连接上去，然后就是连接百度的http服务器，看到也连接成功了，最后一个是连接后面的socket服务器，同样的返回了服务器的回复。可是为什么百度的http服务器没有回复呢？因为我们向它发送的请求不对,如果想要得到返回数据，我们需要发送一个GET请求,`GET / \HTTP1.1\r\n\r\n`。
+可以看到，我先是在本机开了一个ftp服务器，用socket可以成功连接上去，然后就是连接百度的http服务器，看到也连接成功了，最后一个是连接后面的socket服务器，同样的返回了服务器的回复。可是为什么百度的http服务器没有回复呢？因为我们向它发送的请求不对,如果想要得到返回数据，我们需要发送一个GET请求,`GET / HTTP/1.1\r\n\r\n`。
 
 #### 简单的TCP协议的网络服务器
 
@@ -150,8 +150,8 @@ client是一个socket对象和socket信息的元组。
 1. socketobject.settimeout()
 2. socketobject.gettimeout()
 3. socketobject.getpeername()
-4. socketobject.getsocketname()
-5. socketobject.getsocketoption()
+4. socketobject.getsockname()
+5. socketobject.getsockopt()
 
 ```python
 #coding=utf-8
@@ -186,7 +186,7 @@ print "Received From Sercer : " + buf
 ![socket_client_improve.png](images/socket_client_improve.png)
 
 #### socket的其他功能函数
-1. socket.gethostname()
+1. socket.gethostname() = socket.getfqdn()
 2. socket.gethostbyname(host)
 3. socket.gethostbyaddr(host)
 4. socket.getservbyname(servicename[,protocolname])
@@ -812,5 +812,7 @@ while 1:
 [Errno 10054] 远程主机强迫关闭了一个现有的连接
 
 [Errno 10057] 由于套接字没有连接并且(当使用一个sendto调用发送数据报套接字时)没有提供相应的地址，发送或接受数据的请求没有被接受。
+
+[Errno 10060] 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
 
 [Error 10061] 目标机器积极拒绝连接，未启动服务器或服务器已关闭
