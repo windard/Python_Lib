@@ -816,3 +816,70 @@ while 1:
 [Errno 10060] 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。
 
 [Error 10061] 目标机器积极拒绝连接，未启动服务器或服务器已关闭
+
+[Errno 11001] getaddrinfo failed
+
+```
+Socket error 0 - Directly send error 
+Socket error 10004 - Interrupted function call 
+Socket error 10013 - Permission denied 
+Socket error 10014 - Bad address 
+Socket error 10022 - Invalid argument 
+Socket error 10024 - Too many open files 
+Socket error 10035 - Resource temporarily unavailable 
+Socket error 10036 - Operation now in progress 
+Socket error 10037 - Operation already in progress 
+Socket error 10038 - Socket operation on non-socket 
+Socket error 10039 - Destination address required 
+Socket error 10040 - Message too long 
+Socket error 10041 - Protocol wrong type for socket 
+Socket error 10042 - Bad protocol option 
+Socket error 10043 - Protocol not supported 
+Socket error 10044 - Socket type not supported 
+Socket error 10045 - Operation not supported 
+Socket error 10046 - Protocol family not supported 
+Socket error 10047 - Address family not supported by protocol family 
+Socket error 10048 - Address already in use 
+Socket error 10049 - Cannot assign requested address 
+Socket error 10050 - Network is down 
+Socket error 10051 - Network is unreachable 
+Socket error 10052 - Network dropped connection on reset 
+Socket error 10053 - Software caused connection abort 
+Socket error 10054 - Connection reset by peer 
+Socket error 10055 - No buffer space available 
+Socket error 10056 - Socket is already connected 
+Socket error 10057 - Socket is not connected 
+Socket error 10058 - Cannot send after socket shutdown 
+Socket error 10060 - Connection timed out 
+Socket error 10061 - Connection refused 
+Socket error 10064 - Host is down 
+Socket error 10065 - No route to host 
+Socket error 10067 - Too many processes 
+Socket error 10091 - Network subsystem is unavailable 
+Socket error 10092 - WINSOCK.DLL version out of range 
+Socket error 10093 - Successful WSAStartup not yet performed 
+Socket error 10094 - Graceful shutdown in progress 
+Socket error 11001 - Host not found 
+Socket error 11002 - Non-authoritative host not found 
+Socket error 11003 - This is a non-recoverable error 
+Socket error 11004 - Valid name, no data record of requested type 
+WSAEADDRINUSE (10048) Address already in use 
+WSAECONNABORTED (10053) Software caused connection abort 
+WSAECONNREFUSED (10061) Connection refused 
+WSAECONNRESET (10054) Connection reset by peer 
+WSAEDESTADDRREQ (10039) Destination address required 
+WSAEHOSTUNREACH (10065) No route to host 
+WSAEMFILE (10024) Too many open files 
+WSAENETDOWN (10050) Network is down 
+WSAENETRESET (10052) Network dropped connection 
+WSAENOBUFS (10055) No buffer space available 
+WSAENETUNREACH (10051) Network is unreachable 
+WSAETIMEDOUT (10060) Connection timed out 
+WSAHOST_NOT_FOUND (11001) Host not found 
+WSASYSNOTREADY (10091) Network sub-system is unavailable 
+WSANOTINITIALISED (10093) WSAStartup() not performed 
+WSANO_DATA (11004) Valid name, no data of that type 
+WSANO_RECOVERY (11003) Non-recoverable query error 
+WSATRY_AGAIN (11002) Non-authoritative host found 
+WSAVERNOTSUPPORTED (10092) Wrong WinSock DLL version
+```
