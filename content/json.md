@@ -37,6 +37,7 @@ print python_str["others"][0]
 
 可以看到第一行是json数据格式，第二行是Python的dist数据格式，也就可以正常的读写。    
 在将json数据格式转化为Python的数据格式了之后，为了更好的展示，可以使用`pprint`来代替原生的`print`，它会按照key的字幕顺序以一种更加美观的方式输出。   
+
 ```python
 import json
 from pprint import pprint
@@ -119,3 +120,32 @@ NameError: name 'false' is not defined
 ```
 
 对于 json 数据格式的操作还是让专业的库来干吧。
+
+2017-03-18 更新
+
+json 格式数据与 Python 中的 字典(dict) 并不完全一致，json 只能是双引号包围的字符串，而 Python 中的字符串可以用双引号也可以用单引号。
+
+```
++-------------------+---------------+
+| Python            | JSON          |
++===================+===============+
+| dict              | object        |
++-------------------+---------------+
+| list, tuple       | array         |
++-------------------+---------------+
+| str, unicode      | string        |
++-------------------+---------------+
+| int, long, float  | number        |
++-------------------+---------------+
+| True              | true          |
++-------------------+---------------+
+| False             | false         |
++-------------------+---------------+
+| None              | null          |
++-------------------+---------------+
+```
+
+```
+JSONEncoder().encode({"foo": ["bar", "baz"]}) # 将字典格式转换为 json 字符串
+JSONDecoder().decode('{"foo": ["bar", "baz"]}') # 将 json 字符串转换为字典格式
+```

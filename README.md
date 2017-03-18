@@ -188,9 +188,13 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [] [redis](content/redis.md)
 
-## [] [jieba](content/jieba.md)
+## [jieba](content/jieba.md)
 
-## [] [wordcloud](content/wordcloud.md)
+## [wordcloud](content/wordcloud.md)
+
+## [pickle](content/pickle.md)
+
+## [urlparse](content/urlparse.md)
 
 ## [Other_thing](content/other_thing.md)
 

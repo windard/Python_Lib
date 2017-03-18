@@ -70,6 +70,55 @@ cur.execute('SET CHARACTER SET utf8;')
 cur.execute('SET character_set_connection=utf8;')
 ```
 
+打开游标也可以使用 上下文管理器 ，这样可以自动执行关闭操作。
+
+```
+# coding=utf-8
+
+import MySQLdb
+
+conn = MySQLdb.Connection(host='127.0.0.1', user='root', passwd='123456', db='test', port=3306, charset='utf8')
+
+with conn as cur:
+    
+    cur.execute('SELECT * FROM user')
+
+    print 'sum:', cur.rowcount
+    
+    for row in cur.fetchall():
+        print row
+
+```
+
+使用 上下文管理器还有一个好处，就是在 with 语句中的所有 SQL 执行作为一个事务 ，只有全部执行成功才会 commit ，否则会自动 rollback
+
+一般的执行 SQL 语句是使用游标 cursor 操作的，我们也可以直接使用 connection 执行 SQL 语句。
+
+```
+# coding=utf-8
+
+import MySQLdb
+
+try:
+    conn = MySQLdb.connect(host='127.0.0.1', user='root', passwd='123456', db='test', port=3306, charset='utf8')
+
+    # 数据库连接信息
+    print "Host Info  :", conn.get_host_info()
+    print "Server Info:", conn.get_server_info()
+
+    conn.query('SELECT * FROM user')
+
+    # fetch_row 默认只取一条数据
+    for row in conn.use_result().fetch_row(10):
+        print row
+
+except MySQLdb.Error,e:
+     print "MySQL Error %d: %s" % tuple(e)
+else:
+    conn.close()
+
+```
+
 再来看一个完整的增改删查的代码。
 
 ```python
@@ -115,6 +164,58 @@ except MySQLdb.Error,e:
 ![mysqldb_second](images/mysqldb_second.jpg)
 
 这里包含完整的数据库增改删查的操作。
+
+#### 参数化 SQL 查询
+
+为了防止 SQL 注入，建议使用 参数化 查询，MySQLdb 自动进行转义过滤。
+
+```
+# coding=utf-8
+
+import MySQLdb
+
+conn = MySQLdb.Connection(host='127.0.0.1', user='root', passwd='123456', db='test', port=3306, charset='utf8')
+
+with conn as cur:
+
+    # secure
+    cur.execute('SELECT * FROM user WHERE id=%s AND name=%s', ["0 or 1=1; # -- ", 'windard'])
+
+    print 'sum:', cur.rowcount
+    
+    for row in cur.fetchall():
+        print row
+
+    # insecure
+    cur.execute('SELECT * FROM user WHERE id=%s AND name=%s'%("0 or 1=1; # -- ", 'windard'))
+
+    print 'sum:', cur.rowcount
+    
+    for row in cur.fetchall():
+        print row
+
+```
+
+MySQLdb 的转义函数是 `Connection.literal(o)`，参数可以是字符串或者是列表。
+
+```
+# coding=utf-8
+
+import MySQLdb
+
+conn = MySQLdb.Connection(host='127.0.0.1', user='root', passwd='123456', db='test', port=3306, charset='utf8')
+
+print conn.literal(["0 or 1=1; # -- ", 'windard'])
+
+print conn.literal("0' or 1=1; # -- ")
+```
+
+转义结果为 
+
+```
+("'0 or 1=1; # -- '", "'windard'")
+'0\' or 1=1; # -- '
+```
 
 #### 进阶操作
 
@@ -217,146 +318,155 @@ except MySQLdb.Error,e:
 ```
 #coding=utf-8
 
+import chardet
 import MySQLdb
 
 class Database(object):
-    """docstring for Database"""
-    def __init__(self, host="127.0.0.1", user="root", password="", db="",port=3306, charset="utf8", use_unicode=True, debug=False):
+    """Database Control For Beginner"""
+    def __init__(self, host='127.0.0.1', user='root', password='', db='', port=3306, charset='utf8', \
+                use_unicode=True, debug=False):
         self.host = host
         self.user = user
         self.password = password
         self.port = port
         self.charset = charset
         self.db = db
-        self.debug = debug
+        self._debug = debug
         try:
-            self.conn = MySQLdb.connect(host=self.host, user=self.user, passwd=self.password, db=self.db, port=self.port, charset=self.charset )
-            self.conn.set_character_set('utf8')
-            self.cur = self.conn.cursor()
-            self.cur.execute('SET NAMES utf8;')
-            self.cur.execute('SET CHARACTER SET utf8;')
-            self.cur.execute('SET character_set_connection=utf8;')
-        except Exception,e:
-            print e
+            self._conn = MySQLdb.Connection(host=self.host, user=self.user, passwd=self.password, \
+                db=self.db, port=self.port, charset=self.charset)
+            self._conn.set_character_set('utf8')
+            self._cur = self._conn.cursor()
+            self._cur.execute('SET NAMES utf8;')
+            self._cur.execute('SET CHARACTER SET utf8;')
+            self._cur.execute('SET character_set_connection=utf8;')        
+        except Exception, e:
+            if self._debug:
+                print tuple(e)
 
-    def exec_(self, query):
+    def exec_(self, query, paras=''):
         try:
-            if self.debug:
+            if self._debug:
                 print query
-            self.cur.execute(query)
-            result = {"code":"00","content":[]}
-            for x in self.cur.fetchall():
-                if len(x)==1:
-                    result["content"].append(x[0])
-                else:
-                    children = []
-                    for y in x:
-                        children.append(y)
-                    result["content"].append(children)
+            if paras:
+                self._cur.execute(query, paras)
+            else:
+                self._cur.execute(query)
+            result = {'code':1000}
+            result['content'] = self._cur.fetchall()
             return result
         except Exception,e:
-            self.conn.rollback()
-            result = {"code":"01","content":tuple(e)}
+            self._conn.rollback()
+            result = {'code':1001,'content':tuple(e)}
             return result
 
-    def get(self, table, filed=["*"], options={}):
+    def get(self, table, filed=['*'], options={}):
         try:
-            if "*" in filed:
-                filed = "*"
+            select, where, order, limit, paras, conds = '', '', '', '', [], []
+            if '*' in filed:
+                select = '*'
             else:
-                filed = ",".join(filed)
-            conds = ""
-            if options.get("where",""):
-                where = []
-                for key,value in options.get("where").items():
-                    where.append("%s='%s'"%(unicode(key),unicode(value)))
-                conds += "WHERE "
-                conds += " AND ".join(where)
-            if options.get("order",""):
-                order = ""
-                order += " ORDER BY "+ options.get("order")[0]
-                if len(options.get("order")) == 2:
-                    order += " "+options.get("order")[1]
-                conds += order
-            if options.get("limit",""):
-                limit = ""
-                if type(options.get("limit")) == unicode:
-                    limit = " LIMIT "+unicode(options.get("limit"))
-                else:
-                    limit = " LIMIT " + ",".join(options.get("limit"))
-                conds += limit
-            return self.exec_("SELECT %s FROM %s %s"%(filed,table,conds))
+                select = ','.join(filed)
+            if options.get('where', None):
+                for key,value in options['where'].items():
+                    if type(value) == str:
+                        value = value.decode(chardet.detect(value)['encoding'])
+                    conds.append("%s %%s"%key)
+                    paras.append(value)
+                where = 'WHERE '
+                where += ' AND '.join(conds)
+            if options.get('order', None):
+                order = ' ORDER BY '+ options['order']
+            if options.get('limit', None):
+                limit = ' LIMIT ' + ','.join(map(str, options['limit']))
+            return self.exec_("SELECT %s FROM %s %s %s %s"%(select, table, where, order, limit), paras)
         except Exception,e:
-            return {"code":"02","content":tuple(e)}
+            return {'code':1002, 'content':tuple(e)}
 
     def set(self, table, values, options={}):
         try:
-            where = []
-            for key,value in options.items():
-                where.append("%s='%s'"%(unicode(key),unicode(value)))
-            conds = []
-            for key,value in values.items():
-                conds.append("%s='%s'"%(unicode(key),unicode(value)))
-            if len(where):
-                return self.exec_("UPDATE %s SET %s WHERE %s"%(table," AND ".join(conds)," AND ".join(where)))
-            else:
-                return self.exec_("UPDATE %s SET %s "%(table," AND ".join(conds)))
+            conds, where, paras, stats = [], '', [], []
+            for key, value in values.items():
+                if type(value) == str:
+                    value = value.decode(chardet.detect(value)['encoding'])
+                conds.append("%s %%s"%key)
+                paras.append(value)
+            if options:
+                for key, value in options.items():
+                    if type(value) == str:
+                        value = value.decode(chardet.detect(value)['encoding'])
+                    stats.append("%s %%s"%key)
+                    paras.append(value)
+                where = 'WHERE '
+                where += ' AND '.join(stats)
+            return self.exec_('UPDATE %s SET %s %s'%(table, ' AND '.join(conds), where), paras)
         except Exception,e:
-            return {"code":"03","content":tuple(e)}
+            return {'code':1003, 'content':tuple(e)}
 
     def new(self, table, values, options=[]):
         try:
-            conds = ""
-            for i in values:
-                if type(i) == int:
-                    conds += " %d,"
-                else:
-                    conds += " '%s',"
+            conds, paras, stats = [], [], ''
+            for value in values:
+                if type(value) == str:
+                    value = value.decode(chardet.detect(value)['encoding'])
+                conds.append("%s")
+                paras.append(value)
             if options:
-                return self.exec_("INSERT INTO %s(%s) VALUES(%s)"%(table," , ".join(options),conds[:-1]%(tuple(values))))
-            else:
-                return self.exec_("INSERT INTO %s VALUES(%s)"%(table,conds[:-1]%(tuple(values))))
+                stats += '(' + ','.join(options) + ')'
+            return self.exec_('INSERT INTO %s%s VALUES(%s)'%(table, stats, ','.join(conds)), paras)
         except Exception,e:
-            return {"code":"04","content":tuple(e)}
+            return {'code':1004,'content':tuple(e)}
 
     def del_(self, table, options={}):
         try:
-            where = []
-            for key,value in options.items():
-                where.append("%s='%s'"%(unicode(key),unicode(value)))
-            if where:
-                return self.exec_("DELETE FROM %s WHERE %s"%(table," AND ".join(where)))
-            else:
-                return self.exec_("DELETE FROM %s"%table)
+            where, paras, stats = '', [], []
+            if options:
+                for key, value in options.items():
+                    if type(value) == str:
+                        value = value.decode(chardet.detect(value)['encoding'])
+                    stats.append("%s %%s"%key)
+                    paras.append(value)
+                where = 'WHERE '
+                where += ' AND '.join(stats)
+            return self.exec_('DELETE FROM %s %s'%(table, where), paras)
         except Exception,e:
-            return {"code":"05","content":tuple(e)}
+            return {'code':1005,'content':tuple(e)}
 
     def __del__(self):
         try:
-            self.conn.commit()
-            self.cur.close()
-            self.conn.close()
-        except Exception,e:
-            print e
+            try:
+                self._conn.commit()
+            except Exception,e:
+                if self._debug:
+                    print tuple(e)
+                self._conn.rollback()
+            self._cur.close()
+            self._conn.close()
+        except Exception, e:
+            if self._debug:
+                print tuple(e)
 
 """
 
 import databasescontrol
 
-a = databasescontrol.Database(password="XXXXXX")
+conn = databasescontrol.Database(password="XXXXXX")
 
-print a.exec_("show databases")
+print conn.exec_('use test;')
+# print conn.get('user')
 
-print a.exec_("use test")
+print conn.get("user", options={'where':{'id >':1, 'name like':'%m%'}, "limit":[1], "order":'id desc'})
+# print conn.get("user", options={'where':{'id >':1, 'name =':'mary'}, "limit":[1, 2], "order":'id desc'})
+# print conn.get("user", filed=['id', 'name', 'passwd'], options={'where':{'id >':1, 'name =':'姓名'}})
+# print conn.get('user', options={'where': {'id in':(1,2)}})
+# print conn.set("user", {"name =":"mary"}, {'id >':2, 'name=':'wocao'})
+# print conn.new("user", ["name","password", 6], ["name","passwd", 'id'])
+# print conn.new('user', [7, 'hello', 'world', 'nihao', 9.0])
+# print conn.new('user', [8, '中文', 'world', '测试', 9.0])
 
-# print a.get("user",options={"where":{"password":"haha"},"limit":["2","2"],"order":["id","DESC"]})
-# print a.set("user",{"username":"wocao"})
+# print conn.del_('user', {'name=':'姓名'})
 
-print a.new("user",["name","password"],["username","password"])
-
-# print a.del_("user")
-
-print a.get("user")
+print conn.get('user')
 
 """
 ```
