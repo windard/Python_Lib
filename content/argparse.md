@@ -1,22 +1,27 @@
-##argparse
+## argparse
 
 向python中传入命令行参数，解析命令行参数和选项。
 
-####基本使用
+#### 基本使用
+
 ```python
 import argparse
 
 parser = argparse.ArgumentParser()
 parser.parse_args()
 ```
+
 保存为argparse_demo.py，运行，看一下结果。
 ![argparse_demo](images/argparse_demo.jpg)
+
 什么结果都没有，就是这样，它本来就什么都不做。
 我们可以给它一个参数。'-h'或者'--help'
 ![argparse_demo_h](images/argparse_demo_h.jpg)
+
 显示这个函数有一个可选参数'-h'或者'--help'，功能是显示帮助，然后退出。
+
 ```python
-#coding=utf-8
+
 #导入该模块
 import argparse
 #创建一个解析对象
@@ -29,15 +34,19 @@ args = parser.parse_args()
 print args.echo
 
 ```
+
 保存为argparse_add_argument.py，运行，看一下结果。
 不过，现在我们增加了一个参数 'echo'
 ![argparse_add_argument](images/argparse_add_argument.jpg)
+
 将输入的参数回显出来。
 现在我们来看一下相应的参数
+
 ```python
 ArgumentParser(prog=None, usage=None,description=None, epilog=None, parents=[],formatter_class=argparse.HelpFormatter, prefix_chars='-',fromfile_prefix_chars=None, argument_default=None,conflict_handler='error', add_help=True)  
 
 ```
+
 ArgumentParser()参数用的不多，一般只需要传递description参数。当调用parser.print_help()或者运行程序时由于参数不正确时，会打印这些描述信息。
 - prog:程序的名字，默认为None，用来在help信息中描述程序的名称。
 - usage:描述程序用途的字符串。
@@ -69,7 +78,7 @@ add_argument()
 
 
 ```python
-#coding=utf-8
+
 import argparse
 parser = argparse.ArgumentParser(description="This is for test")
 #这是必选参数

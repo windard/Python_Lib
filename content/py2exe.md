@@ -11,7 +11,7 @@
 ### 一个简单的例子
 
 ```python
-#coding=utf-8
+
 print "hello world"
 
 ```
@@ -19,7 +19,7 @@ print "hello world"
 保存为hello.py
 
 ```python
-#coding=utf-8
+
 from distutils.core import setup
 import py2exe
 
@@ -35,7 +35,7 @@ setup(console=['hello.py'])
 ### PyQt的编译
 
 ```python
-#coding=utf-8
+
 from distutils.core import setup
 import py2exe
 import sys
@@ -66,7 +66,7 @@ setup(
 ### pygame的编译
 
 ```python
-#coding=utf-8
+
 
 try:
     from distutils.core import setup

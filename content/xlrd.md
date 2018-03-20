@@ -3,7 +3,7 @@
 用Python打开Excel并读取,但是这个只能读。不能写入。         
 
 ```python
-#coding=utf-8
+
 import xlrd
 #打开一个Excel表单
 data = xlrd.open_workbook("test.xls")

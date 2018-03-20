@@ -4,7 +4,7 @@
 tarfile这个库也是和linux下的tar命令一样，功能丰富，不仅能打包，还能够压缩。    
 
 ```python
-#coding=utf-8
+
 import tarfile
 allfile = []
 #此处我们也使用之前zipfile的递归的方法
@@ -29,7 +29,7 @@ tar.close()
 可以看到这个库的用法与之前的zipfile库的用法非常相似，而且解压的过程也非常相近。     
 
 ```python
-#coding=utf-8
+
 import tarfile 
 #解压到当前文件夹
 g = tarfile.open('demo.tar.gz','r:gz')

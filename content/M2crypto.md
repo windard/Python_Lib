@@ -3,7 +3,7 @@
 这是一个很强大加密解密python库，用这个来实现rsa加密能够比使用rsa库更快一些。
 
 ```python
-#coding=utf-8
+
 
 from M2Crypto import RSA,BIO
 
@@ -30,7 +30,7 @@ print decrypted
 同样也能用于aes加密
 
 ``` python
-#coding=utf-8
+
 from M2Crypto.EVP import Cipher
 from M2Crypto import m2
 from M2Crypto import util
@@ -69,7 +69,7 @@ print Encrypt("This is a message")
 还有md5加密
 
 ``` python
-#coding=utf-8
+
 
 from M2Crypto.EVP import MessageDigest
 

@@ -29,3 +29,13 @@ if __name__ == '__main__':
     print arguments['--left']
     print arguments['--right']
 ```
+
+参考
+
+[docopt/docopt](https://github.com/docopt/docopt)
+
+[docopt - 创建漂亮的命令行交互界面](https://wp-lai.gitbooks.io/learn-python/content/0MOOC/docopt.html)
+
+[docopt：为Python程序创造一个优雅的命令行界面](http://hao.jobbole.com/docopt/)
+
+[docopt——好用的Python命令行参数解释器](https://xuanwo.org/2016/04/04/docopt-intro/)

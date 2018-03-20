@@ -5,7 +5,7 @@
 只列举了一些简单的可能常用的，还有很多，如果需要可以查看手册。             
 
 ```python
-#coding=utf-8
+
 
 import math
 

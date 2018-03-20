@@ -11,9 +11,9 @@
 import MySQLdb
 
 try:
-	conn = MySQLdb.connect(host='localhost',user='root',passwd='',db='test',port=3306,charset='utf8')
-	print "Connect Successful !"
-	conn.close()
+    conn = MySQLdb.connect(host='localhost',user='root',passwd='',db='test',port=3306,charset='utf8')
+    print "Connect Successful !"
+    conn.close()
 except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 ```
@@ -31,25 +31,25 @@ test中有三个选项，分别是name，id，sex，数据类型分别是char，
 ![mysql](images/mysql.jpg)
 
 ```python
-#coding=utf-8
+
 import MySQLdb
 
 try:
-	conn = MySQLdb.connect(host='localhost',user='root',passwd='',db='test',port=3306)
-	print "Connect Successful !"
-	cur = conn.cursor()
-	cur.execute("SELECT * FROM test")
-	data = cur.fetchone()
-	print data
-	value = ["Windard",001,"man"]
-	cur.execute("INSERT INTO test(name,id,sex) VALUES(%s,%s,%s)",value)
-	#注意一定要有conn.commit()这句来提交，要不然不能真正的插入数据。
-	conn.commit()
-	cur.execute("SELECT * FROM test")
-	data = cur.fetchone()
-	print data
-	cur.close()
-	conn.close()
+    conn = MySQLdb.connect(host='localhost',user='root',passwd='',db='test',port=3306)
+    print "Connect Successful !"
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM test")
+    data = cur.fetchone()
+    print data
+    value = ["Windard",001,"man"]
+    cur.execute("INSERT INTO test(name,id,sex) VALUES(%s,%s,%s)",value)
+    #注意一定要有conn.commit()这句来提交，要不然不能真正的插入数据。
+    conn.commit()
+    cur.execute("SELECT * FROM test")
+    data = cur.fetchone()
+    print data
+    cur.close()
+    conn.close()
 except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 ```
@@ -122,39 +122,39 @@ else:
 再来看一个完整的增改删查的代码。
 
 ```python
-#coding=utf-8
+
 import MySQLdb
 
 try:
-	conn = MySQLdb.connect(host='localhost',user='root',passwd='',db='test',port=3306)
-	print "Connect Successful !"
-	cur = conn.cursor()
-	#首先查询原始数据库状态
-	cur.execute("SELECT * FROM test ")
-	data = cur.fetchone()
-	print data
-	#插入一条数据
-	value = ["Windard",001,"man"]
-	cur.execute("INSERT INTO test(name,id,sex) VALUES(%s,%s,%s)",value)
-	conn.commit()
-	#查询插入数据库之后的状态
-	cur.execute("SELECT * FROM test ")
-	data = cur.fetchone()
-	print data
-	#更改数据库数据
-	cur.execute("UPDATE test SET id = 100 WHERE name = 'Windard'")
-	#查询更改数据之后的数据库数据
-	cur.execute("SELECT * FROM test ")
-	data = cur.fetchone()
-	print data
-	#删除数据库数据
-	cur.execute("DELETE FROM test WHERE name = 'Windard'")
-	#查询删除数据之后的数据库数据
-	cur.execute("SELECT * FROM test ")
-	data = cur.fetchone()
-	print data
-	cur.close()
-	conn.close()
+    conn = MySQLdb.connect(host='localhost',user='root',passwd='',db='test',port=3306)
+    print "Connect Successful !"
+    cur = conn.cursor()
+    #首先查询原始数据库状态
+    cur.execute("SELECT * FROM test ")
+    data = cur.fetchone()
+    print data
+    #插入一条数据
+    value = ["Windard",001,"man"]
+    cur.execute("INSERT INTO test(name,id,sex) VALUES(%s,%s,%s)",value)
+    conn.commit()
+    #查询插入数据库之后的状态
+    cur.execute("SELECT * FROM test ")
+    data = cur.fetchone()
+    print data
+    #更改数据库数据
+    cur.execute("UPDATE test SET id = 100 WHERE name = 'Windard'")
+    #查询更改数据之后的数据库数据
+    cur.execute("SELECT * FROM test ")
+    data = cur.fetchone()
+    print data
+    #删除数据库数据
+    cur.execute("DELETE FROM test WHERE name = 'Windard'")
+    #查询删除数据之后的数据库数据
+    cur.execute("SELECT * FROM test ")
+    data = cur.fetchone()
+    print data
+    cur.close()
+    conn.close()
 except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 ```
@@ -166,6 +166,40 @@ except MySQLdb.Error,e:
 这里包含完整的数据库增改删查的操作。
 
 #### 参数化 SQL 查询
+
+一般在 Python 中的参数化字符串使用百分号 `%` 传入，但是使用 SQL 查询的话，参数不用自己来完成，MySQL 的函数库会进行参数化，并自动为其加上单引号。
+
+```
+# -*- coding: utf-8 -*-
+
+import MySQLdb
+
+try:
+    #打开数据库连接
+    conn = MySQLdb.connect(host='localhost', user='root', passwd='', db='test')
+    print "Connect Successful !"
+    #用cursor()获得操作游标
+    cur = conn.cursor()
+
+    name = ['windard']
+
+    # 不要这样使用
+    cur.execute("SELECT * FROM user WHERE name='%s'" % name[0])
+    print cur.fetchone()
+
+    # 这样才是正确的
+    cur.execute("SELECT * FROM user WHERE name=%s", name)
+    print cur.fetchone()
+
+    # like 的时候是这样
+    cur.execute("SELECT * FROM user WHERE name LIKE %s", ['%%%s%%' % name[0]])
+    print cur.fetchone()
+
+    conn.close()
+except MySQLdb.Error, e:
+    print "Mysql Error %d: %s" % (e.args[0], e.args[1])
+
+```
 
 为了防止 SQL 注入，建议使用 参数化 查询，MySQLdb 自动进行转义过滤。
 
@@ -222,47 +256,47 @@ print conn.literal("0' or 1=1; # -- ")
 那我们试一下创建一个新的数据库和新的表单，插入大量的数据来试试。
 
 ```python
-#coding=utf-8
+
 import MySQLdb
 
 try:
-	conn = MySQLdb.connect(host='localhost',user='root',passwd='',port=3306,charset='utf8')
-	print "Connect Successful !"
-	cur = conn.cursor()
-	#创建一个新的数据库名为python
-	cur.execute("CREATE DATABASE IF NOT EXISTS python")
-	#连接这个数据库
-	conn.select_db('python')
-	#创建一个新的表单test
-	cur.execute("CREATE TABLE test(id int,info varchar(20))")
-	#插入单个数据
-	value = [1,'windard']
-	cur.execute("INSERT INTO test VALUES(%s,%s)",value)
-	conn.commit()
-	#查看结果
-	cur.execute("SELECT * FROM test ")
-	data = cur.fetchone()
-	print data
-	#插入大量数据
-	values = []
-	for i in range(20):
-		values.append((i,'this is number :' + str(i)))
-	cur.executemany("INSERT INTO test VALUES(%s,%s)",values)
-	conn.commit()
-	#查看结果，此时execute()的返回值是插入数据得到的行数
-	print "All Database Table"
-	count = cur.execute("SELECT * FROM test ")
-	data = cur.fetchmany(count)
-	for item in data:
-		print item
-	#删除表单
-	cur.execute("DROP TABLE test ")
-	#删除数据库
-	cur.execute("DROP DATABASE python")
-	cur.close()
-	conn.close()
+    conn = MySQLdb.connect(host='localhost',user='root',passwd='',port=3306,charset='utf8')
+    print "Connect Successful !"
+    cur = conn.cursor()
+    #创建一个新的数据库名为python
+    cur.execute("CREATE DATABASE IF NOT EXISTS python")
+    #连接这个数据库
+    conn.select_db('python')
+    #创建一个新的表单test
+    cur.execute("CREATE TABLE test(id int,info varchar(20))")
+    #插入单个数据
+    value = [1,'windard']
+    cur.execute("INSERT INTO test VALUES(%s,%s)",value)
+    conn.commit()
+    #查看结果
+    cur.execute("SELECT * FROM test ")
+    data = cur.fetchone()
+    print data
+    #插入大量数据
+    values = []
+    for i in range(20):
+        values.append((i,'this is number :' + str(i)))
+    cur.executemany("INSERT INTO test VALUES(%s,%s)",values)
+    conn.commit()
+    #查看结果，此时execute()的返回值是插入数据得到的行数
+    print "All Database Table"
+    count = cur.execute("SELECT * FROM test ")
+    data = cur.fetchmany(count)
+    for item in data:
+        print item
+    #删除表单
+    cur.execute("DROP TABLE test ")
+    #删除数据库
+    cur.execute("DROP DATABASE python")
+    cur.close()
+    conn.close()
 except MySQLdb.Error,e:
-	print "Mysql Error %d: %s" % (e.args[0], e.args[1])
+    print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 
 ```
 
@@ -273,34 +307,34 @@ except MySQLdb.Error,e:
 在这里连接数据库的时候也加上了数据库使用的编码格式，utf8，在使用的时候可以避免乱码的出现。
 
 ```python
-#coding=utf-8
+
 import MySQLdb
 
 try:
-	conn = MySQLdb.connect(host='localhost',user='root',passwd='',db='test',port=3306)
-	print "Connect Successful !"
-	cur = conn.cursor()
-	cur.execute("SELECT * FROM test")
-	data = cur.fetchone()
-	print data
-	value = ["Windard",001,"man"]
-	try:
-		cur.execute("INSERT INTO test(name,id,sex) VALUES(%s,%s,%s)",value)
-		#注意一定要有conn.commit()这句来提交，要不然不能真正的插入数据。
-		conn.commit()
-	except :
-		#发生错误时回滚
-		conn.rollback()
+    conn = MySQLdb.connect(host='localhost',user='root',passwd='',db='test',port=3306)
+    print "Connect Successful !"
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM test")
+    data = cur.fetchone()
+    print data
+    value = ["Windard",001,"man"]
+    try:
+        cur.execute("INSERT INTO test(name,id,sex) VALUES(%s,%s,%s)",value)
+        #注意一定要有conn.commit()这句来提交，要不然不能真正的插入数据。
+        conn.commit()
+    except :
+        #发生错误时回滚
+        conn.rollback()
 
-	cur.execute("SELECT * FROM test")
-	data = cur.fetchall()
-	for item in data:
-		fname = item[0]
-		fid   = item[1]
-		fsex  = item[2]
-	print "name = %s ,id = %s , sex = %s " %(fname ,fid ,fsex)
-	cur.close()
-	conn.close()
+    cur.execute("SELECT * FROM test")
+    data = cur.fetchall()
+    for item in data:
+        fname = item[0]
+        fid   = item[1]
+        fsex  = item[2]
+    print "name = %s ,id = %s , sex = %s " %(fname ,fid ,fsex)
+    cur.close()
+    conn.close()
 except MySQLdb.Error,e:
      print "Mysql Error %d: %s" % (e.args[0], e.args[1])
 ```
@@ -316,7 +350,7 @@ except MySQLdb.Error,e:
 #### 实用的 MySQL 数据库类
 
 ```
-#coding=utf-8
+
 
 import chardet
 import MySQLdb

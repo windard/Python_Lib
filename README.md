@@ -13,6 +13,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 以下是我在Python学习中学到的库函数，也不敢说作为教程，只能算是自己记录下来作为参考。
 俗话说的好，好记性不如烂笔头。
+
 具体内容在`content`文件夹里，代码在`code`文件夹里，一些其他的资料在`others`文件夹里。
 还有一些用Python做的小项目在`project`文件夹里。
 
@@ -55,6 +56,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 ## [json](content/json.md)
 
 ## [time](content/time.md)
+
+## [datetime](content/datetime.md)
 
 ## [random](content/random.md)
 
@@ -156,7 +159,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [pyquery](content/pyquery.md)
 
-## [ ] [lxml](content/lxml.md)
+## [lxml](content/lxml.md)
 
 ## [webbrowser](content/webbrowser.md)
 
@@ -164,7 +167,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [ ] [matplotlib](content/matplotlib.md)
 
-## [contextlib](context/contextlib.md)
+## [contextlib](content/contextlib.md)
 
 ## panda
 
@@ -182,11 +185,13 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [] [signal](content/signal.md)
 
-## [] [asyncore](content/asyncore.md)
+## [asyncore](content/asyncore.md)
 
-## [] [collections](content/collections.md)
+## [asynchat](content/asynchat.md)
 
-## [] [redis](content/redis.md)
+## [collections](content/collections.md)
+
+## [redis](content/redis.md)
 
 ## [jieba](content/jieba.md)
 
@@ -196,14 +201,42 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [urlparse](content/urlparse.md)
 
+## [furl](content/furl.md)
+
+## [fileinput](content/fileinput.md)
+
+## [shelve](content/shelve.md)
+
+## asynio
+
+## [gevent](content/gevent.md)
+
+## [array](content/array.md)
+
+## [pdb](content/pdb.md)
+
+## [decimal](content/decimal.md)
+
+## [click](content/click.md)
+
+## [qrcode](content/qrcode.md)
+
+## [qrtools](content/qrtools.md)
+
+## [zbar](content/zbar.md)
+
+## [pyqrcode](content/pyqrcode.md)
+
+## [ipaddress](content/ipaddress.md)
+
+## [psutil](content/psutil.md)
+
+## [requests-html](content/requests-html.md)
+
+## [LunarSolarConverter](content/LunarSolarConverter.md)
+
+## [tools](content/tools.md)
+
 ## [Other_thing](content/other_thing.md)
 
 ## [Reference_link](content/reference_link.md)
-
-安装 pip 最简单的方法还是下载 [get-pip.py](https://bootstrap.pypa.io/get-pip.py),然后运行，简单方便跨平台。
-
-上面有些库是需要自己安装，而安装这些库一般都用pip比较方便，在windows下安装pip可以通过先安装easy_install，再通过安装pip的办法。
-
-然后可以使用 `-i http://pypi.douban.com/simple --trusted-host pypi.douban.com` 来为 pip 加速。
-
-有一些库在 Windows 下可能不好安装，需要自行编译，可以下载别人已经编译好的可执行文件 whl 安装，Python 第三方库网站 [http://www.lfd.uci.edu/~gohlke/pythonlibs/](http://www.lfd.uci.edu/~gohlke/pythonlibs/) ，下载好之后 `pip install XXX.whl` 即可。

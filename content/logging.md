@@ -3,7 +3,7 @@
 标准的输出日志库，比每次用 print 输出不知道高到哪里去了。
 
 ```python
-#coding=utf-8
+
 
 import logging
 import sys
@@ -29,7 +29,7 @@ logging.critical('This is a critical error message')
 logging 共分五个 log 等级，默认输出的 Level 为 warning 等级，可以设定为其他等级就可以将代码中的每一个等级大于等于 Level 的问题都输出。
 
 ```python
-#coding=utf-8
+
 
 import sys
 import logging

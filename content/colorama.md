@@ -128,7 +128,7 @@ print_format_table()
 上面的方法只能在 linux 下有效，如果想要跨平台的话，可能就需要这个库了
 
 ```python
-#coding=utf-8
+
 
 from colorama import init,Fore
 

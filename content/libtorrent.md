@@ -58,6 +58,12 @@ for x in info.trackers():
 # 是否为私密种子
 print info.priv()
 
+# 返回DHT初始node
+info.nodes()
+
+# 分片SHA1值
+info.pieces()
+
 ```
 
 结果为
@@ -70,23 +76,314 @@ The.Garden.of.Words.2013.BluRay.1080p.10bit.x264.FLAC.DTS.AC3.6Audio-NYHD.mkv
 1
 4445065381 The.Garden.of.Words.2013.BluRay.1080p.10bit.x264.FLAC.DTS.AC3.6Audio-NYHD.mkv 爱生活 爱西电 爱睿思
 uTorrent/3200
-http://resource.xidian.edu.cn/announce.php?passkey=9c0de35d732fe76d3b4fd2e8157db8b9
-True
-windard@windard:~/Desktop/python$ python libtorrent_demo.py
-The.Garden.of.Words.2013.BluRay.1080p.10bit.x264.FLAC.DTS.AC3.6Audio-NYHD.mkv
-8ae7e343ae7a0ea5ceb600afc38efc0e6876c144
-4445065381
-1
-4445065381 The.Garden.of.Words.2013.BluRay.1080p.10bit.x264.FLAC.DTS.AC3.6Audio-NYHD.mkv
-爱生活 爱西电 爱睿思
-uTorrent/3200
-http://resource.xidian.edu.cn/announce.php?passkey=9c0de35d732fe76d3b4fd2e8157db8b9
+http://resource.xidian.edu.cn/announce.php?passkey=xxxx
 True
 ```
+
+#### 手动编解码种子文件
+
+bt 种子文件是由 bencoding 编码的字典结构
+
+##### bencoding 编码
+
+Bencoding 主要用在种子文件中，也用于同 tracker 请求时的返回响应
+
+bencoding 编码主要有四种数据结构 字符串，整数，列表和字典
+
+- 整数: 整数以十进制编码并处在字符`i`和`e`之间，如 `0 -> i0e`, `42 -> i42e`, `-43 -> i-43e`
+- 字符串: 字符串按 ASCII 编码之后以 `(长度):(内容)` 的格式编码，如 `'spam' -> 4:spam`
+- 列表: 列表的内容处在字符`l`和`e`之间，元素格式为 bencoding 的四种编码格式，如 `[42, 'spam'] -> li42e4:spame`
+- 字典: 字典的内容处在字符`d`和`e`之间，字典的键和值必须紧密相连且按照键值排序编码，如`{'bar':'spam', 'foo':42} -> d3:bar4:spam3:fooi42ee`
+
+自己实现 bencoding 编码也不难，也有几个已有的库 `bencode`, `bencoder`, `libtorrent.bencode[bdecode]`, `bcoding`, `better_bencode`可以使用。
+
+encode
+
+```
+# -*- coding: utf-8 -*-
+
+
+class Encoder(object):
+    code_method = None
+
+    def __init__(self, raw_data, encoding='utf-8'):
+        self.method = type(raw_data)
+        self.raw_data = raw_data
+        self.encoding = encoding
+
+    def encode(self):
+        raise NotImplementedError()
+
+
+class IntegerEncoder(Encoder):
+    code_method = [int, long]
+
+    def encode(self):
+        return 'i{}e'.format(self.raw_data)
+
+
+class StringEncoder(Encoder):
+    code_method = [str, unicode, bytes]
+
+    def encode(self):
+        if self.method == unicode:
+            self.raw_data.encode(self.encoding)
+        return '{}:{}'.format(len(self.raw_data), self.raw_data)
+
+
+class ListEncoder(Encoder):
+    code_method = [list, tuple, set]
+
+    def encode(self):
+        return 'l{}e'.format(''.join([encode(data) for data in self.raw_data]))
+
+
+class DictEncoder(Encoder):
+    code_method = [dict]
+
+    def encode(self):
+        self.raw_data = sorted(self.raw_data.items(), key=lambda a: a[0])
+        return 'd{}e'.format(''.join([''.join(encode(item) for item in data)
+                                      for data in self.raw_data]))
+
+
+def encode(raw_data):
+    method = type(raw_data)
+    if method in IntegerEncoder.code_method:
+        return IntegerEncoder(raw_data).encode()
+    elif method in StringEncoder.code_method:
+        return StringEncoder(raw_data).encode()
+    elif method in ListEncoder.code_method:
+        return ListEncoder(raw_data).encode()
+    else:
+        return DictEncoder(raw_data).encode()
+
+
+if __name__ == '__main__':
+    print encode(42)
+    print encode('spam')
+    print encode([42, 'spam'])
+    print encode({'bar': 'spam', 'foo': 42})
+    print encode({
+        'encoding':'utf-8',
+        'announce': ['http://baidu.com', 'http://ele.me'],
+        'info': {
+            'length': 123,
+            'pieces': ['abc', 'def'],
+            'name': 'secret star'
+        }
+    })
+
+```
+
+
+decode
+
+```
+# -*- coding: utf-8 -*-
+
+import re
+
+
+class Decoder(object):
+    regex_text = None
+
+    def __init__(self, raw_data):
+        self.raw_data = raw_data
+        self.data = None
+
+    def decode(self):
+        raise NotImplementedError()
+
+
+class IntegerDecoder(Decoder):
+
+    regex_text = r'i([-]?[\d]+)e'
+
+    def decode(self):
+        value = re.match(self.regex_text, self.raw_data).group(1)
+        self.raw_data = self.raw_data[1:]
+        self.raw_data = self.raw_data.lstrip(value)
+        self.raw_data = self.raw_data[1:]
+        self.data = int(value)
+        return self.raw_data, self.data
+
+
+class StringDecoder(Decoder):
+
+    regex_text = r'([\d]+):([\S]+)'
+
+    def decode(self):
+        length = re.match(self.regex_text, self.raw_data).group(1)
+        self.raw_data = self.raw_data.lstrip(length)
+        self.raw_data = self.raw_data.lstrip(':')
+        self.data = self.raw_data[:int(length)]
+        self.raw_data = self.raw_data[int(length):]
+        return self.raw_data, self.data
+
+
+class ListDecoder(Decoder):
+
+    regex_text = r'l([\S]+)e'
+
+    def __init__(self, raw_data):
+        super(ListDecoder, self).__init__(raw_data)
+        self.data = []
+
+    def decode_item(self, raw_data):
+        raw_data, value = decode(raw_data)
+        self.data.append(value)
+        return raw_data
+
+    def decode(self):
+        self.raw_data = self.raw_data[1:]
+        while not self.raw_data.startswith('e'):
+            self.raw_data = self.decode_item(self.raw_data)
+        self.raw_data = self.raw_data[1:]
+        return self.raw_data, self.data
+
+
+class DictDecoder(Decoder):
+
+    regex_text = r'd([\S]+)e'
+
+    def __init__(self, raw_data):
+        super(DictDecoder, self).__init__(raw_data)
+        self.data = {}
+
+    def decode_item(self, raw_data):
+        raw_data, key = StringDecoder(raw_data).decode()
+        raw_data, value = decode(raw_data)
+        self.data[key] = value
+        return raw_data
+
+    def decode(self):
+        self.raw_data = self.raw_data[1:]
+        while not self.raw_data.startswith('e'):
+            self.raw_data = self.decode_item(self.raw_data)
+        self.raw_data = self.raw_data[1:]
+        return self.raw_data, self.data
+
+
+def decode(raw_data):
+    if raw_data.startswith('d'):
+        raw_data, data = DictDecoder(raw_data).decode()
+    elif raw_data.startswith('l'):
+        raw_data, data = ListDecoder(raw_data).decode()
+    elif raw_data.startswith('i'):
+        raw_data, data = IntegerDecoder(raw_data).decode()
+    else:
+        raw_data, data = StringDecoder(raw_data).decode()
+    return raw_data, data
+
+
+if __name__ == '__main__':
+    # print decode('de')
+    # print decode('i42e')
+    # print decode('i42ee')
+    # print decode('4:spam')
+    # print decode('li42e4:spame')
+    # print decode('d3:bar4:spam3:fooi42ee')
+    print decode('d8:announcel16:http://baidu.com13:http://ele.mee8:encoding5:utf-84:infod6:lengthi123e4:name11:secret star6:piecesl3:abc3:defeee')  # noqa
+
+```
+
+##### 种子的字典结构
+
+种子文件格式
+
+- announce: tracker服务器的URL(字符串)
+- announce-list(可选): 备用tracker服务器列表(列表)
+- creation date(可选): 种子创建的时间，Unix 时间戳
+- comment(可选): 备注(字符串)
+- encoding: 编码方式(字符串)
+- created by(可选): 创建人或创建程序的信息(字符串)
+- info: 一个字典结构，包含文件的主要信息，为分二种情况：单文件结构或多文件结构
+
+1.单文件结构如下：
+ - length: 文件长度，单位字节(整数)
+ - md5sum(可选): 长32个字符的文件的MD5校验和，BT不使用这个值，只是为了兼容一些程序所保留!(字符串)
+ - name:文件名(字符串)
+ - piece length: 每个块的大小，单位字节(整数)
+ - pieces: 每个块的20个字节的SHA1 Hash的值(二进制格式)
+
+2.多文件结构如下：
+ - name:最上层的目录名字(字符串)
+ - piece length: 每个块的大小，单位字节(整数)
+ - files: 一个列表结构结构
+  - length: 文件长度，单位字节(整数)
+  - md5sum(可选): 同单文件结构中相同
+  - path: 文件的路径和名字，是一个列表结构，如\test\test.txt 列表为l4:test8test.txte
+ - pieces: 同单文件结构中相同
+
+其结构大概就像这样
+
+```
+{
+"announce"="http://btfans.3322.org:8000/announce"   ;tracker 服务器的URL(字符串)
+"announce-list"=["http://..","http://.."]           ;备用tracker服务器列表(列表)
+"creation date"=1175204110                          ;种子创建的时间，Unix标准时间格式
+"encoding"="utf-8"                                  ;编码
+"comment"="备注"
+"created by"="创建人信息"
+
+{
+
+"info"={"files"=[{"filehash"="SHA1 Hash","length"=168099584,"path"=["01.rmvb"]},
+                  {...},
+                  {...}
+                 ]
+
+         "name"="保存目录名"
+         "piece length"=2097152    ；每个块的大小，单位字节(整数)
+         "pieces"="每个块的SHA1 Hash的值的顺序排列(二进制格式,长度为"20 X 块数")"
+
+
+         }
+
+}
+
+}
+```
+
+实现种子文件的读取和写入和转磁力
+
+```
+# -*- coding: utf-8 -*-
+
+import hashlib
+from bencoding_encode import encode
+from bencoding_decode import decode
+
+
+def load(filename):
+    data = open(filename, 'rb').read()
+    return decode(data)[1]
+
+
+def dump(filename, data):
+    with open(filename, 'wb') as f:
+        f.write(encode(data))
+
+
+def torrent2magnet(filename):
+    data = load(filename)
+    return 'magnet:?xt=urn:btih:{}'.format(hashlib.sha1(encode(data['info'])).hexdigest())
+
+
+if __name__ == '__main__':
+    data = load('shape.torrent')
+    dump('dump.torrent', data)
+    print torrent2magnet('dump.torrent')
+
+```
+
 
 #### 种子与磁力链接转换
 
 使用 libtorrent 就可以非常简单的进行转换，或者是使用 bencode
+
+种子文件经过哈希算法可以直接组装成磁力链接，根据磁力链接需要向 tracker 请求或者经过 DHT 协议向其他用户获得种子内容
 
 ###### 种子文件转换为磁力链接
 
@@ -126,7 +423,7 @@ magneturi = 'magnet:?%s' % paramstr
 print magneturi
 ```
 
-###### 磁力链接转种子
+###### 磁力链接转种子文件
 
 ```
 # coding=utf-8

@@ -9,7 +9,7 @@
 还是上一个例子，我们用threading来试一下。
 
 ```python
-#coding=utf-8
+
 import threading
 from time import ctime,sleep
 def loop(nloop,nsec):
@@ -43,7 +43,7 @@ print "all end   at: ",ctime()
 ![threading_demo.jpg](images/threading_demo.jpg)
 
 ```python
-#coding=utf-8
+
 
 import threading
 from time import ctime,sleep
@@ -88,7 +88,7 @@ print "all end   at: ",ctime()
 这里我们需要先创建一个类供线程启动的时候执行，然后在线程启动的时候，Thread对象会调用我们创建的对象的执行函数。
 
 ```python
-#coding=utf-8
+
 
 import threading
 from time import ctime,sleep
@@ -134,7 +134,7 @@ print "all end   at: ",ctime()
 创建一个继承自Thread的之类，然后构造这个之类的实例，这时，Thread的start方法在就要在之类里重写为run方法。
 
 ```python
-#coding=utf-8
+
 
 import threading
 from time import ctime,sleep
@@ -185,7 +185,7 @@ print "all end   at: ",ctime()
 假设我们一共有100个货物，生产者与消费者所需时间都是1秒以内的随机时间。
 
 ```python
-#coding=utf-8
+
 
 import threading
 from Queue import Queue
@@ -235,7 +235,7 @@ print "all end   at: ",ctime()
 果然在把生产者消费者线程增多的时候，相比较效率提高了很多。
 
 ```python
-#coding=utf-8
+
 
 import threading
 from Queue import Queue
@@ -289,7 +289,7 @@ print "all end   at: ",ctime()
 我们先来看一下没有资源锁的情况
 
 ```python
-#coding=utf-8
+
 
 import threading
 from time import ctime,sleep
@@ -334,7 +334,7 @@ if __name__ == '__main__':
 现在我们将其上锁。
 
 ```python
-#coding=utf-8
+
 
 import threading
 from time import ctime,sleep
@@ -381,7 +381,7 @@ if __name__ == '__main__':
 
 ![threading_lock.jpg](images/threading_lock.jpg)
 
-使用 进程锁的话需要手动的获取和释放，也可以采用简洁的方法,使用 上下文管理器。
+使用线程锁的话需要手动的获取和释放，也可以采用简洁的方法,使用 上下文管理器。
 
 ```
 def run(self):

@@ -7,7 +7,7 @@
 >- Windows下，点击[这里](envelopes-master.zip)下载文件压缩包，解压后进入文件夹，`python install setup.py`即可安装。
 
 ```python
-#coding=utf-8
+
 
 from envelopes import Envelope
 

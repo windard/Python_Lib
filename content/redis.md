@@ -1,12 +1,14 @@
 ## redis
 
-redis 是一个基于内存的 键值对 存储系统，是NoSQL 的两大代表之一，另一个是 mongoDB 。它不仅能做数据库，还能做缓存，消息代理等，它支持的数据结构有 字符串, 列表, 集合, 字典, 散列, 有序集合, 位图, 地理位置，等多种数据结构，同时它的数据存储在内存中，也可以持久化到硬盘。
+redis 是一个基于内存的 键值对 存储系统，是 NoSQL 的两大代表之一，另一个是 mongoDB 。它不仅能做数据库，还能做缓存，消息代理等，功能十分强大。它支持的数据结构有 字符串, 列表, 集合, 字典, 散列, 有序集合, 位图, 地理位置，等多种数据结构，同时它的数据存储在内存中，也可以持久化到硬盘。
 
-常见的五种数据结构与 Python 中的数据结构的对应 字符串 == 字符串 (String), 列表 == 列表 (List), 集合 == 集合 (Set), 散列 == 字典 (Dict), 有序集合 == 有序字典 (Dict), 在 Python 中没有 有序集合 的概念，因为 Python 的字典就是有序的。
+常见的五种数据结构与 Python 中的数据结构的对应 字符串(STRING) == 字符串 (String), 列表(LIST) == 列表 (List), 集合(SET) == 集合 (Set), 散列(HASH) == 字典 (Dict), 有序集合(ZSET) == 有序集合 (Dict), 在 Python 中没有 有序集合 的概念，所以只能当做一个有顺序的集合。
 
 redis 的 服务器端是 `redis-server` ，客户端是 `redis-cli`。
 
-一般常用的命令有 `set [key] [value]`, `get [key]`, ,`del [key]`, `keys *` 等。
+一般常用的命令有 `set [key] [value]`(增值, 改值), `get [key]`(取值), `del [key]`(删值), `type [key]`(查看数据类型), `keys *`(查找键), `rename [key] [key]`(改名) 等。
+
+其中 `del`, `type`, `rename` 是对所有数据类型通用的。
 
 ### 基础使用
 
@@ -44,14 +46,76 @@ windard <type 'str'>
 
 ... 为什么跟我想象的不一样，数组和字典，输出都是 字符串 结构的吖，难道还要自行转换一下。
 
+在使用 `set` 和 `get` 的时候，还可以使用 `mset` 和 `mget` 来批量导入导出，使用字符串还有很多其他的操作，如获得字符串长度，获得部分字符串等。
+
+- `redis.Redis.mset(self, *args, **kwargs)`
+- `redis.Redis.mget(self, keys, *args)`
+- `redis.Redis.strlen(self, name)`
+- `redis.Redis.substr(self, name, start, end=-1)`
+- `redis.Redis.incr(self, name, amount=1)`
+- `redis.Redis.decr(self, name, amount=1)`
+- `redis.Redis.incrby(self, name, amount=1)`
+- `redis.Redis.decr(self, name, amount=1)`
+
+```
+# coding=utf-8
+
+import redis
+
+r = redis.Redis()
+
+r.mset({'country:name': 'China', 'country:location': 'Asia', 'country:area': '960'})
+
+print r.mget({'country:name', 'country:area'})
+
+r.set('school', 'xidian')
+
+print r.get('school')
+
+print r.strlen('school')
+
+print r.substr('school', 0, 3)
+
+r.set('num', 1)
+
+print r.incr('num')
+
+print r.get('num')
+
+print r.incrby('num', 4)
+
+print r.get('num')
+
+print r.decr('num')
+
+print r.get('num')
+```
+
+输出
+
+```
+['China', '960']
+xidian
+6
+xidi
+2
+2
+6
+6
+5
+5
+```
+
 ### 使用列表
 
 注意，在再次使用中设置一个已有键的值，如果两次设置的值的数据类型不一致，会报错 `redis.exceptions.ResponseError: WRONGTYPE Operation against a key holding the wrong kind of value`
 
 可以尽量不要使用同一个键，或者在再次使用中删除该键值对。
 
-- `redis.Redis.lpush(self, name, *values)` 往某个键中填入列表
-- `redis.Redis.lpop(self, name)` 从某个键中取出值
+- `redis.Redis.lpush(self, name, *values)` 往某个键中从左往右填入列表
+- `redis.Redis.rpush(self, name, *values)` 往某个键中从右往左填入列表
+- `redis.Redis.lpop(self, name)` 从某个键中从左往右取出值
+- `redis.Redis.rpop(self, name)` 从某个键中从右往左取出值
 - `redis.Redis.lrange(self, name, start, end)` 从某个键取出某些值
 
 ```
@@ -138,7 +202,7 @@ print result, type(result)
 ```
 
 有几点需注意：
-- 虽然我们推进去的是列表，但是每个列表的值，本来是数字，结果还是逃不掉变成字符串的命运
+- 虽然我们推进去的是列表，但是每个列表的值，本来是数字，结果还是逃不掉变成字符串的命运，不过还是可以进行加减操作
 - 若要一次推入多个数值，需要使用 `*[list]` ，而不是直接推入数组，否则也是字符串
 - 只有 `push` 和 `pop` 有左边，有右边操作，可以双边操作，其他的 `index`, `range`, `trim` 等都只有左边
 
@@ -146,19 +210,133 @@ print result, type(result)
 
 在 Python 中，集合与列表的区别就是 不能有重复的值 ，在 redis 同理。
 
+列表可以存储多个相同的字符串，而集合通过散列来保证自己的每个字符串都是各不相同的。
+
+列表是有序的，而集合是无序的。所以列表有左右之分，而集合则是直接添加。
+
+- `redis.Redis.sadd(self, name, *values)`
+- `redis.Redis.scard(self, name)`
+- `redis.Redis.smembers(self, name)`
+- `redis.Redis.sismember(self, name, value)`
+
 ```
+# coding=utf-8
+
+import redis
+
+r = redis.Redis()
+
+r.delete('name')
+
+r.sadd('name', 'mary', 'heny')
+
+r.sadd('name', 'john', 'anny')
+
+print r.smembers('name')
+
+# 查看集合中值的数量
+print r.scard('name')
+
+print r.sismember('name', 'john')
+
+print r.sismember('name', 'venr')
 
 ```
 
-### 使用字典
+输出
+
+```
+4
+set(['john', 'heny', 'anny', 'mary'])
+True
+False
+```
+
+### 使用有序集合
+
+- `redis.Redis.zrem(self, name, *values)`
+- `redis.Redis.zadd(self, name, *args, **kwargs)`
+- `redis.Redis.zrank(self, name, value)`
+- `redis.Redis.zcard(self, name)`
+- `redis.Redis.zscore(self, name, value)`
+- `redis.Redis.zcount(self, name, min, max)`
+- `redis.Redis.zrange(self, name, start, end, desc=False, withscores=False, score_cast_func=<type 'float'>)`
+- `redis.Redis.zrangebyscore(self, name, min, max, start=None, num=None, withscores=False, score_cast_func=<type 'float'>)`
+- `redis.Redis.zremrangebyrank(self, name, min, max)`
+
+```
+# coding=utf-8
+
+import redis
+
+r = redis.Redis()
+
+r.delete('name')
+
+# mary 的分数是 1.1
+# lily 的分数是 3.3
+# john 的分数是 2.2
+# heny 的分数是 4.4
+r.zadd('name', 'mary', 1.1, 'lily', 3.3, john=2.2, heny=4.4)
+
+# 查看所有元素
+print r.zrange('name', 0, -1)
+
+# 查看某个元素的位置
+print r.zrank('name', 'lily')
+
+# 查看所有元素，并显示分数
+print r.zrange('name', 0, -1, True)
+
+# 查看分数在 2-4 之间的元素
+print r.zrangebyscore('name', 2, 4)
+
+# 计数，统计所有元素的数量
+print r.zcard('name')
+
+# 计数，统计分数在 0-3 之间的数目
+print r.zcount('name', 0, 3)
+
+# 删除元素
+r.zrem('name', 'mary')
+
+print r.zrange('name', 0, -1)
+
+# 通过索引删除元素
+r.zremrangebyrank('name', 0, 1)
+
+print r.zrange('name', 0, -1)
+
+# 通过分数删除元素
+r.zremrangebyscore('name', 1, 2)
+
+print r.zrange('name', 0, -1)
+
+```
+
+输出
+
+```
+['mary', 'john', 'lily', 'heny']
+2
+['heny', 'lily', 'john', 'mary']
+['john', 'lily']
+4
+2
+['john', 'lily', 'heny']
+['heny']
+['heny']
+```
+
+### 使用散列
 
 - `redis.Redis.hset(self, name, key, value)`
 - `redis.Redis.hget(self, name, key)`
+- `redis.Redis.hdel(self, name, *keys)`
 - `redis.Redis.hmset(self, name, mapping)`
 - `redis.Redis.hmget(self, name, keys, *args)`
 - `redis.Redis.hgetall(self, name)`
 - `redis.Redis.hscan(self, name, cursor=0, match=None, count=None)`
-- `redis.Redis.hdel(self, name, *keys)`
 - `redis.Redis.hkeys(self, name)`
 - `redis.Redis.hvals(self, name)`
 
@@ -215,6 +393,46 @@ xidian
 2
 ['location', 'year']
 ['Shannxi', '86']
+```
+
+### 订阅和收听
+
+使用 redis 可以作为消息队列使用，并不需要使用 RQ(Redis Queue) 就可以使用 订阅和收听 来作为消息队列。
+
+在一个 redis 的终端中开始收听 
+
+```
+127.0.0.1:6379> subscribe hello
+Reading messages... (press Ctrl-C to quit)
+1) "subscribe"
+2) "hello"
+3) (integer) 1
+1) "message"
+2) "hello"
+3) "world"
+1) "message"
+2) "hello"
+3) "suibianme"
+1) "message"
+2) "hello"
+3) "nihao"
+```
+
+在另一个终端中发布消息
+
+```
+127.0.0.1:6379> publish hello world
+(integer) 1
+127.0.0.1:6379> publish hello suibianme
+(integer) 1
+127.0.0.1:6379> publish hello nihao
+(integer) 1
+```
+
+收听时也可以选择批量收听
+
+```
+subscribe hello*
 ```
 
 ### 高级使用
@@ -292,6 +510,60 @@ None
 False
 ```
 
-### 其他应用
+再来一些应用
 
+```
+# coding=utf-8
+
+import redis
+
+r = redis.Redis()
+
+# 查看数据库信息
+# for key, value in r.info().items():
+    # print key, ":", value
+
+# 查看数据库大小，即当前数据库的键值对数
+print r.dbsize()
+
+# 查看链接
+print r.ping()
+
+r.set('name', 'windard')
+
+# 获得一个值的同时改变它
+print r.getset('name', 'others')
+
+print r.get('name')
+
+# 关闭 redis 数据库
+# r.shutdown()
+
+r.delete('click')
+
+# 设置一个键，让它每次自加一
+r.incr('click')
+
+print r.get('click')
+r.incr('click')
+
+print r.get('click')
+
+# 还能自减一
+r.decr('click')
+print r.get('click')
+
+```
+
+输出
+
+```
+55
+True
+windard
+others
+1
+2
+1
+```
 

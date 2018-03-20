@@ -1,4 +1,4 @@
-## nmap 
+## nmap
 有名的网络端口扫描工具，有大神为它写了一个 Python 库 python-nmap ，调用 nmap 来实现端口扫描。
 
 nmap 的简单使用
@@ -11,7 +11,9 @@ nmap 的简单使用
 - `--spoof-mac <mac address>` 伪装你的 Mac 地址
 - `-sU` UDP 端口扫描
 - `-sn|sP` Ping 测试 ，可以 `nmap -sn 10.177.233.31/24` ，可以 `nmap -sn 10.177.233.1-255`
+ > `nmap -sP 222.24.19.0/24` 没事扫一扫，有收获
 - `-PE/PP/PM` 使用ICMP echo, timestamp, and netmask 请求包发现主机
+- `-PS/PA/PU/PY` 使用 TCP SYN/ACK ，UDP，SCTP 扫描发现主机
 - `-sT` TCP 连接扫描，会在目标主机中有请求记录，这也是默认的扫描方式
 - `-sA` TCP ACK 扫描，探查目标主机防火墙过滤情况
 - `-sS` TCP SYN 扫描，只进行TCP三次握手的前两步，很少有系统计入日志，默认使用，需要root权限
@@ -33,7 +35,7 @@ nmap 的简单使用
 ```
 # coding=utf-8
 
-import nmap 
+import nmap
 
 nm = nmap.PortScanner()
 

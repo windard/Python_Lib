@@ -4,7 +4,7 @@
 首先假设我们有两个任务，一个需要2秒钟来完成，一个需要4秒钟来完成，花费时间我们用sleep来代替。那么正常情况下，我们需要6秒才能完成这两个任务。代码如下。
 
 ```python
-#coding=utf-8
+
 
 from time import ctime,sleep
 
@@ -33,7 +33,7 @@ print "all end   at: ",ctime()
 可以看到确实是花费了6秒钟，现在，我们再来使用多线程是他们同时进行，并且使用锁，把主进程锁住等待全部子进程完成，那么应该只花费4秒钟就可以全部完成了。                         
 
 ```python
-#coding=utf-8
+
 
 import thread
 from time import ctime,sleep

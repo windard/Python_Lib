@@ -5,7 +5,7 @@
 ### PIL
 
 ```python
-#coding=utf-8
+
 
 from PIL import ImageGrab
 
@@ -19,7 +19,7 @@ img.save('grab_pil_demo.png','PNG')
 ### Qt4
 
 ```python
-#coding=utf-8
+
 
 import sys  
 from PyQt4.QtGui import QPixmap, QApplication  
@@ -31,7 +31,7 @@ QPixmap.grabWindow(QApplication.desktop().winId()).save('grab_qt_demo.png', 'png
 ### Win32
 
 ```python
-#coding=utf-8
+
 
 import Image
 import win32gui, win32ui, win32con, win32api  
@@ -104,7 +104,7 @@ win32gui.DeleteObject(screenshot.GetHandle())
 #### 截全图
 
 ```python
-#coding=utf-8
+
 
 import pyscreenshot
 
@@ -131,7 +131,7 @@ python -m pyscreenshot.examples.showgrabfullscreen
 #### 截部分
 
 ```
-#coding=utf-8
+
 
 import pyscreenshot
 

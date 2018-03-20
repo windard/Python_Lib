@@ -5,7 +5,7 @@
 #### 首先是Markdown    
 
 ```pyhton
-#coding=utf-8
+
 
 import markdown
 
@@ -60,7 +60,7 @@ print result
 一样的文本，再来试一下markdown2                     
 
 ```python
-#coding=utf-8
+
 
 import markdown2
 
@@ -115,7 +115,7 @@ print result
 最后来试下Mistune                
 
 ```python
-#coding=utf-8
+
 
 import mistune
 
@@ -221,7 +221,7 @@ hello world
 然后再写一个转换的Python文件。
 
 ```python
-#coding=utf-8
+
 import markdown
 import codecs
 

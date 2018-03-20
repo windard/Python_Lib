@@ -3,7 +3,7 @@
 这个库的功能很简单，也很有用，就是在输入的时候输入字符不回显出来。它只有两个函数，`getpass`和`getuser`,功能分别是输入不进行回显和获得当前系统登录用户名。
 
 ```python
-#coding=utf-8
+
 import getpass
 #输入不回显，默认会提示password
 pass1 = getpass.getpass()

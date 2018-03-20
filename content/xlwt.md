@@ -3,7 +3,7 @@
 强大的Python与Excel交互，可以用xlwt打开Excel表单并写入，但是只能写入，不能读取。  
 
 ```python
-#coding=utf-8
+
 import xlwt
 #设定打开文档的编码格式，或者留空
 excel = xlwt.Workbook('utf-8')

@@ -107,7 +107,7 @@ conn.close()
 常用的数据库对象
 
 ```
-#coding=utf-8
+
 
 import sqlite3
 

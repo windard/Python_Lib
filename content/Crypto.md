@@ -1,11 +1,11 @@
 ## Crypto
 
-这是一个很强大的信息安全库，可以做很多的高级加密，包括但不限于AES，DES，RSA，MD5，sha-1等等加密算法。               
+这是一个很强大的信息安全库，可以做很多的高级加密，包括但不限于AES，DES，RSA，MD5，sha-1等等加密算法。
 
 #### md5和SHA-1
 
 ```python
-#coding=utf-8
+
 #先从简单的开始吧 MD5 SHA-1
 from Crypto.Hash import MD5
 from Crypto.Hash import SHA
@@ -17,20 +17,20 @@ h.update("This is decode string")
 print h.hexdigest()
 ```
 
-保存为crypto.md5.py，运行，看一下结果。   
+保存为crypto.md5.py，运行，看一下结果。
 
-![crypto_md5.jpg](images/crypto_md5.jpg)      
+![crypto_md5.jpg](images/crypto_md5.jpg)
 
 
 #### AES
 
-接下来是AES加密，美国标准加密协议。     
+接下来是AES加密，美国标准加密协议。
 
 ```python
-#coding=utf-8
+
 from Crypto.Cipher import AES
 import base64
-#设定一个密钥，密钥可以是是16位, 
+#设定一个密钥，密钥可以是是16位,
 #还可以是24 或 32 位长度，
 #其对应为 AES-128, AES-196 和 AES-256.
 key = '0123456789abcdef'
@@ -54,9 +54,9 @@ plain = decryptor.decrypt(ciphertext)
 print plain
 ```
 
-保存为crypto_aes.py，运行，看一下结果。      
+保存为crypto_aes.py，运行，看一下结果。
 
-![crypto_aes.jpg](images/crypto_aes.jpg)     
+![crypto_aes.jpg](images/crypto_aes.jpg)
 
 或者是这样写
 
@@ -106,11 +106,11 @@ print msg
 
 #### DES
 
-接下来就是DES加密算法，但是DES算法的安全性已经不那么可靠，穷举法还是能够计算出来，现在一般采用三重的DES加密来保证安全性。                                     
-两种DES加密算法的实现，分别用crypto库和pyDes库。     
+接下来就是DES加密算法，但是DES算法的安全性已经不那么可靠，穷举法还是能够计算出来，现在一般采用三重的DES加密来保证安全性。
+两种DES加密算法的实现，分别用crypto库和pyDes库。
 
 ```python
-#coding=utf-8
+
 from pyDes import *
 import base64
 #DES的key和IV向量都是8位
@@ -133,12 +133,12 @@ plain = m.decrypt(cipytext)
 print plain
 ```
 
-保存为pydes_des.py，运行，看一下结果。        
+保存为pydes_des.py，运行，看一下结果。
 
-![pydes_des.jpg](images/pydes_des.jpg)             
+![pydes_des.jpg](images/pydes_des.jpg)
 
 ```python
-#coding=utf-8
+
 from Crypto.Cipher import DES
 import base64
 key = "01234567"
@@ -156,17 +156,17 @@ plain = m.decrypt(cipher)
 print plain
 ```
 
-保存为crypto_des.py，运行，看一下结果。            
+保存为crypto_des.py，运行，看一下结果。
 
-![crypto_des.jpg](images/crypto_des.jpg)                  
+![crypto_des.jpg](images/crypto_des.jpg)
 
 可以看到两个DES加密的结果是一样的，但是这个安全性不高。
 
 #### DES3
 
-那么接下来就是我们的三重DES加密。用crypto库创建三重DES是非常容易的，只需要将DES换成3DES即可，还有就是密钥的长度由8位变成了16位。              
+那么接下来就是我们的三重DES加密。用crypto库创建三重DES是非常容易的，只需要将DES换成3DES即可，还有就是密钥的长度由8位变成了16位。
 ```python
-#coding=utf-8
+
 from Crypto.Cipher import DES3
 import base64
 #三重DES加密的密钥是16位的
@@ -185,7 +185,25 @@ plain = m.decrypt(cipher)
 print plain
 ```
 
-保存为crypto_3des.py，运行，看一下结果。       
- 
+保存为crypto_3des.py，运行，看一下结果。
+
 ![crypto_3des.jpg](images/crypto_3des.jpg)
 
+
+#### RSA
+
+RSA 是自带文档的，然而文档有一点点问题
+
+```
+>>> from Crypto.PublicKey import RSA
+>>>
+>>> key = RSA.generate(2048)
+>>> f = open('mykey.pem','w')
+>>> f.write(key.exportKey('PEM'))
+>>> f.close()
+...
+>>> f = open('mykey.pem','r')
+>>> key = RSA.importKey(f.read())
+```
+
+在第三行 `f.write(key.exportKey('PEM'))` 运行会报错 `AttributeError: 'module' object has no attribute 'exportKey'`，应该是 `f.write(RSA.exportKey('PEM'))`

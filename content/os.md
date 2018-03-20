@@ -24,9 +24,14 @@
 9. 判断一个文件是否存在或这否为文件-- os.path.isfile("file")
 10. 判断一个路径（目录或文件）是否存在——os.path.exists()
 11. 判断一个路径是否是绝对路径-- os.path.isabs()
+12. 获得一个绝对路径 -- os.path.abspath()
+13. 获得一个相对路径 -- os.path.relpath(path, start)
 9. 读取和设置环境变量-- os.getenv() 与os.putenv()
-10. 指示你正在使用的平台-- os.name       对于Windows，它是'nt'，而对于Linux/Unix用户，它是'posix'
-11. 给出当前平台使用的行终止符--os.linesep    Windows使用'\r\n',Linux使用'\n',而Mac使用'\r'
+1o. 使用家环境-- os.path.expanduser('~')
+10. 指示你正在使用的平台-- os.name       对于Windows，它是`nt`，而对于Linux/Unix用户，它是`posix`
+12. 给出当前平台使用的路径分隔符 -- os.sep Windows 使用 `\` ，Linux 使用 `/`，Mac OS 使用 `:`
+11. 给出当前平台使用的行终止符--os.linesep    Windows 使用`\r\n`,Linux 使用 `\n`,而 Mac OS 使用 `\r`
+12. 给出当前平台使用的分割路径的分隔符 -- os.pathsep   Windows 使用 `;` ，Linux 使用 `:` Mac OS 使用 `::`
 12. 运行shell命令-- os.system()
  >但是这个执行命令行没有返回值，直接输出，不管你有没有print
 13. 执行shell命令-- os.popen()
@@ -43,7 +48,7 @@
 20. 杀死一个进程 -- os.kill()
 
 ```python
-#coding=utf-8
+
 import os
 
 currentpath = os.getcwd()
@@ -185,7 +190,7 @@ def create_child():
         print u'你的系统不支持fork'
         exit()
 
-    if pid1 <0:
+    if pid1 < 0:
         print u'创建子进程失败'
     elif pid1==0:
         print '这是在子进程里，看不到子进程的 pid:%d，因为那就是自己的 pid: %d，父进程就是主进程: %d '%(pid1,os.getpid(),os.getppid())

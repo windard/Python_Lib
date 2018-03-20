@@ -7,7 +7,7 @@
 ### 监听鼠标
 
 ```python
-#coding=utf-8
+
 import pyHook,pythoncom
 
 def onMouseEvent(event):
@@ -35,7 +35,7 @@ pythoncom.PumpMessages()
 ### 监听键盘
 
 ```python
-#coding=utf-8
+
 
 import pyHook,pythoncom
 
@@ -68,7 +68,7 @@ pythoncom.PumpMessages()
 ### 完整的 键盘记录器
 
 ```python
-#coding=utf-8
+
 
 from ctypes import *
 import pyHook

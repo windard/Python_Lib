@@ -75,7 +75,7 @@ fobj = open(filepath)
 我们来试一下
 
 ```python
-#coding=utf-8
+
 filepath = unicode('测试文档.txt','utf8')
 file1 = open(filepath,'w')
 file1.write("This is for test")
@@ -88,13 +88,13 @@ file2.close()
 
 保存为openfile.py，运行，看一下结果。
 
-![openfile](images/openfile.jpg) 
+![openfile](images/openfile.jpg)
 
 确实可以，显示挺好的。
 但是这里又有一个问题了，如果我想要把中文打印出来呢？把刚才的代码稍微改一下
 
 ```python
-#coding=utf-8
+
 filepath = unicode('测试文档.txt','utf8')
 file1 = open(filepath,'w')
 file1.write('这是测试文档')
@@ -131,9 +131,9 @@ file2.close()
 
 ```
 $filename=iconv('utf-8','gb2312',$filename);
-``` 
+```
 
-或者是 
+或者是
 
 ```
 file_get_contents(mb_convert_encoding($filename, 'gbk', 'utf-8'));

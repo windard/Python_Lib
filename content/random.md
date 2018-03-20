@@ -10,7 +10,7 @@
 7. random.sample(sequence, k)用来从指定序列中获得指定长度的片段，参数类型不定。         
 
 ```python
-#coding=utf-8
+
 import random
 
 #生成一个0到1之间的随机数

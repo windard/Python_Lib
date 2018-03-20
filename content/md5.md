@@ -48,7 +48,7 @@ print encode.hexdigest()
 从上面md5的生成可以看出来，只要是一个字符串都可以生成md5值，同样的方法，如果把一个文件以二进制读取出来也可以计算出来，因为md5的不可解密性，md5值经常用来检验文件是否被修改。
 
 ```python
-#coding=utf-8
+
 import hashlib
 #读取二进制文件
 filename = open("md5_hash.py","rb")
@@ -66,7 +66,7 @@ print decode
 这里每次读取文件都是直接打开全部文件读入缓存，如果文件过大的话就会占用过多内存，可以进行稍微改进。      
 
 ```python
-#coding=utf-8
+
 import hashlib
 #读取二进制文件
 filename = open("md5_hash.py","rb")

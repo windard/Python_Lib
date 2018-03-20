@@ -39,7 +39,7 @@ Queue.PriorityQueue(maxsize=0)            优先级别队列
 #### 一个小例子
 
 ```python
-#coding=utf-8
+
 
 import Queue
 
@@ -75,7 +75,7 @@ for i in range(4):
 #### 队列的遍历
 
 ```
-#coding=utf-8
+
 
 import Queue
 

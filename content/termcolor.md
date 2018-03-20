@@ -3,7 +3,7 @@
 在终端中改变颜色的库，除了 colorama 之外，常用的就是 termcolor 了，它的颜色值也比前者多一些。
 
 ```python
-#coding=utf-8
+
 
 import sys
 from termcolor import colored, cprint

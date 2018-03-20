@@ -2,11 +2,14 @@
 
 #### ImageDraw
 
-Image函数库是用来操作图像的，那么这个函数库使用来画图的，这些都属于PIL图像处理库。     
+Image函数库是用来操作图像的，那么这个函数库使用来画图的，这些都属于PIL图像处理库。
 
 ```python
-#coding=utf-8
+
 import Image,ImageDraw
+
+# from PIL import Image, ImageDraw
+
 pic = Image.open("../images/test2.jpg")
 draw = ImageDraw.Draw(pic)
 width,height = pic.size
@@ -21,15 +24,15 @@ pic.show()
 pic.save("../images/test5.jpg")
 ```
 
-保存为imageDraw_demo.py，运行，看一下结果。       
+保存为imageDraw_demo.py，运行，看一下结果。
 
-![imageDraw_demo.jpg](images/imageDraw_demo.jpg)    
+![imageDraw_demo.jpg](images/imageDraw_demo.jpg)
 
 #### ImageEnhance
-这个函数库是用来图像增强，用来色彩增强，亮度增强，对比度增强，图像尖锐化等增强操作。     
+这个函数库是用来图像增强，用来色彩增强，亮度增强，对比度增强，图像尖锐化等增强操作。
 
 ```python
-#coding=utf-8
+
 import Image,ImageEnhance
 pic = Image.open("../images/test2.jpg")
 
@@ -52,19 +55,19 @@ contrast_pic.show()
 contrast_pic.save("../images/test8.jpg")
 ```
 
-保存为imageEnhance_demo.py，运行，看一下结果。      
-在你的文件夹里就可以看到几张照片，确实是能够有相应的改变。       
+保存为imageEnhance_demo.py，运行，看一下结果。
+在你的文件夹里就可以看到几张照片，确实是能够有相应的改变。
 
 #### imageFont
 
-遇到了问题，还有其他的在安装opencv的时候也遇到了一个问题。    
+遇到了问题，还有其他的在安装opencv的时候也遇到了一个问题。
 
-`ImportError: The _imagingft C module is not installed`和` error: Unable to find vcvarsall.bat`，算了。不然就可以用Python写验证码了。     
+`ImportError: The _imagingft C module is not installed`和` error: Unable to find vcvarsall.bat`，算了。不然就可以用Python写验证码了。
 
 [在Python中用PIL做验证码](http://www.zouyesheng.com/captcha.html)
 
 ```python
-#coding=utf-8
+
 import Image, ImageDraw, ImageFont, ImageFilter
 import random
 
@@ -103,10 +106,10 @@ image.save('code.jpg', 'jpeg');
 
 #### imageFilter
 
-图片模糊效果。     
+图片模糊效果。
 
 ```python
-#coding=utf-8
+
 import Image,ImageFilter
 pic = Image.open("../images/test2.jpg")
 pic1 = pic.filter(ImageFilter.BLUR)
@@ -114,7 +117,7 @@ pic1.show()
 pic1.save("../images/test9.jpg")
 ```
 
-保存为imageFilter_demo.py，运行，看一下结果。     
+保存为imageFilter_demo.py，运行，看一下结果。
 
 ![imageFilter_demo.jpg](images/imageFilter_demo.jpg)
 

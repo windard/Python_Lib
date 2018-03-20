@@ -27,13 +27,13 @@
 |{m,n}   |匹配前一个字符m次到n次|
 |^         |匹配字符串的开头，也可以在一个字符集内表示取非|
 |\$          |匹配字符串的结尾|
-|[……]		 |表示一个字符集|
-|(……) 	|表示一个分组|
+|[……]        |表示一个字符集|
+|(……)   |表示一个分组|
 
 
 ## 基本使用
 
-python提供了两种不同的基本正则匹配，分别是match和search。                       
+python提供了两种不同的基本正则匹配，分别是match和search。
 
 match是从字符串开头做匹配，search是从字符串中做任意匹配，返回值都是一个Match实例,他们的用法基本一致，`match(pattern, string, flags=0)`和`search(pattern, string, flags=0)`。
 
@@ -55,7 +55,8 @@ match是从字符串开头做匹配，search是从字符串中做任意匹配，
 >>> c
 >>> type(c)
 <type 'NoneType'>
-
+>>> re.match(r'(hello) , (world)', a).group(0)
+'hello , world'
 ```
 
 但是这种匹配一般只能找到匹配的一个，有时我们需要找到所有的匹配，这就需要findall函数，用法也与上面的两个一样`findall(pattern, string, flags=0)`,直接返回一个数组，数组的每一项都是字符串。
@@ -73,6 +74,8 @@ match是从字符串开头做匹配，search是从字符串中做任意匹配，
 
 除了查找之外，正则表达式还有两个很重要的功能就是分割与替换，在这里分别是sub和split，用法是`sub(pattern, repl, string, count=0, flags=0)`和`split(pattern, string, maxsplit=0, flags=0)`,返回改变之后的字符串，传入值保持不变。
 
+> repl 即可以为一个字符串，也可以为一个可执行函数
+
 ```
 
 >>> a = "hello , world"
@@ -86,9 +89,15 @@ match是从字符串开头做匹配，search是从字符串中做任意匹配，
 ['hello', ',', 'world']
 >>> a
 'hello , world'
+>>> re.sub(r'(hello) , (world)', r'\2 , \1', a)
+'world , hello'
+>>> '%s , %s' % re.match(r'(hello) , (world)', a).groups()
+'hello , world'
+>>> '%s , %s' % (re.match(r'(hello) , (world)', a).group(2), re.match(r'(hello) , (world)', a).group(1))
+'world , hello'
 ```
 
-关于sub函数，还有一个subn函数，用法与sub一致，但是返回一个元祖，由改变之后的字符串和改变的个数组成
+关于sub函数，还有一个subn函数，用法与sub一致，但是返回一个元组，由改变之后的字符串和改变的个数组成
 
 ```
 
@@ -99,12 +108,17 @@ match是从字符串开头做匹配，search是从字符串中做任意匹配，
 'hello , world'
 ```
 
+## 总结
+
+- 使用 match 从头开始匹配，使用 search 从中匹配
+- 使用 group 查看匹配结果，使用 groups 查看匹配分组结果
+
 ## 高级使用
 高级使用是先将正则表达式的字符串形式编译成Pattern实例，然后用Pattern实例处理字符串并得到一个Match实例，再对这个Match实例进行处理。
 
 ```
 
-#coding=utf-8
+
 import re
 
 pattern = re.compile(r"he")
@@ -147,7 +161,7 @@ Match对象 是一次匹配的结果，包含很多关于此次匹配的信息
 7. expand(template): 将匹配到的分组代入template中然后返回。template中可以使用\id或\g<id>、\g<name>引用分组，但不能使用编号0。\id与\g<id>是等价的；但\10将被认为是第10个分组，如果你想表达\1之后是字符'0'，只能使用\g<1>0
 
 ```python
-#coding=utf-8
+
 
 import re
 
@@ -176,3 +190,34 @@ print "m.span(2):", m.span(2)
 
 ![re_complex](images/re_complex.png)
 
+## 贪婪与懒惰
+
+正则表达式默认是贪婪模式，即匹配尽可能多的字符，如 `+` 匹配一个到无穷多个，就匹配尽可能多的到不匹配为止，如果采用懒惰模式，则就刚好匹配一个，不再多了。
+
+|代码 / 语法 |匹配说明|
+|--          |---         |
+|*?          |重复任意次，但尽可能的少重复            |
+|+?          |重复1次或更多次，但尽可能少重复            |
+|??          |重复0次或1次，但尽可能少重复            |
+|{n, m}?     |重复n到m次，但尽可能少重复            |
+|{n,}?       |重复n次以上，但尽可能少重复            |
+
+```
+import re
+
+m = re.match(r'<html>(.*)', "<html><body><title>this is title</title></body></html>>")
+
+print m.group()
+
+m = re.match(r'<html>(.*?)', "<html><body><title>this is title</title></body></html>>")
+
+print m.group()
+
+```
+
+输出
+
+```
+<html><body><title>this is title</title></body></html>>
+<html>
+```

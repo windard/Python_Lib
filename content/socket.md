@@ -40,7 +40,7 @@ socket抽象层是在TCP与UDP协议的运输层之上的与应用层连接的�
 #### 简单的TCP协议的网络客户端
 
 ```python
-#coding=utf-8
+
 import socket,sys
 
 host = sys.argv[1]
@@ -48,10 +48,10 @@ port = int(sys.argv[2])
 
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 try:
-	s.connect((host,port))
-	print "Connect Successful"
+    s.connect((host,port))
+    print "Connect Successful"
 except:
-	print "Connect Failed"
+    print "Connect Failed"
 
 s.send("hello server")
 
@@ -68,7 +68,7 @@ print "Received From Sercer : " + buf
 #### 简单的TCP协议的网络服务器
 
 ```python
-#coding=utf-8
+
 import socket
 
 host = "127.0.0.1"
@@ -81,12 +81,12 @@ s.listen(5)
 print "Server is running on port %s Press Ctrl-C to stop"%port
 
 while 1:
-	clientsock,clientaddr = s.accept()
-	print "Welcome from %s : %s"%(clientaddr[0],clientaddr[1])
-	resquest = clientsock.recv(1024)
-	print "Received From client : " + resquest
-	clientsock.send("Hello client")
-	clientsock.close()
+    clientsock,clientaddr = s.accept()
+    print "Welcome from %s : %s"%(clientaddr[0],clientaddr[1])
+    resquest = clientsock.recv(1024)
+    print "Received From client : " + resquest
+    clientsock.send("Hello client")
+    clientsock.close()
 
 s.close()
 ```
@@ -154,7 +154,7 @@ client是一个socket对象和socket信息的元组。
 5. socketobject.getsockopt()
 
 ```python
-#coding=utf-8
+
 import socket,sys
 
 host = sys.argv[1]
@@ -162,10 +162,10 @@ port = int(sys.argv[2])
 
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 try:
-	s.connect((host,port))
-	print "Connect Successful"
+    s.connect((host,port))
+    print "Connect Successful"
 except:
-	print "Connect Failed"
+    print "Connect Failed"
 
 s.send("hello server")
 
@@ -198,7 +198,7 @@ print "Received From Sercer : " + buf
 10. socket.ssl()
 
 ```python
-#coding=utf-8
+
 
 import socket
 
@@ -210,7 +210,7 @@ print "host ip : " + hostip
 
 host = socket.gethostbyaddr(hostip)
 for item in host:
-	print item
+    print item
 
 httpport = socket.getservbyname("http")
 print "http port : " + str(httpport)
@@ -232,7 +232,7 @@ print "43 port is : " + servivename
 
 addrinfo = socket.getaddrinfo("www.baidu.com",None)
 for item in addrinfo:
-	print "www.baidu.com ip is : " + item[4][0]
+    print "www.baidu.com ip is : " + item[4][0]
 ```
 
 保存为socket_get.py，运行，看一下结果。
@@ -256,7 +256,7 @@ num2ip = lambda x: '.'.join([str(x/(256**i)%256) for i in range(3,-1,-1)])
 所以为了可复用的服务器端，我们想到可以用多线程，来避免客户端阻塞。
 
 ```python
-#coding=utf-8
+
 
 import socket
 import thread
@@ -269,19 +269,19 @@ s.bind((host,port))
 s.listen(5)
 
 def connect(clientsock,clientaddr):
-	print "Welcome from %s : %s"%(clientaddr[0],clientaddr[1])
-	clientsock.send("Hello client \n")
-	while 1:
-		resquest = clientsock.recv(1024)
-		while not len(resquest):
-			break
-		print "Received From No.%s client : "%clientaddr[1] + resquest,
+    print "Welcome from %s : %s"%(clientaddr[0],clientaddr[1])
+    clientsock.send("Hello client \n")
+    while 1:
+        resquest = clientsock.recv(1024)
+        while not len(resquest):
+            break
+        print "Received From No.%s client : "%clientaddr[1] + resquest,
 
 print "Server is running on port %s Press Ctrl-C to stop"%port
 
 while 1:
-	clientsock,clientaddr = s.accept()
-	thread.start_new_thread(connect ,(clientsock,clientaddr))
+    clientsock,clientaddr = s.accept()
+    thread.start_new_thread(connect ,(clientsock,clientaddr))
 
 s.close()
 ```
@@ -295,19 +295,19 @@ s.close()
 因为在你的socket端口在关闭之后系统会自动为你保存一段时间，防止你再次需要时被其他服务占用，那么我们可以通过可重用套接字来解决这个问题。
 
 ```python
-#coding=utf-8
+
 
 import socket
 import thread
 
 def connect(clientsock,clientaddr):
-	print "Welcome from %s : %s"%(clientaddr[0],clientaddr[1])
-	clientsock.send("Hello client \n")
-	while 1:
-		resquest = clientsock.recv(1024)
-		while not len(resquest):
-			break
-		print "Received From No.%s client : "%clientaddr[1] + resquest,
+    print "Welcome from %s : %s"%(clientaddr[0],clientaddr[1])
+    clientsock.send("Hello client \n")
+    while 1:
+        resquest = clientsock.recv(1024)
+        while not len(resquest):
+            break
+        print "Received From No.%s client : "%clientaddr[1] + resquest,
 
 
 host = "127.0.0.1"
@@ -328,8 +328,8 @@ s.listen(5)
 print "Server is running on port %s Press Ctrl-C to stop"%port
 
 while 1:
-	clientsock,clientaddr = s.accept()
-	thread.start_new_thread(connect ,(clientsock,clientaddr))
+    clientsock,clientaddr = s.accept()
+    thread.start_new_thread(connect ,(clientsock,clientaddr))
 
 s.close()
 ```
@@ -358,33 +358,33 @@ s.bind((host, port))
 s.listen(5)
 
 while 1:
-	try:
-		clientsock, clientaddr = s.accept()
-	except KeyboardInterrupt:
-		raise
-	except:
-		traceback.print_exc()
-		continue
+    try:
+        clientsock, clientaddr = s.accept()
+    except KeyboardInterrupt:
+        raise
+    except:
+        traceback.print_exc()
+        continue
 
-	try:
-		print "Got connection from", clientsock.getpeername()
-		while 1:
-			try:
-				clientsock.sendall(time.asctime()+'\n')
-			except:
-				break
-			time.sleep(5)
-	except (KeyboardInterrupt, SystemExit):
-		raise
-	except:
-		traceback.print_exc()
+    try:
+        print "Got connection from", clientsock.getpeername()
+        while 1:
+            try:
+                clientsock.sendall(time.asctime()+'\n')
+            except:
+                break
+            time.sleep(5)
+    except (KeyboardInterrupt, SystemExit):
+        raise
+    except:
+        traceback.print_exc()
 
-	try:
-		clientsock.close()
-	except KeyboardInterrupt:
-		raise
-	except:
-		traceback.print_exc()
+    try:
+        clientsock.close()
+    except KeyboardInterrupt:
+        raise
+    except:
+        traceback.print_exc()
 
 ```
 
@@ -403,19 +403,19 @@ spinpos  = 0
 spindir  = 1
 
 def spin():
-	global spinsize, spinpos, spindir
-	spinstr = '.'*spinpos + '|' +'.'*(spinsize -spinpos -1)
-	sys.stdout.write('\r' + spinstr + ' ')
-	sys.stdout.flush()
+    global spinsize, spinpos, spindir
+    spinstr = '.'*spinpos + '|' +'.'*(spinsize -spinpos -1)
+    sys.stdout.write('\r' + spinstr + ' ')
+    sys.stdout.flush()
 
-	spinpos += spindir
+    spinpos += spindir
 
-	if spinpos < 0:
-		spindir = 1
-		spinpos = 1
-	elif spinpos >= spinsize:
-		spinpos -= 2
-		spindir = -1
+    if spinpos < 0:
+        spindir = 1
+        spinpos = 1
+    elif spinpos >= spinsize:
+        spinpos -= 2
+        spindir = -1
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host, port))
@@ -424,23 +424,23 @@ p = select.poll()
 p.register(s.fileno(), select.POLLIN | select.POLLERR | select.POLLHUP)
 
 while 1:
-	results = p.poll(50)
-	if len(results):
-		if results[0][1] == select.POLLIN:
-			data = s.recv(4096)
-			if not len(data):
-				print "\rRemote end closed and connection; exiting."
-				break
-			sys.stdout.write('\rReceived: '+data)
-			sys.stdout.flush()
-		else:
-			print "\rProblem occured; exiting."
-			sys.exit(0)
-	spin()
+    results = p.poll(50)
+    if len(results):
+        if results[0][1] == select.POLLIN:
+            data = s.recv(4096)
+            if not len(data):
+                print "\rRemote end closed and connection; exiting."
+                break
+            sys.stdout.write('\rReceived: '+data)
+            sys.stdout.flush()
+        else:
+            print "\rProblem occured; exiting."
+            sys.exit(0)
+    spin()
 
 ```
 
-使用 select 的异步 IO 操作，跨平台。
+使用 select 的异步 IO 操作，跨平台。但是它只能接受 socket ，而不能接受其他文件格式，在 Linux 下，socket 也是文件，只要是文件格式都可以接受。
 
 ```
 # coding=utf-8
@@ -455,39 +455,39 @@ spinpos  = 0
 spindir  = 1
 
 def spin():
-	global spinsize, spinpos, spindir
-	spinstr = '.'*spinpos + '|' +'.'*(spinsize -spinpos -1)
-	sys.stdout.write('\r' + spinstr + ' ')
-	sys.stdout.flush()
+    global spinsize, spinpos, spindir
+    spinstr = '.'*spinpos + '|' +'.'*(spinsize -spinpos -1)
+    sys.stdout.write('\r' + spinstr + ' ')
+    sys.stdout.flush()
 
-	spinpos += spindir
+    spinpos += spindir
 
-	if spinpos < 0:
-		spindir = 1
-		spinpos = 1
-	elif spinpos >= spinsize:
-		spinpos -= 2
-		spindir = -1
+    if spinpos < 0:
+        spindir = 1
+        spinpos = 1
+    elif spinpos >= spinsize:
+        spinpos -= 2
+        spindir = -1
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((host, port))
 
 while 1:
-	infds, outfds, errfds = select.select([s], [], [s], 0.05)
-	if len(infds):
-		data = s.recv(4096)
-		if not len(data):
-			print "\rRemote end closed connection:exiting."
-			break
+    infds, outfds, errfds = select.select([s], [], [s], 0.05)
+    if len(infds):
+        data = s.recv(4096)
+        if not len(data):
+            print "\rRemote end closed connection:exiting."
+            break
 
-		sys.stdout.write('\rReceived: '+data)
-		sys.stdout.flush()
+        sys.stdout.write('\rReceived: '+data)
+        sys.stdout.flush()
 
-	if len(errfds):
-		print "\rProblem occured;exiting."
-		sys.exit(0)
+    if len(errfds):
+        print "\rProblem occured;exiting."
+        sys.exit(0)
 
-	spin()
+    spin()
 ```
 
 #### UDP 连接
@@ -509,10 +509,10 @@ udpsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 udpsock.bind((host, port))
 
 while 1:
-	print "Waiting for message ... "
-	data , addr = udpsock.recvfrom(bufsize)
-	udpsock.sendto('[%s] %s'%(ctime(), data), addr)
-	print ' ... received from and teturned to:', addr
+    print "Waiting for message ... "
+    data , addr = udpsock.recvfrom(bufsize)
+    udpsock.sendto('[%s] %s'%(ctime(), data), addr)
+    print ' ... received from and teturned to:', addr
 
 udpsock.close()
 ```
@@ -532,145 +532,147 @@ bufsize = 1024
 udpsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 while 1:
-	data = raw_input(">")
-	if not data:
-		break
-	udpsock.sendto(data, (host, port))
-	data, addr = udpsock.recvfrom(bufsize)
-	if not data:
-		break
-	print data
+    data = raw_input(">")
+    if not data:
+        break
+    udpsock.sendto(data, (host, port))
+    data, addr = udpsock.recvfrom(bufsize)
+    if not data:
+        break
+    print data
 
 udpsock.close()
 ```
 
 #### socket聊天服务器
 
-聊天服务器用到了一个新的库，select,用于动态的监听所有的io网络，并返回可用的io。这里涉及到一些同步异步，阻塞非阻塞的内容，在我的另一片博客里有详细的讲解。
+聊天服务器用到了一个新的库，select,用于动态的监听所有的io网络，并返回可用的io。这里涉及到一些同步异步，阻塞非阻塞的内容，但是只能在 Linux 下运行。
 
 ```python
-#coding=utf-8
+# -*- coding: utf-8 -*-
 
 import sys
 import socket
 import select
 import argparse
 
-def runserver(host,port):
-	s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-	s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
-	s.bind((host,port))
-	s.listen(10)
 
-	print "Server is running ... "
+def runserver(host, port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind((host, port))
+    s.listen(10)
 
-	inputs = [0,s]
-	outputs = []
-	clients = {}
+    print "Server is running ... "
 
-	while True:
-		try:
-			readable,writeable,exceptional = select.select(inputs,outputs,[])
-			for sock in readable:
-				if sock == s:
-					clientsock,clientaddr = sock.accept()
-					recvname = clientsock.recv(1024)
-					if recvname.endswith("NAME:"):
-						clientname = str(clientaddr)
-					else:
-						clientname = recvname.split('NAME:')[1]
-					clientsock.sendall("Welcome " + clientname + "\n")
-					print clientname + " Come In"
-					clients[clientsock] = (clientname,clientaddr,clientsock)
-					inputs.append(clientsock)
-					for output in outputs:
-						output.sendall("Welcome " + clientname + " Come In \n")
-					outputs.append(clientsock)
-				elif sock == 0:
-					message = sys.stdin.readline()
-					if message.startswith("QUIT"):
-						print "Server is close ... "
-						sys.exit(0)
-					for output in outputs:
-						output.sendall("Server : " + message)
-				else:
-					data = sock.recv(1024)
-					if data:
-						if data.startswith("SECRECT"):
-							print "SECRECT " + clients[sock][0] + " : " + data,
-							output = data.split(" ")[1]
-							message = data.split(" ")[2]
-							for client in clients.values():
-								if client[0] == output:
-									client[2].sendall("SECRECT " + clients[sock][0] + " : " + message)
-						else:
-							print clients[sock][0] + " : " + data,
-							for output in outputs:
-								if output != sock:
-									output.sendall(clients[sock][0] + " : " + data)
-					else:
-						name = clients[sock][0]
-						print name+" leaved "
-						for output in outputs:
-							output.sendall(name+" leaved \n")
-						inputs.remove(sock)
-						outputs.remove(sock)
-						del clients[sock]
+    inputs = [sys.stdin, s]
+    outputs = []
+    clients = {}
+
+    while True:
+        try:
+            readable, writeable, exceptional = select.select(inputs, outputs, [])
+            for sock in readable:
+                if sock == s:
+                    clientsock, clientaddr = sock.accept()
+                    recvname = clientsock.recv(1024)
+                    if recvname.endswith("NAME:"):
+                        clientname = str(clientaddr)
+                    else:
+                        clientname = recvname.split('NAME:')[1]
+                    clientsock.sendall("Welcome " + clientname + "\n")
+                    print clientname + " Come In"
+                    clients[clientsock] = (clientname, clientaddr, clientsock)
+                    inputs.append(clientsock)
+                    for output in outputs:
+                        output.sendall("Welcome " + clientname + " Come In \n")
+                    outputs.append(clientsock)
+                elif sock == 0:
+                    message = sys.stdin.readline()
+                    if message.startswith("QUIT"):
+                        print "Server is close ... "
+                        sys.exit(0)
+                    for output in outputs:
+                        output.sendall("Server : " + message)
+                else:
+                    data = sock.recv(1024)
+                    if data:
+                        if data.startswith("SECRECT"):
+                            print "SECRECT " + clients[sock][0] + " : " + data,
+                            output = data.split(" ")[1]
+                            message = data.split(" ")[2]
+                            for client in clients.values():
+                                if client[0] == output:
+                                    client[2].sendall("SECRECT " + clients[sock][0] + " : " + message)
+                        else:
+                            print clients[sock][0] + " : " + data,
+                            for output in outputs:
+                                if output != sock:
+                                    output.sendall(clients[sock][0] + " : " + data)
+                    else:
+                        name = clients[sock][0]
+                        print name + " leaved "
+                        for output in outputs:
+                            output.sendall(name + " leaved \n")
+                        inputs.remove(sock)
+                        outputs.remove(sock)
+                        del clients[sock]
+
+        except KeyboardInterrupt:
+            print "Server is close ... "
+            break
 
 
-		except KeyboardInterrupt:
-			print "Server is close ... "
-			break
+def runclient(host, port, name=None):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.connect((host, port))
+    if name is not None:
+        s.sendall("NAME:" + name)
+    else:
+        s.sendall("NAME:")
 
-def runclient(host,port,name=None):
-	s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-	s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
-	s.connect((host,port))
-	if name!=None:
-		s.sendall("NAME:"+name)
-	else:
-		s.sendall("NAME:")
+    print s.recv(1024),
 
-	print s.recv(1024),
+    while True:
+        try:
+            readable, writeable, exceptional = select.select([0, s], [], [])
+            for sock in readable:
+                if sock == s:
+                    data = sock.recv(1024)
+                    if not data:
+                        print "Server is closed"
+                        sys.exit(0)
+                    sys.stdout.write(data)
+                    sys.stdout.flush()
+                else:
+                    data = sys.stdin.readline()
+                    if data.startswith("QUIT"):
+                        print "Client is closed"
+                        sys.exit(0)
+                    s.sendall(data)
+        except KeyboardInterrupt:
+            print "Client is closed"
+            break
 
-	while True:
-		try:
-			readable,writeable,exceptional = select.select([0,s],[],[])
-			for sock in readable:
-				if sock == s:
-					data = sock.recv(1024)
-					if not data:
-						print "Server is closed"
-						sys.exit(0)
-					sys.stdout.write(data)
-					sys.stdout.flush()
-				else:
-					data = sys.stdin.readline()
-					if data.startswith("QUIT"):
-						print "Client is closed"
-						sys.exit(0)
-					s.sendall(data)
-		except KeyboardInterrupt:
-			print "Client is closed"
-			break
 
 if __name__ == '__main__':
-	parser = argparse.ArgumentParser(description="socket chatroom")
-	parser.add_argument("--type",help="chose the type",action="store",default="client",dest="type")
-	parser.add_argument("--host",help="input your host",action="store",default="127.0.0.1",dest="host")
-	parser.add_argument("--port",help="input your port",action="store",default=8888,type=int,dest="port")
-	parser.add_argument("--name",help="input your name",action="store",default=None,dest="name")
-	args = parser.parse_args()
-	chattype = args.type
-	host = args.host
-	port = args.port
-	name = args.name
-	if chattype.startswith("server"):
-		runserver(host,port)
-	elif chattype.startswith("client"):
-		runclient(host,port,name)
-	else:
-		print "your input is wrong"
+    parser = argparse.ArgumentParser(description="socket chatroom")
+    parser.add_argument("--type", help="chose the type", action="store", default="client", dest="type")
+    parser.add_argument("--host", help="input your host", action="store", default="127.0.0.1", dest="host")
+    parser.add_argument("--port", help="input your port", action="store", default=8888, type=int, dest="port")
+    parser.add_argument("--name", help="input your name", action="store", default=None, dest="name")
+    args = parser.parse_args()
+    chattype = args.type
+    host = args.host
+    port = args.port
+    name = args.name
+    if chattype.startswith("server"):
+        runserver(host, port)
+    elif chattype.startswith("client"):
+        runclient(host, port, name)
+    else:
+        print "your input is wrong"
 
 ```
 
@@ -774,14 +776,14 @@ server.bind((host,port))
 print "server is running ... "
 
 while 1:
-	server.listen(5)
-	conn,addr = server.accept()
-	url = "http://127.0.0.1:5002/"
-	request = conn.recv(1024).split(" ")[1]
-	page = urllib.urlopen(url+request).read()
-	print time.strftime('%Y-%m-%d %H:%M:%S')," [%s:%s] %s"%(addr[0],addr[1],request)
-	conn.sendall(page)
-	conn.close()
+    server.listen(5)
+    conn,addr = server.accept()
+    url = "http://127.0.0.1:5002/"
+    request = conn.recv(1024).split(" ")[1]
+    page = urllib.urlopen(url+request).read()
+    print time.strftime('%Y-%m-%d %H:%M:%S')," [%s:%s] %s"%(addr[0],addr[1],request)
+    conn.sendall(page)
+    conn.close()
 
 ```
 
@@ -803,7 +805,9 @@ while 1:
 
 [Error 10004] 一个封锁操作被调用中断
 
-[Error 10013] 试图使用被禁止的访问权限去访问套接字
+[Error 10013] 试图使用被禁止的访问权限去访问套接字 | 以一种访问权限不允许的方式做了一个访问套接字的尝试。
+
+[WinError 10038] 在一个非套接字上尝试了一个操作。
 
 [Errno 10048] 通常每个套接字地址(协议/网络地址/端口)只允许使用一次 端口被占用 
 

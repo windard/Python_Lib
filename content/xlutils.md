@@ -4,7 +4,7 @@
 而且其实这个是调用了上面两个的方法来实现自己的功能。      
 
 ```python
-#coding=utf-8
+
 from xlrd import open_workbook
 from xlutils.copy import copy
  

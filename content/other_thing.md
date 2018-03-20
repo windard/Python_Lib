@@ -59,3 +59,23 @@ http.createServer(function (req, res) {
 ```
 
 保存为server.js,在当前目录下cmd里输入`node server.js`即可调用，在`localhost:3000`查看。
+
+5. 真正最简单的 nodejs 服务器
+
+```
+npm install http-server -g
+```
+
+`http-server` 启动在 8080 端口。
+
+6. urlencode 和 urldecode
+
+```
+import urllib2
+
+def urlencode(s):
+    return urllib2.quote(s)
+
+def urldecode(s):
+    return urllib2.unquote(s).decode('utf8')
+```

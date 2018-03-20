@@ -11,7 +11,7 @@
 #### 基本使用
 
 ```python
-#coding=utf-8
+
 
 import smtplib
 
@@ -68,7 +68,7 @@ smtpObj.close()
 接下来，我们使用163邮箱也来试一下。
 
 ```python
-#coding=utf-8
+
 
 import smtplib
 from email.mime.text import MIMEText
@@ -100,7 +100,7 @@ smtpObj.close()
 其实发送HTML格式的邮件也非常简单，在MIMETest对象里面指定文本为HTML即可。   
 
 ```python
-#coding=utf-8
+
 
 import smtplib
 from email.mime.text import MIMEText
@@ -138,7 +138,7 @@ smtpObj.close()
 发送附件则需要创建 MIMEMultipart 实例，然后构造附件发送。    
 
 ```python
-#coding=utf-8
+
 
 import smtplib
 from email.mime.text import MIMEText
@@ -190,7 +190,7 @@ smtpObj.close()
 发送图片并在邮件正文中显示出来，需要用到 email 的 MIMEImage 实例，并选用 HTML 格式的正文。
 
 ```python
-#coding=utf-8
+
 
 import smtplib
 from email.mime.text import MIMEText
@@ -239,7 +239,7 @@ python支持SSL/TLS的安全邮件。
 使用`smtpObj.starttls()`即可开启ssl，就像这样。
 
 ```python
-#coding=utf-8
+
 
 import smtplib
 import socket
@@ -283,7 +283,7 @@ smtpObj.close()
 ###### 一个常用的 邮件类
 
 ```
-#coding=utf-8
+
 
 import smtplib
 from email.mime.text import MIMEText

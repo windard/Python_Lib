@@ -1,12 +1,14 @@
 ## urlparse
 
+### 简单使用
+
 URL 解析处理函数库，有很多关于 URL 常用的功能。
 
 - `urlparse.urlparse(url, scheme='', allow_fragments=True)` 将 URL 拆分成六元组(<scheme>://<netloc>/<path>;<params>?<query>#<fragment>)。
 - `urlparse.urlunparse(data)` 与上面的过程相反，将 六元组 合并成 URL
 - `urlparse.urlsplit(url, scheme='', allow_fragments=True)` 将 URL 切割为六元组，与 `urlparse.urlparse` 功能基本一致
 - `urlparse.parse_qs(qs, keep_blank_values=0, strict_parsing=0)` 将 GET 请求参数单独切割，生成字典
-- `urlparse.parse_qsl(qs, keep_blank_values=0, strict_parsing=0)` 将 GET 请求参数单独切割，生成元祖
+- `urlparse.parse_qsl(qs, keep_blank_values=0, strict_parsing=0)` 将 GET 请求参数单独切割，生成元组
 - `urlparse.urljoin(base, url, allow_fragments=True)` 将两个 URL 合并。
 
 ```
@@ -98,13 +100,13 @@ from urlparse import urljoin
 from urlparse import urlparse
 from urlparse import urlunparse
 from posixpath import normpath
- 
+
 def myjoin(base, url):
     url1 = urljoin(base, url)
     arr = urlparse(url1)
     path = normpath(arr[2])
     return urlunparse((arr.scheme, arr.netloc, path, arr.params, arr.query, arr.fragment))
- 
+
 if __name__ == "__main__":
     print myjoin("http://www.baidu.com", "abc.html")
     print myjoin("http://www.baidu.com", "/../../abc.html")
@@ -120,3 +122,10 @@ http://www.baidu.com/abc.html
 http://www.baidu.com/abc.html
 http://www.baidu.com/abc.html?key=value&m=x
 ```
+
+
+### 其他使用
+
+- urllib.urlencode  <-> urlparse.parse_qsl
+- urllib.quote      <-> urllib.unquote
+- urlparse.urlparse <-> urlparse.urlunparse

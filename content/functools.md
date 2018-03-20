@@ -199,6 +199,158 @@ greet
 
 两个函数不懂，都不能写一个好好的示例了。
 
+
+#### 缓存
+
+在 Python 3.2 及以后的版本中，可以使用 `functools.lru_cache` 作为一个简单的函数缓存装饰器
+
+```
+# coding=utf-8
+
+from functools import lru_cache
+
+
+@lru_cache(maxsize=32)
+def fib(n):
+    if n < 2:
+        return n
+    return fib(n-1) + fib(n-2)
+
+print([fib(n) for n in range(10)])
+# Output: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+
+# 清除缓存
+fib.cache_clear()
+
+```
+
+最常见的实现缓存的方法
+
+```
+# coding=utf-8
+
+import time
+
+
+def time_cache(n, saved={}):
+    if n in saved:
+        return saved[n]
+    result = time.time()
+    saved[n] = result
+    return result
+
+print time_cache(1)
+time.sleep(2)
+print time_cache(1)
+time.sleep(2)
+print time_cache(1)
+
+```
+
+或者使用装饰器
+
+```
+# coding=utf-8
+
+from functools import wraps
+import time
+
+
+def cache(func):
+    saved = {}
+
+    @wraps(func)
+    def new_func(*args):
+        if args in saved:
+            return saved[args]
+        result = func(*args)
+        saved[args] = result
+        return result
+    return new_func
+
+@cache
+def test_cache(n):
+    return time.time()
+
+print test_cache(1)
+time.sleep(3)
+print test_cache(1)
+time.sleep(3)
+print test_cache(1)
+
+```
+
+在使用装饰器实现缓存的时候很容易理解，在装饰器内有一个闭包，闭包中的变量一直保存。但是在没有装饰器的实现中，如果没有使用全局变量的话，为什么一个默认参数会被一直保存。
+
+这是 Python 的 默认参数陷阱，每一个 Python 的默认参数在第一次编译执行之后都会保留，在下次执行调用时使用同样的参数。
+
+使用相同参数的情况在不可变对象中也会出现，只不过因为不可变对象的值并不会造成影响，所以没有引起注意。
+
+> Default values are computed once, then re-used.
+
+默认参数陷阱的典型场景 
+
+```
+# coding=utf-8
+
+def foo(x=[]):
+    x.append(1)
+    print x
+
+foo()
+foo()
+foo()
+foo()
+
+```
+
+结果是
+
+```
+[1]
+[1, 1]
+[1, 1, 1]
+[1, 1, 1, 1]
+```
+
+如果想要正常的结果只能
+
+```
+# coding=utf-8
+
+def foo(x=[]):
+    x.append(1)
+    print x
+
+foo(x=[])
+foo(x=[])
+foo(x=[])
+foo(x=[])
+foo(x=[])
+
+```
+
+或者
+
+```
+# coding=utf-8
+
+def foo(x=None):
+    if not x:
+        x = []
+    x.append(1)
+    print x
+
+foo()
+foo()
+foo()
+foo()
+foo()
+
+```
+
+在使用时注意即可，当然这种陷阱也并非全不好处，像缓存操作即是使用其利处的一面。
+
 #### 参考链接
 
 [PYTHON-进阶-FUNCTOOLS模块小结](http://www.wklken.me/posts/2013/08/18/python-extra-functools.html)

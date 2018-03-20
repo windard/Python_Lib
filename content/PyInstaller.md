@@ -23,7 +23,7 @@ pyinstaller.py: error: Requires at least one scriptname file or exactly one .spe
 ### 一个简单的例子
 
 ```
-#coding=utf-8
+
 print "hello world"
 ```
 
