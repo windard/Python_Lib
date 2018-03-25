@@ -48,14 +48,14 @@ print "Sending Successful"
 smtpObj.close()
 ```
 
-保存为qqmail_smtp_demo.py，运行，看一下结果。    
+保存为qqmail_smtp_demo.py，运行，看一下结果。
 
-![qqmail_smtp_demo.jpg](images/qqmail_smtp_demo.jpg)         
+![qqmail_smtp_demo.jpg](images/qqmail_smtp_demo.jpg)
 
-这样就可以发送一个简单的邮件了，其实真正核心的代码只有四行。    
+这样就可以发送一个简单的邮件了，其实真正核心的代码只有四行。
 
-1. smtplib.SMTP( [host [, port [, local_hostname]]] )     
-这句代码用来创建一个SMTP对象，并连接邮件服务器。     
+1. smtplib.SMTP( [host [, port [, local_hostname]]] )
+这句代码用来创建一个SMTP对象，并连接邮件服务器。
 >在此处，也可以化为两步。<br>
 >先创建对象`smtpObj = smtplib.SMTP()`，再连接服务器 `smtpObj.connect(host)`
 2. SMTP.login(user,password)
@@ -95,9 +95,9 @@ smtpObj.close()
 
 ![163mail_smtp_demo.jpg](images/163mail_smtp_demo.jpg)
 
-##### 发送HTML格式的邮件   
+##### 发送HTML格式的邮件
 
-其实发送HTML格式的邮件也非常简单，在MIMETest对象里面指定文本为HTML即可。   
+其实发送HTML格式的邮件也非常简单，在MIMETest对象里面指定文本为HTML即可。
 
 ```python
 
@@ -135,7 +135,7 @@ smtpObj.close()
 
 ##### 发送附件
 
-发送附件则需要创建 MIMEMultipart 实例，然后构造附件发送。    
+发送附件则需要创建 MIMEMultipart 实例，然后构造附件发送。
 
 ```python
 
@@ -228,9 +228,9 @@ print "Sending Successful"
 smtpObj.close()
 ```
 
-保存为163mail_smtp_image.py，运行，看一下结果。   
+保存为163mail_smtp_image.py，运行，看一下结果。
 
-![163mail_smtp_image](images/163mail_smtp_image.png)    
+![163mail_smtp_image](images/163mail_smtp_image.png)
 
 ###### SSL与TLS
 
@@ -283,67 +283,86 @@ smtpObj.close()
 ###### 一个常用的 邮件类
 
 ```
-
+#coding=utf-8
 
 import smtplib
 from email.mime.text import MIMEText
 
+
+def send_mail(username, password, receive, subject, content, host="smtp.163.com", ssl=True):
+    a = MailControl(username=username, password=password, host=host, ssl=ssl)
+    a.setSubject(subject)
+    a.setReceiver(receive)
+    a.setContent(content)
+    a.send()
+
+
 class MailControl(object):
     """docstring for MailControl"""
-    def __init__(self,username,password,host="smtp.163.com"):
+
+    def __init__(self, username, password, host="smtp.163.com", ssl=True):
+        """
+            import mail_control
+            a = mail_control.MailControl(username="18607571914@163.com",
+                                        password="XXXXXX")
+            a.setSubject("How Are You?")
+            a.setReceiver("1106911190@qq.com")
+            a.setContent("这是我给你的爱")
+            a.send()
+        """
         self.host = host
         self.username = username
         self.password = password
+        self.subject = None
+        self.receive = None
+        self.message = None
         self.smtpObj = smtplib.SMTP(self.host)
-        self.smtpObj.starttls()
+        if ssl:
+            self.smtpObj.starttls()
         try:
-            self.smtpObj.login(self.username,self.password)
-        except smtplib.e:
-            print e.args[1]
+            self.smtpObj.login(self.username, self.password)
+        except smtplib.SMTPException as e:
+            print(tuple(e))
+            exit(0)
 
     def __del__(self):
         try:
             self.smtpObj.close()
-        except:
-            pass
+        except smtplib.SMTPException as e:
+            print(tuple(e))
 
-    def setSubject(self,subject):
+    def setSubject(self, subject):
         self.subject = subject
-        if hasattr(self,"message"):
+        if self.message:
             self.message["Subject"] = self.subject
 
-    def setReceiver(self,receive):
+    def setReceiver(self, receive):
         self.receive = receive
-        if hasattr(self,"message"):
+        if self.message:
             self.message["To"] = self.receive
 
-    def setContent(self,content,_type="plain",charset="utf-8"):
-        self.message = MIMEText(content,_subtype=_type,_charset=charset)
+    def setContent(self, content, _type="plain", charset="utf-8"):
+        self.message = MIMEText(content, _subtype=_type, _charset=charset)
         self.message["From"] = self.username
-        if hasattr(self,"subject"):
+        if self.subject:
             self.message["Subject"] = self.subject
-        if hasattr(self,"receive"):
+        if self.receive:
             self.message["To"] = self.receive
 
     def send(self):
         try:
-            self.smtpObj.sendmail(self.username,self.receive,self.message.as_string())
-        except Exception,e:
-            print e
+            self.smtpObj.sendmail(self.username, self.receive,
+                                  self.message.as_string())
+        except smtplib.SMTPException as e:
+            print(tuple(e))
 
-"""
 
-import mailcontrol
+if __name__ == '__main__':
 
-a = mailcontrol.MailControl(username="18607571914@163.com",password="XXXXXX")
-
-a.setSubject("How Are You?")
-
-a.setReceiver("1106911190@qq.com")
-
-a.setContent("这是我给你的信")
-
-a.send()
-"""
+        a = MailControl(username="18607571914@163.com", password="XXXXXX")
+        a.setSubject("How Are You?")
+        a.setReceiver("1106911190@qq.com")
+        a.setContent("这是我给你的爱")
+        a.send()
 
 ```
