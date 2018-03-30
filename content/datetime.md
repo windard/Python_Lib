@@ -2,6 +2,8 @@
 
 datetime 和 timestamp(int) 的相互转换，在时间处理的时候，见到的最多的时间表示方式就是这两者了，时间的表示格式既可以使用 timestamp ，也可以选择使用 datetime 或者是 struct_time ，但是在数据库中一般常见的是是用 integer 或者 datetime 这两种类型存储，那么这三者的转换关系呢？
 
+> datatime 之间混乱的关系终于有人能出来解决一下，requests 作者 Kennethreitz 的 [Maya: Datetimes for Humans™](https://github.com/kennethreitz/maya) 可以看一看
+
 ### 时间的几种表现形式
 
 UTC (Coordinated Universal Time) 是一种时间标准，以 1970年1月1日0时0分0秒的格林尼治时间为起点的时间计量标准，这一时间点也被称为 普朗克时间 (epoch time)。该标准将全世界分为 24 个时区，中国位于 UTC+8 的时区之内。现在全世界的计算机时间也都是采用这一标准。
@@ -179,6 +181,45 @@ def strtime_to_timestamp(local_timestr):
 print timestamp_to_strtime(time.time())
 print datetime_to_timestamp(datetime.now())
 print strtime_to_timestamp('2017-08-27 23:52:39')
+```
+
+更优雅的将 datetime.datetime 转换为 timestamp
+
+```
+# -*- coding: utf-8 -*-
+
+import time
+import calendar
+import datetime
+
+
+def datetime_to_timestamp_by_datetime(datetime_obj):
+    return int(datetime_obj.strftime("%s"))
+
+
+def datetime_to_timestamp_by_time(datetime_obj):
+    return int(time.mktime(datetime_obj.timetuple()))
+
+
+def datetime_to_timestamp_by_calender(datetime_obj):
+    return int(calendar.timegm(datetime_obj.timetuple()))
+
+
+def datetime_to_timestamp_by_calculate(datetime_obj):
+    return int((datetime_obj - datetime.datetime(1970, 1, 1)).total_seconds())
+
+
+def main():
+    now = datetime.datetime.now()
+    print datetime_to_timestamp_by_datetime(now)
+    print datetime_to_timestamp_by_time(now)
+    print datetime_to_timestamp_by_calender(now)
+    print datetime_to_timestamp_by_calculate(now)
+
+
+if __name__ == '__main__':
+    main()
+
 ```
 
 ### 时间区间的转换

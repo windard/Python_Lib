@@ -111,7 +111,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [commands](content/commands.md)
 
-## [ X ] [OpenSSL](content/OpenSSL.md)
+## [OpenSSL](content/OpenSSL.md)
 
 ## [markdown](content/markdown.md)
 
@@ -224,6 +224,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 ## [qrtools](content/qrtools.md)
 
 ## [zbar](content/zbar.md)
+
+## [pyzbar](content/pyzbar.md)
 
 ## [pyqrcode](content/pyqrcode.md)
 
