@@ -79,3 +79,10 @@ def urlencode(s):
 def urldecode(s):
     return urllib2.unquote(s).decode('utf8')
 ```
+
+7. 使用 python 内置的 json 显示
+
+```
+cat test.json | python -m json.tool
+echo '{"name": "lucy", "age": "18"}' | python -mjson.tool
+```

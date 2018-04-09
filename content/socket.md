@@ -338,6 +338,46 @@ s.close()
 
 ![socket_server_sockopt.png](images/socket_server_sockopt.png)
 
+改进后如下
+
+```
+# -*- coding: utf-8 -*-
+
+import socket
+import thread
+
+host = "127.0.0.1"
+port = 8081
+
+
+def main():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind((host, port))
+    s.listen(5)
+
+    print "Server is running on %s:%s Press Ctrl-C to stop" % (host, port)
+
+    while 1:
+        clientsock, clientaddr = s.accept()
+        thread.start_new_thread(connect, (clientsock, clientaddr))
+
+
+def connect(clientsock, clientaddr):
+    print "Welcome from %s : %s" % (clientaddr[0], clientaddr[1])
+    clientsock.send("Hello client \n")
+    while 1:
+        message = clientsock.recv(1024)
+        if not len(message):
+            break
+        print "Received From No.%s client : " % clientaddr[1] + message,
+        clientsock.send(message)
+
+
+if __name__ == '__main__':
+    main()
+
+```
 #### 异步 IO 的 socket 程序
 
 在多个客户端连接的时候，服务器就会阻塞，一般可以采用的解决办法有 多线程，多进程，异步 IO ，协程等，我们来试一下 异步 IO 的操作，常用的异步 IO 操作有 select ， poll ，epoll ， kqueue 等，可以在 Windows 上使用的只有 select ，支持 Linux 设备的是select ， poll ，epoll 等，而 kqueue 是 Mac 上的。
@@ -391,7 +431,7 @@ while 1:
 使用 poll 的异步 IO 操作，在 Windows 下无法运行
 
 ```
-# coding=utf-8 
+# coding=utf-8
 
 import socket, sys, select
 
@@ -683,7 +723,7 @@ if __name__ == '__main__':
 ```python
 # coding=utf-8
 # Written by Vamei
-# A messy HTTP server based on TCP socket 
+# A messy HTTP server based on TCP socket
 
 import socket
 
@@ -692,7 +732,7 @@ HOST = ''
 PORT = 8001
 
 text_content = '''
-HTTP/1.x 200 OK  
+HTTP/1.x 200 OK
 Content-Type: text/html
 
 <head>
@@ -705,14 +745,14 @@ Content-Type: text/html
 <form name="input" action="/" method="post">
 First name:<input type="text" name="firstname"><br>
 <input type="submit" value="Submit">
-</form> 
+</form>
 </body>
 </html>
 '''
 
 f = open('image1.png','rb')
 pic_content = '''
-HTTP/1.x 200 OK  
+HTTP/1.x 200 OK
 Content-Type: image/jpg
 
 '''
@@ -725,7 +765,7 @@ s.bind((HOST, PORT))
 # Serve forever
 while True:
     s.listen(5)
-    conn, addr = s.accept()                    
+    conn, addr = s.accept()
     request    = conn.recv(1024)         # 1024 is the receiving buffer size
     method     = request.split(' ')[0]
     src        = request.split(' ')[1]
@@ -809,7 +849,7 @@ while 1:
 
 [WinError 10038] 在一个非套接字上尝试了一个操作。
 
-[Errno 10048] 通常每个套接字地址(协议/网络地址/端口)只允许使用一次 端口被占用 
+[Errno 10048] 通常每个套接字地址(协议/网络地址/端口)只允许使用一次 端口被占用
 
 [Errno 10053] 服务器端断开一个已经建立的连接
 
@@ -824,66 +864,66 @@ while 1:
 [Errno 11001] getaddrinfo failed
 
 ```
-Socket error 0 - Directly send error 
-Socket error 10004 - Interrupted function call 
-Socket error 10013 - Permission denied 
-Socket error 10014 - Bad address 
-Socket error 10022 - Invalid argument 
-Socket error 10024 - Too many open files 
-Socket error 10035 - Resource temporarily unavailable 
-Socket error 10036 - Operation now in progress 
-Socket error 10037 - Operation already in progress 
-Socket error 10038 - Socket operation on non-socket 
-Socket error 10039 - Destination address required 
-Socket error 10040 - Message too long 
-Socket error 10041 - Protocol wrong type for socket 
-Socket error 10042 - Bad protocol option 
-Socket error 10043 - Protocol not supported 
-Socket error 10044 - Socket type not supported 
-Socket error 10045 - Operation not supported 
-Socket error 10046 - Protocol family not supported 
-Socket error 10047 - Address family not supported by protocol family 
-Socket error 10048 - Address already in use 
-Socket error 10049 - Cannot assign requested address 
-Socket error 10050 - Network is down 
-Socket error 10051 - Network is unreachable 
-Socket error 10052 - Network dropped connection on reset 
-Socket error 10053 - Software caused connection abort 
-Socket error 10054 - Connection reset by peer 
-Socket error 10055 - No buffer space available 
-Socket error 10056 - Socket is already connected 
-Socket error 10057 - Socket is not connected 
-Socket error 10058 - Cannot send after socket shutdown 
-Socket error 10060 - Connection timed out 
-Socket error 10061 - Connection refused 
-Socket error 10064 - Host is down 
-Socket error 10065 - No route to host 
-Socket error 10067 - Too many processes 
-Socket error 10091 - Network subsystem is unavailable 
-Socket error 10092 - WINSOCK.DLL version out of range 
-Socket error 10093 - Successful WSAStartup not yet performed 
-Socket error 10094 - Graceful shutdown in progress 
-Socket error 11001 - Host not found 
-Socket error 11002 - Non-authoritative host not found 
-Socket error 11003 - This is a non-recoverable error 
-Socket error 11004 - Valid name, no data record of requested type 
-WSAEADDRINUSE (10048) Address already in use 
-WSAECONNABORTED (10053) Software caused connection abort 
-WSAECONNREFUSED (10061) Connection refused 
-WSAECONNRESET (10054) Connection reset by peer 
-WSAEDESTADDRREQ (10039) Destination address required 
-WSAEHOSTUNREACH (10065) No route to host 
-WSAEMFILE (10024) Too many open files 
-WSAENETDOWN (10050) Network is down 
-WSAENETRESET (10052) Network dropped connection 
-WSAENOBUFS (10055) No buffer space available 
-WSAENETUNREACH (10051) Network is unreachable 
-WSAETIMEDOUT (10060) Connection timed out 
-WSAHOST_NOT_FOUND (11001) Host not found 
-WSASYSNOTREADY (10091) Network sub-system is unavailable 
-WSANOTINITIALISED (10093) WSAStartup() not performed 
-WSANO_DATA (11004) Valid name, no data of that type 
-WSANO_RECOVERY (11003) Non-recoverable query error 
-WSATRY_AGAIN (11002) Non-authoritative host found 
+Socket error 0 - Directly send error
+Socket error 10004 - Interrupted function call
+Socket error 10013 - Permission denied
+Socket error 10014 - Bad address
+Socket error 10022 - Invalid argument
+Socket error 10024 - Too many open files
+Socket error 10035 - Resource temporarily unavailable
+Socket error 10036 - Operation now in progress
+Socket error 10037 - Operation already in progress
+Socket error 10038 - Socket operation on non-socket
+Socket error 10039 - Destination address required
+Socket error 10040 - Message too long
+Socket error 10041 - Protocol wrong type for socket
+Socket error 10042 - Bad protocol option
+Socket error 10043 - Protocol not supported
+Socket error 10044 - Socket type not supported
+Socket error 10045 - Operation not supported
+Socket error 10046 - Protocol family not supported
+Socket error 10047 - Address family not supported by protocol family
+Socket error 10048 - Address already in use
+Socket error 10049 - Cannot assign requested address
+Socket error 10050 - Network is down
+Socket error 10051 - Network is unreachable
+Socket error 10052 - Network dropped connection on reset
+Socket error 10053 - Software caused connection abort
+Socket error 10054 - Connection reset by peer
+Socket error 10055 - No buffer space available
+Socket error 10056 - Socket is already connected
+Socket error 10057 - Socket is not connected
+Socket error 10058 - Cannot send after socket shutdown
+Socket error 10060 - Connection timed out
+Socket error 10061 - Connection refused
+Socket error 10064 - Host is down
+Socket error 10065 - No route to host
+Socket error 10067 - Too many processes
+Socket error 10091 - Network subsystem is unavailable
+Socket error 10092 - WINSOCK.DLL version out of range
+Socket error 10093 - Successful WSAStartup not yet performed
+Socket error 10094 - Graceful shutdown in progress
+Socket error 11001 - Host not found
+Socket error 11002 - Non-authoritative host not found
+Socket error 11003 - This is a non-recoverable error
+Socket error 11004 - Valid name, no data record of requested type
+WSAEADDRINUSE (10048) Address already in use
+WSAECONNABORTED (10053) Software caused connection abort
+WSAECONNREFUSED (10061) Connection refused
+WSAECONNRESET (10054) Connection reset by peer
+WSAEDESTADDRREQ (10039) Destination address required
+WSAEHOSTUNREACH (10065) No route to host
+WSAEMFILE (10024) Too many open files
+WSAENETDOWN (10050) Network is down
+WSAENETRESET (10052) Network dropped connection
+WSAENOBUFS (10055) No buffer space available
+WSAENETUNREACH (10051) Network is unreachable
+WSAETIMEDOUT (10060) Connection timed out
+WSAHOST_NOT_FOUND (11001) Host not found
+WSASYSNOTREADY (10091) Network sub-system is unavailable
+WSANOTINITIALISED (10093) WSAStartup() not performed
+WSANO_DATA (11004) Valid name, no data of that type
+WSANO_RECOVERY (11003) Non-recoverable query error
+WSATRY_AGAIN (11002) Non-authoritative host found
 WSAVERNOTSUPPORTED (10092) Wrong WinSock DLL version
 ```
