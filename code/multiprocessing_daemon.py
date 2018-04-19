@@ -14,6 +14,9 @@ def sleeper(name, seconds):
 if __name__ == '__main__':
     print "in parent process (id %s)" % os.getpid()
     p = Process(target=sleeper, args=('bob', 5))
+    print 'daemon?', p.daemon
+    p.daemon = not p.daemon
+    print 'daemon?', p.daemon
     p.start()
     print "in parent process after child process start"
     print "parent process about to join child process"

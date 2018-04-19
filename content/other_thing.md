@@ -70,14 +70,32 @@ npm install http-server -g
 
 6. urlencode 和 urldecode
 
+- urllib.urlencode <-> urlparse.parse_qsl | query_string.query_string
+- urllib.quote <-> urllib.unquote
+- urlparse.urlparse <-> urlparse.urlunparse
+
 ```
-import urllib2
+# -*- coding: utf-8 -*-
 
-def urlencode(s):
-    return urllib2.quote(s)
+import urlparse
+import urllib
+from query_string import query_string
 
-def urldecode(s):
-    return urllib2.unquote(s).decode('utf8')
+data = {
+    'name': 'windard',
+    'year': 23,
+    'price': 100000000.111,
+    'company': 'https://ele.me'
+}
+
+if __name__ == '__main__':
+    raw_data = urllib.urlencode(data)
+    print raw_data
+    parse_data = urlparse.parse_qsl(raw_data)
+    print parse_data
+    query_data = query_string(raw_data)
+    print query_data
+
 ```
 
 7. 使用 python 内置的 json 显示

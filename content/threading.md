@@ -2,31 +2,77 @@
 
 #### 基本使用
 
-在thread的库里还需要我们自己的去设定锁，并且在主线程里阻塞主线程的进行来判断锁是否已经释放。但是在threading库里，因为每一个子线程都被默认为是守护线程，所以主线程不会等待子线程结束，我们需要手动的将子线程加入(join)到主线程中，然后主线程就会等待子线程全部结束才会继续下去。
+在 thread 的库里还需要我们自己的去设定锁，并且在主线程里阻塞主线程的进行来判断锁是否已经释放, threading 是比 thread 更高级易于操作的多线程库。
 
-守护线程的意思就是说这个线程独立于主线程，主线程看可以先于守护线程结束而不用等候守护线程结束，也可以设定 `threading.Thread.setDaemon(False)`
+多线程中，子线程默认不是守护线程，主线程会等待子线程结束再结束。如果要设为守护线程则在主线程结束后即终止 `threading.Thread.setDaemon(True)`.
+
+多线程中，子线程创建后，`start` 即开始子线程，主线程继续进行，`join` 即阻塞主线程，等待子线程结束后再继续主线程。
+
+在手动的将子线程加入(join)到主线程中后，主线程就会等待子线程全部结束才会继续 join 之后的程序。
+
+在 `join` 被加入到主线程之后，虽然主线程被阻塞，但是并不影响其他线程，其他线程可以继续 `join` 到主线程。
+
+守护线程的意思就是说这个线程独立于主线程，主线程可以先于守护线程结束而不用等候守护线程结束。
+
+```
+# -*- coding: utf-8 -*-
+
+from threading import Thread
+import os
+import time
+
+
+def sleeper(name, seconds):
+    print 'starting child process with id: ', os.getpid()
+    print 'parent process:', os.getppid()
+    print 'sleeping for %s ' % seconds
+    time.sleep(seconds)
+    print "%s done sleeping" % name
+
+
+if __name__ == '__main__':
+    print "in parent process (id %s)" % os.getpid()
+    p = Thread(target=sleeper, args=('bob', 5))
+    print 'daemon?', p.isDaemon()
+    p.setDaemon(not p.isDaemon())
+    print 'daemon?', p.isDaemon()
+    p.start()
+    print "in parent process after child process start"
+    print "parent process about to join child process"
+    p.join()
+    print "in parent process after child process join"
+    print "parent process exiting with id ", os.getpid()
+    print "The parent's parent process:", os.getppid()
+
+```
 
 还是上一个例子，我们用threading来试一下。
 
 ```python
+# coding=utf-8
 
 import threading
 from time import ctime,sleep
+
 def loop(nloop,nsec):
 	print "loop",nloop," start at: ",ctime()
 	sleep(nsec)
 	print "loop",nloop,"end    at: ",ctime()
+
 print "all start at: ",ctime()
 loops = [4,2]
 threads = []
 nloops = range(len(loops))
+
 #创建两个线程
 for i in nloops:
 	t = threading.Thread(target=loop,args=(i,loops[i]))
 	threads.append(t)
+
 #让两个线程同时开始
 for i in nloops:
 	threads[i].start()
+
 #将两个线程加入主线程
 #如果将join和start在一起的话
 #就会阻塞主线程的执行
@@ -35,6 +81,7 @@ for i in nloops:
 #还是一个线程一个线程的执行
 for i in nloops:
 	threads[i].join()
+
 print "all end   at: ",ctime()
 ```
 
@@ -43,7 +90,7 @@ print "all end   at: ",ctime()
 ![threading_demo.jpg](images/threading_demo.jpg)
 
 ```python
-
+# coding=utf-8
 
 import threading
 from time import ctime,sleep
@@ -88,7 +135,7 @@ print "all end   at: ",ctime()
 这里我们需要先创建一个类供线程启动的时候执行，然后在线程启动的时候，Thread对象会调用我们创建的对象的执行函数。
 
 ```python
-
+# coding=utf-8
 
 import threading
 from time import ctime,sleep
@@ -134,7 +181,7 @@ print "all end   at: ",ctime()
 创建一个继承自Thread的之类，然后构造这个之类的实例，这时，Thread的start方法在就要在之类里重写为run方法。
 
 ```python
-
+# coding=utf-8
 
 import threading
 from time import ctime,sleep
@@ -185,7 +232,7 @@ print "all end   at: ",ctime()
 假设我们一共有100个货物，生产者与消费者所需时间都是1秒以内的随机时间。
 
 ```python
-
+# coding=utf-8
 
 import threading
 from Queue import Queue
@@ -235,7 +282,7 @@ print "all end   at: ",ctime()
 果然在把生产者消费者线程增多的时候，相比较效率提高了很多。
 
 ```python
-
+# coding=utf-8
 
 import threading
 from Queue import Queue
@@ -289,7 +336,7 @@ print "all end   at: ",ctime()
 我们先来看一下没有资源锁的情况
 
 ```python
-
+# coding=utf-8
 
 import threading
 from time import ctime,sleep
@@ -334,7 +381,7 @@ if __name__ == '__main__':
 现在我们将其上锁。
 
 ```python
-
+# coding=utf-8
 
 import threading
 from time import ctime,sleep

@@ -103,7 +103,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [subprocess](content/subprocess.md)
 
-## [ X ] [multiprocessing](content/multiprocessing.md)
+## [multiprocessing](content/multiprocessing.md)
 
 ## [logging](content/logging.md)
 
@@ -244,6 +244,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 ## [struct](content/struct.md)
 
 ## [twine](content/twine.md)
+
+## [delegator](content/delegator.md)
 
 ## [tools](content/tools.md)
 

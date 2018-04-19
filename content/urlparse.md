@@ -126,6 +126,6 @@ http://www.baidu.com/abc.html?key=value&m=x
 
 ### 其他使用
 
-- urllib.urlencode  <-> urlparse.parse_qsl
+- urllib.urlencode  <-> urlparse.parse_qsl | query_string.query_string
 - urllib.quote      <-> urllib.unquote
 - urlparse.urlparse <-> urlparse.urlunparse

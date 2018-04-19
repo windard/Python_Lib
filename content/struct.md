@@ -87,6 +87,7 @@ if __name__ == '__main__':
 ```
 
 - `>` 表示字节序为大端序，即网络序
+- `!` 表示字节序为网络序，即大端序
 - `<` 表示字节序为小端序
 - `I` 表示4字节无符号数
 - `H` 表示2字节无符号数
@@ -101,7 +102,7 @@ if __name__ == '__main__':
 (1324224242,)
 ```
 
-## struct 类型表
+### struct 类型表
 
 |Format | C Type  |Python type| Standard size |
 |-------|---------|-----------|---------------|
@@ -123,3 +124,114 @@ if __name__ == '__main__':
 |s  | char[] | string  |1|
 |p  | char[] | string|   |
 |P  | void * | integer|    |
+
+### 打包数据
+
+```
+# -*- coding: utf-8 -*-
+
+import struct
+from collections import namedtuple
+
+User = namedtuple('User', ['name', 'phone', 'age'])
+
+
+def pack():
+    user = User(name='windard', phone='186-0757-1914', age=20)
+
+    raw_data = struct.pack('7s13sI', user.name, user.phone, user.age)
+
+    with open('raw_data.bin', 'wb') as f:
+        f.write(raw_data)
+
+    print repr(raw_data)
+
+
+def unpack():
+    with open('raw_data.bin', 'rb') as f:
+        raw_data = f.read()
+    data = struct.unpack('7s13sI', raw_data)
+    user = User(*data)
+
+    print user
+
+
+if __name__ == '__main__':
+    pack()
+    unpack()
+
+```
+
+数据长度，默认四字节对齐，如果指定字节序，则按照原字节数.
+
+> 字节对齐表示在有`unsigned int`的时候，如果其出现在字符串后面，则字符串需要按照四字节对齐，如果字符串在其后面，则无需对齐。
+
+```
+struct.calcsize('7s12sI')   # 24
+struct.calcsize('!7s12sI')  # 23
+struct.calcsize('I7s12s')   # 23
+```
+
+### 打包不定长数据
+
+#### 计算长度
+
+```
+s = bytes(s, 'utf-8')    # Or other appropriate encoding
+struct.pack("I%ds" % (len(s),), len(s), s)
+```
+
+#### 直接连接
+
+```
+struct.pack("I", len(s)) + s
+```
+
+#### 解包数据
+
+```
+int_size = struct.calcsize("I")
+(i,), data = struct.unpack("I", data[:int_size]), data[int_size:]
+data_content = data[i:]
+```
+
+#### 使用示例
+
+
+```
+# -*- coding: utf-8 -*-
+
+import sys
+import struct
+
+if sys.version_info.major == 3:
+    unicode = str
+
+
+def pack_with_len(s):
+    if type(s) != bytes:
+        s = s.encode('utf-8')
+    return struct.pack('I%ds' % len(s), len(s), s)
+
+
+def pack_without_len(s):
+    if type(s) != bytes:
+        s = s.encode('utf-8')
+    return struct.pack('I', len(s)) + s
+
+
+def unpack_string(data):
+    int_size = struct.calcsize("I")
+    (i, ), data = struct.unpack("I", data[:int_size]), data[int_size:]
+    return data
+
+
+if __name__ == '__main__':
+    d1 = pack_with_len('this is a very long string')
+    d2 = pack_without_len('and we do know it length')
+    print repr(d1)
+    print repr(d2)
+    print unpack_string(d1)
+    print unpack_string(d2)
+
+```

@@ -2,6 +2,9 @@
 
 据说是比 arguement 更好用的命令行参数解析器。
 
+- click.opition 可选参数
+- click.arguement 必需参数
+
 ```
 import click
 

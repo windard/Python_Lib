@@ -25,7 +25,7 @@ class Popen(args, bufsize=0, executable=None,
 |agrs					|需要被执行的字符串或数组																				|
 |bufsize 				|0 无缓冲，1 有缓冲，其他正值 缓冲区大小，负值 采用默认系统缓冲(一般是全缓冲)							|
 |executable 			|一般不用吧，args字符串或列表第一项表示程序名 															|
-|stdin，stdout，stderr	|None 没有任何重定向，继承父进程，PIPE 创建管道，文件对象，文件描述符(整数)，stderr 还可以设置为 STDOUT	|
+|stdin，stdout，stderr	|None 没有任何重定向，继承父进程，PIPE 创建管道，文件对象，文件描述符(整数)，stderr 还可以设置为 STDOUT，即命令行中的 `<` 和 `>` 默认都是 `-` 即屏幕|
 |preexec_fn 			|钩子函数， 在fork和exec之间执行。(unix) 																|
 |close_fds				|unix 下执行新进程前是否关闭0/1/2之外的文件，windows下不继承还是继承父进程的文件描述符 					|
 |shell 					|为真的话，unix下相当于args前面添加了 "/bin/sh“ ”-c”，window下，相当于添加"cmd.exe /c"					|
@@ -71,6 +71,28 @@ def check_output(*popenargs, **kwargs):
         cmd = kwargs.get("args")
         raise CalledProcessError(retcode, cmd, output=output)
     return output
+```
+
+`call`, `check_call` 两个方法都会将命令执行结果回显在屏幕上，如果需要保留执行结果，可以使用 `check_output` 或者将 Popen 的 `stdout` 字段设为 `subprocess.PIPE`.在 `Popen.communicate()` 得到输出结果，也可以在这个方法里加命令行参数，在 `Popen.wait()` 得到返回状态码。
+
+
+```
+# -*- coding: utf-8 -*-
+
+import subprocess
+
+if __name__ == '__main__':
+    retcode = subprocess.call(["which", "pbcopy"])
+    print subprocess.check_call(["which", "pbcopy"])
+    print subprocess.check_output(["which", "pbcopy"])
+    print retcode
+
+    p = subprocess.Popen(["which", "pbcopy"], stdout=subprocess.PIPE)
+    print p.wait()
+
+    out, err = p.communicate()
+    print out
+
 ```
 
 一个简单的的 shell
