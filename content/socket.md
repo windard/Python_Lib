@@ -378,6 +378,7 @@ if __name__ == '__main__':
     main()
 
 ```
+
 #### 异步 IO 的 socket 程序
 
 在多个客户端连接的时候，服务器就会阻塞，一般可以采用的解决办法有 多线程，多进程，异步 IO ，协程等，我们来试一下 异步 IO 的操作，常用的异步 IO 操作有 select ， poll ，epoll ， kqueue 等，可以在 Windows 上使用的只有 select ，支持 Linux 设备的是select ， poll ，epoll 等，而 kqueue 是 Mac 上的。
@@ -824,6 +825,188 @@ while 1:
     print time.strftime('%Y-%m-%d %H:%M:%S')," [%s:%s] %s"%(addr[0],addr[1],request)
     conn.sendall(page)
     conn.close()
+
+```
+
+#### 文件传输服务器
+
+socket 连接，如果客户端断开连接，服务器端会收到最后一个空请求，如果服务器端断开连接，客户端则会直接断开
+
+server
+
+```
+# -*- coding: utf-8 -*-
+
+import os
+import socket
+import thread
+import struct
+import hashlib
+
+host = "127.0.0.1"
+port = 8081
+
+
+def main():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind((host, port))
+    s.listen(5)
+
+    print "Server is running on %s:%s Press Ctrl-C to stop" % (host, port)
+
+    while 1:
+        clientsock, clientaddr = s.accept()
+        thread.start_new_thread(connect, (clientsock, clientaddr))
+
+
+class TransferFile(object):
+
+    def __init__(self, filename, path=None):
+        self.content = ''
+        self.filename = self.fullname = os.path.abspath(filename)
+        if path:
+            self.fullname = os.path.join(path, filename)
+        self.filename = os.path.basename(self.fullname)
+
+    @property
+    def exists(self):
+        return os.path.exists(self.fullname)
+
+    @property
+    def md5(self):
+        return hashlib.md5(self.content).hexdigest()
+
+    @property
+    def size(self):
+        return len(self.content)
+
+    def save(self):
+        with open(self.fullname, 'wb') as f:
+            f.write(self.content)
+
+    def open(self):
+        with open(self.fullname, 'rb') as f:
+            self.content = f.read()
+
+    def delete(self):
+        return os.remove(self.fullname)
+
+
+def connect(clientsock, clientaddr):
+    print "Welcome from %s : %s" % (clientaddr[0], clientaddr[1])
+    clientsock.sendall("File Transfer Server")
+    filemeta = clientsock.recv(1024)
+    filename, filesize, filemd5 = struct.unpack('128sl32s', filemeta)
+    filename = filename.strip('\x00')
+    print('receive file %s' % filename)
+    tf = TransferFile(filename)
+    if tf.exists:
+        print 'file already exists'
+        clientsock.sendall('exists')
+        clientsock.close()
+        return
+    else:
+        tf.content = ''
+        clientsock.sendall('ok')
+    while filesize > tf.size:
+        piece = clientsock.recv(1024)
+        tf.content += piece
+    if tf.size == filesize and tf.md5 == filemd5:
+        print 'file transfer success'
+        tf.save()
+    else:
+        print 'file transfer fail'
+    clientsock.sendall('roger')
+    clientsock.close()
+
+
+if __name__ == '__main__':
+    main()
+
+```
+
+
+client
+
+```
+# -*- coding: utf-8 -*-
+
+import os
+import struct
+import socket
+import hashlib
+
+
+host = "127.0.0.1"
+port = 8081
+
+
+class TransferFile(object):
+    def __init__(self, filename, path=None):
+        self.content = ''
+        self.filename = self.fullname = os.path.abspath(filename)
+        if path:
+            self.fullname = os.path.join(path, filename)
+        self.filename = os.path.basename(self.fullname)
+
+    @property
+    def exists(self):
+        return os.path.exists(self.fullname)
+
+    @property
+    def md5(self):
+        return hashlib.md5(self.content).hexdigest()
+
+    @property
+    def size(self):
+        return len(self.content)
+
+    def save(self):
+        with open(self.fullname, 'wb') as f:
+            f.write(self.content)
+
+    def open(self):
+        with open(self.fullname, 'rb') as f:
+            self.content = f.read()
+
+    def delete(self):
+        return os.remove(self.fullname)
+
+
+def transfer_file(conn):
+    file_path = raw_input("File path:")
+    tf = TransferFile(file_path)
+    if not tf.exists:
+        print('file not exists')
+        return
+    tf.open()
+    conn.sendall(struct.pack('128sl32s', tf.filename, tf.size, tf.md5))
+    flag = conn.recv(1024)
+    if flag == 'ok':
+        with open(tf.fullname, 'rb') as f:
+            while 1:
+                piece = f.read(1024)
+                if not piece:
+                    break
+                conn.sendall(piece)
+        print 'file transfer success.'
+    else:
+        print flag
+    last = conn.recv(1024)
+    print last
+
+
+def main():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host, port))
+    buf = s.recv(1024)
+    print(buf)
+    transfer_file(s)
+
+
+if __name__ == '__main__':
+    main()
 
 ```
 
