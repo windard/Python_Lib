@@ -254,7 +254,49 @@ if __name__ == '__main__':
 
 ```
 
+实际上，在线程池中，线程池本身就会返回线程的结果
+
+```
+# -*- coding: utf-8 -*-
+
+import os
+import time
+import multiprocessing
+
+def multi(x):
+    return x + 42
+
+
+if __name__ == '__main__':
+    pool = multiprocessing.Pool()
+
+    print pool.map(multi, range(10))
+    print pool.map_async(multi, range(10)).get()
+
+    for i in pool.imap_unordered(multi, range(10)):
+        print i,
+
+    print
+    res = pool.apply_async(multi, (20, ))
+    print res.get(timeout=20)
+
+    res = pool.apply_async(os.getpid)
+    print res.get()
+
+    multiple_results = [pool.apply_async(os.getpid) for _ in range(4)]
+    print [res.get() for res in multiple_results]
+
+    res = pool.apply_async(time.sleep, (10, ))
+    try:
+        print res.get(timeout=1)
+    except multiprocessing.TimeoutError:
+        print 'we lacked patience and got a timeout error'
+
+```
+
 python2 中线程本身没有线程池，在 python3 才提供了线程池的支持。但是在 multiprocess 中有线程池的支持，还有一个 threadpool 的库提供线程池。
+
+进程池是无序的，但是 threadpool 是有序的。
 
 ```
 # -*- coding: utf-8 -*-
@@ -290,6 +332,7 @@ if __name__ == '__main__':
     print 'All task done.'
 
 ```
+
 ### threadpool
 
 最简易的 threadpool 实现
@@ -528,8 +571,54 @@ if __name__ == '__main__':
 1. 线程锁和进程锁是不一样的
 2. `Queue.Queue` 是线程安全的, `multiprocessing.Queue` 是进程安全的，不要混用，不能混用。
 
+使用 `multiprocess.Pipe` 也能够在不同的进程间共享数据，但是它不是进程安全的，需要使用进程锁来保证数据安全性
 
-## 进程变量
+```
+# -*- coding: utf-8 -*-
+
+import time
+import random
+
+from multiprocessing import Process, Pipe, Lock
+
+l = Lock()
+
+
+def writeQ(q):
+    for value in ['A', 'B', 'C', 'D', 'E']:
+        print 'Put %s to queue ...' % value
+        q.send(value)
+        time.sleep(random.random())
+
+
+def readQ(q):
+    for _ in range(2):
+        l.acquire()
+        print 'read q and q status: ', q.recv()
+        l.release()
+
+
+if __name__ == '__main__':
+    parent_conn, child_conn = Pipe()
+    pw = Process(target=writeQ, args=(child_conn, ))
+    pr = Process(target=readQ, args=(parent_conn, ))
+    pt = Process(target=readQ, args=(parent_conn, ))
+    pw.start()
+    pr.start()
+    pt.start()
+
+    # print 'from parent', parent_conn.recv()
+    # child_conn.send('in parent')
+    # child_conn.send('in parent')
+    # print 'after parent', parent_conn.recv()
+
+    pw.join()
+    pr.join()
+    pt.join()
+
+```
+
+### 进程变量
 
 在进程之间无共享变量，不和线程一样，无论是全局变量，还是局部变量都是不能共享的。
 
@@ -564,7 +653,6 @@ if __name__ == '__main__':
 
 ```
 
-
 而如果将 `multiprocessing.Process` 换成 `threading.Thread` 则效果完全不一样。
 
 所以进程之间的共享变量只能使用 `multiprocessing.Queue` 而不是 `Queue.Queue`
@@ -575,6 +663,69 @@ if __name__ == '__main__':
 
 因为在 python 中 GIL 的限制，在进程切换之间的消耗，其实并不建议使用多进程，可以使用协程或者异步来代替。
 
-## lock
+普通的局部变量或者全局变量不能共享，但是有专门的进程数据格式用来在不同的进程间同步数据,比如说 `multiprocess.Array` 和 `multiprocess.Value`
 
-既然进程之间没有共享变量，那么进程锁如何使用，且如何保证进程安全？多进程中的 Queue 和消息队列中的 Queue 有什么区别?
+```
+# -*- coding: utf-8 -*-
+
+import multiprocessing
+
+
+def decrease(n, a):
+    n.value = 3.1415927
+    for i in range(len(a)):
+        a[i] = - a[i]
+
+
+if __name__ == '__main__':
+    num = multiprocessing.Value('d', 0.0)
+    arr = multiprocessing.Array('i', range(10))
+
+    p = multiprocessing.Process(target=decrease, args=(num, arr))
+    p.start()
+    p.join()
+
+    print(num.value)
+    print(arr[:])
+
+```
+
+或者 `multiprocess.Manager`
+
+```
+# -*- coding: utf-8 -*-
+
+import multiprocessing
+
+
+def func(d, l):
+    d[1] = '2'
+    d['2'] = 2
+    d[0.25] =None
+    l.reverse()
+
+if __name__ == '__main__':
+    manager = multiprocessing.Manager()
+    d = manager.dict()
+    l = manager.list(range(10))
+    p = multiprocessing.Process(target=func, args=(d, l))
+    p.start()
+    p.join()
+
+    print(d)
+    print(l)
+
+```
+
+### lock
+
+既然进程之间没有共享变量，那么进程锁如何使用，且如何保证进程安全？
+
+多进程中的 Queue 和消息队列中的 Queue 有什么区别?
+
+线程池和进程池有什么区别？
+
+
+### 参考链接
+
+[multiprocess](https://docs.python.org/2/library/multiprocessing.html)

@@ -437,3 +437,46 @@ def run(self):
 		counter -= 1
 		print "  "+str(counter)+"  "
 ```
+
+Lock 与 RLock 的区别，Lock 只能锁一次，再次请求就会挂起，RLock 自带计数器，在一个线程中可以请求多次，等计数器全部释放之后，其他线程才能取得资源。
+
+#### 本地变量
+
+threadLocal 线程局部变量，避免了使用全局变量需加锁的困境和局部变量调用不清的麻烦。保证在每个线程中的变量都是在线程内可读可写的，而不会被其他线程污染。
+
+```
+# -*- coding: utf-8 -*-
+
+import threading
+
+
+local = threading.local()
+
+
+def process_name():
+    print "hello %s, in %s" % (local.name, threading.current_thread().name)
+
+
+def process_local(name):
+    local.name = name
+    process_name()
+
+
+if __name__ == '__main__':
+    local.name = 'Cli'
+    process_name()
+    t1 = threading.Thread(target=process_local, args=('Bob', ), name='Target-A')  # noqa
+    t2 = threading.Thread(target=process_local, args=('Alice', ), name='Target-B')  # noqa
+
+    t1.start()
+    t2.start()
+
+    t1.join()
+    t2.join()
+
+```
+
+线程变量是只能在当前线程中使用，在 flask 中即当前请求。但是 flask 不仅仅是只支持多线程，还有多进程，甚至单线程。
+
+如何在单线程中使每个请求都获得一份局部变量。
+- 将局部变量变成实例属性。
