@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import socket
-import thread
+import threading
 
 host = "127.0.0.1"
 port = 8081
@@ -17,25 +17,26 @@ def main():
     print "Server is running on %s:%s Press Ctrl-C to stop" % (host, port)
 
     while 1:
-        clientsock, clientaddr = s.accept()
+        clientsock, _ = s.accept()
         socks.append(clientsock)
-        thread.start_new_thread(connect, (clientsock, clientaddr, socks))
+        threading.Thread(target=connect, args=(clientsock, socks)).start()
 
 
-def connect(clientsock, clientaddr, socks):
-    print "Welcome from %s : %s" % (clientaddr[0], clientaddr[1])
-    clientsock.sendall("Hello client\n")
+def connect(clientsock, socks):
+    clientaddr = '%s:%5s' % (clientsock.getpeername())
+    print "Welcome from %s" % (clientaddr)
+    clientsock.sendall("Hello client")
     while 1:
         message = clientsock.recv(1024)
         if not len(message):
             socks.remove(clientsock)
             break
-        print "Received From %s:%s client : '%s'" % (
-            clientaddr[0], clientaddr[1], message.strip())
+        data = '%s : %s' % (clientaddr, message.strip())
+        print(data)
         for sock in socks:
             if sock == clientsock:
-                break
-            clientsock.send(message)
+                continue
+            sock.sendall(data)
 
 
 if __name__ == '__main__':

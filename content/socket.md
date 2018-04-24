@@ -585,7 +585,7 @@ while 1:
 udpsock.close()
 ```
 
-#### socket聊天服务器
+#### socket + select 聊天室
 
 聊天服务器用到了一个新的库，select,用于动态的监听所有的io网络，并返回可用的io。这里涉及到一些同步异步，阻塞非阻塞的内容，但是只能在 Linux 下运行。
 
@@ -718,6 +718,113 @@ if __name__ == '__main__':
 ```
 
 保存为socket_chatroom.py。
+
+
+#### socket + threading 聊天室
+
+其实不用异步，用多线程就能够实现聊天室。
+1. socket 的接收和发送是原子性的，是可以在多线程中同时进行的。
+2. raw_input 也不是阻塞的，在多线程中也可以输入输出
+3. sys.stdout 是可以删除的，将已经输出的数据抹去
+
+server
+
+```
+# -*- coding: utf-8 -*-
+
+import socket
+import threading
+
+host = "127.0.0.1"
+port = 8081
+
+
+def main():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.bind((host, port))
+    s.listen(5)
+    socks = []
+
+    print "Server is running on %s:%s Press Ctrl-C to stop" % (host, port)
+
+    while 1:
+        clientsock, _ = s.accept()
+        socks.append(clientsock)
+        threading.Thread(target=connect, args=(clientsock, socks)).start()
+
+
+def connect(clientsock, socks):
+    clientaddr = '%s:%5s' % (clientsock.getpeername())
+    print "Welcome from %s" % (clientaddr)
+    clientsock.sendall("Hello client")
+    while 1:
+        message = clientsock.recv(1024)
+        if not len(message):
+            socks.remove(clientsock)
+            break
+        data = '%s : %s' % (clientaddr, message.strip())
+        print(data)
+        for sock in socks:
+            if sock == clientsock:
+                continue
+            sock.sendall(data)
+
+
+if __name__ == '__main__':
+    main()
+
+```
+
+client
+
+```
+# -*- coding: utf-8 -*-
+
+import os
+import sys
+import socket
+import threading
+
+
+host = "127.0.0.1"
+port = 8081
+
+
+def read(s):
+    while 1:
+        buf = s.recv(1024)
+        sys.stdout.write("\033[2K\033[E")
+        sys.stdout.write("\033[34m< " + buf + "\033[39m")
+        sys.stdout.write("\n> ")
+        sys.stdout.flush()
+
+
+def write(s):
+    while 1:
+        message = raw_input("> ")
+        if message.strip().lower() == "quit" or \
+                message.strip().lower() == "exit":
+            s.close()
+            os._exit(0)
+        s.sendall(message)
+
+
+def main():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((host, port))
+    pw = threading.Thread(target=write, args=(s, ))
+    pw.setDaemon(True)
+    pw.start()
+    pr = threading.Thread(target=read, args=(s, ))
+    pr.start()
+    pw.join()
+
+
+if __name__ == '__main__':
+    main()
+
+```
 
 #### socket HTTP 服务器
 

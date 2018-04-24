@@ -6,6 +6,8 @@
 python -m SimpleHTTPServer 8080
 ```
 
+> `python -m http.server` python 3
+
 还有CGI服务器。
 
 ```python

@@ -2,8 +2,7 @@
 
 import time
 import random
-
-from multiprocessing import Queue, Process, JoinableQueue
+from multiprocessing import Queue, Process, JoinableQueue, Lock
 
 
 def writeQ(q):

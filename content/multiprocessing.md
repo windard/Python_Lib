@@ -573,6 +573,8 @@ if __name__ == '__main__':
 
 使用 `multiprocess.Pipe` 也能够在不同的进程间共享数据，但是它不是进程安全的，需要使用进程锁来保证数据安全性
 
+Pipe 默认是全双工的，即返回两个通道都可读可写，如果是半双工的，则只能前一个通道读，后一个通道写。
+
 ```
 # -*- coding: utf-8 -*-
 
@@ -663,7 +665,7 @@ if __name__ == '__main__':
 
 因为在 python 中 GIL 的限制，在进程切换之间的消耗，其实并不建议使用多进程，可以使用协程或者异步来代替。
 
-普通的局部变量或者全局变量不能共享，但是有专门的进程数据格式用来在不同的进程间同步数据,比如说 `multiprocess.Array` 和 `multiprocess.Value`
+普通的局部变量或者全局变量不能共享，但是有专门的进程数据格式用来在不同的进程间同步数据,比如说 `multiprocess.Array` 和 `multiprocess.Value` , 注意在子进程中使用共享变量的时候，必须使用进程锁，不然很有可能会有问题，造成数据丢失甚至错误。
 
 ```
 # -*- coding: utf-8 -*-
@@ -718,14 +720,254 @@ if __name__ == '__main__':
 ```
 
 ### lock
+多进程间的共享变量，如果不用进程锁，就会造成数据混乱
 
-既然进程之间没有共享变量，那么进程锁如何使用，且如何保证进程安全？
+```
+# -*- coding: utf-8 -*-
+from multiprocessing import Process, Manager, Lock
+import os
+
+manager = Manager()
+sum = manager.Value('tmp', 0)
+lock = Lock()
+
+
+def testFunc(cc):
+    # with lock:
+    #     sum.value += cc
+    sum.value += cc
+
+
+if __name__ == '__main__':
+    ps = []
+
+    for ll in range(100):
+        t = Process(target=testFunc, args=(1,))
+        ps.append(t)
+
+    for i in range(len(ps)):
+        ps[i].start()
+
+    for j in range(len(ps)):
+        ps[j].join()
+
+    print "------------------------"
+    print 'process id:', os.getpid()
+    print sum.value
+
+```
+
+如果不使用进程锁，得到的数据永远都小于100，使用进程锁之后才能得到想要的结果。
 
 多进程中的 Queue 和消息队列中的 Queue 有什么区别?
 
 线程池和进程池有什么区别？
 
+### 信号量
+
+进程锁内部就是一个大小为1的信号量，可重用进程锁是大小不固定的信号量，而信号量可以设置固定大小。
+
+设置一个固定大小的信号量，可以开启十个子进程，去争夺两个信号，同时最多只能由两个子线程在运行。
+
+线程信号量与进程信号量是一样的。
+
+```
+# -*- coding: utf-8 -*-
+
+import threading
+import time
+semaphore = threading.Semaphore(2)
+
+
+def worker(id):
+    print 'thread {id} acquire semaphore'.format(id=id)
+    semaphore.acquire()
+    print 'thread {id} get semaphore do something'.format(id=id)
+    time.sleep(2)
+    semaphore.release()
+    print 'thread {id} release semaphore'.format(id=id)
+
+
+if __name__ == '__main__':
+
+    for i in range(10):
+        t = threading.Thread(target=worker, args=(i, ))
+        t.start()
+
+```
+
+
+### v2ex
+
+在 v2ex 里看到这样一个问题，让以下代码中的 my_process 只运行一次，即 my_progress 在多进程的情况下只运行一次，也就是同时只有一个 printx 在运行。
+
+```
+from multiprocessing import Process
+import time
+
+class ScheduleTest():
+    @staticmethod
+    def printx():
+        while True:
+            print('hello x')
+            time.sleep(5)
+
+    def run(self):
+        print('printx is running...')
+        my_process = Process(target=self.printx)
+        my_process.start()
+
+
+def app_run():
+    my_schedule = ScheduleTest()
+    process_0 = Process(target=my_schedule.run)
+    process_1 = Process(target=my_schedule.run)
+    process_2 = Process(target=my_schedule.run)
+    process_0.start()
+    process_1.start()
+    process_2.start()
+
+
+if __name__ == '__main__':
+    app_run()
+```
+
+#### 进程锁
+
+进程锁的位置很重要
+
+```
+# -*- coding: utf-8 -*-
+from multiprocessing import Process, Lock
+import time
+
+
+lock = Lock()
+
+class ScheduleTest():
+    @staticmethod
+    def printx():
+        while True:
+            print('hello x')
+            time.sleep(5)
+
+    def run(self):
+        print('printx is running...')
+        my_process = Process(target=self.printx)
+        my_process.start()
+
+
+def app_run():
+    my_schedule = ScheduleTest()
+    for i in range(3):
+        with lock:
+            p = Process(target=my_schedule.run)
+            p.start()
+            p.join()
+
+
+if __name__ == '__main__':
+    app_run()
+
+```
+
+#### 信号量
+
+信号量其实也是进程锁
+
+```
+# -*- coding: utf-8 -*-
+from multiprocessing import Process, Semaphore
+import time
+
+
+s = Semaphore(1)
+
+
+class ScheduleTest():
+    @staticmethod
+    def printx():
+        while True:
+            print('hello x')
+            time.sleep(5)
+
+    def run(self):
+        s.acquire()
+        print('printx is running...')
+        my_process = Process(target=self.printx)
+        my_process.start()
+        my_process.join()
+        s.release()
+
+
+def app_run():
+    my_schedule = ScheduleTest()
+    process_0 = Process(target=my_schedule.run)
+    process_1 = Process(target=my_schedule.run)
+    process_2 = Process(target=my_schedule.run)
+    process_0.start()
+    process_1.start()
+    process_2.start()
+
+
+if __name__ == '__main__':
+    app_run()
+
+```
+
+#### 共享变量
+
+共享变量注意需加锁
+
+```
+# -*- coding: utf-8 -*-
+from multiprocessing import Process, Manager, Lock
+import time
+
+manager = Manager()
+sum = manager.Value('tmp', 0)
+lock = Lock()
+
+
+class ScheduleTest():
+    @staticmethod
+    def printx():
+        while True:
+            print('hello x')
+            time.sleep(5)
+
+    def run(self):
+        with lock:
+            if not sum.value:
+                print('printx is running...')
+                my_process = Process(target=self.printx)
+                my_process.start()
+                sum.value += 1
+            else:
+                print('printx has ran.')
+
+
+def app_run():
+    my_schedule = ScheduleTest()
+    process_0 = Process(target=my_schedule.run)
+    process_1 = Process(target=my_schedule.run)
+    process_2 = Process(target=my_schedule.run)
+    process_0.start()
+    process_1.start()
+    process_2.start()
+
+
+if __name__ == '__main__':
+    app_run()
+
+```
 
 ### 参考链接
 
 [multiprocess](https://docs.python.org/2/library/multiprocessing.html)
+
+[Python并行编程 中文版](http://python-parallel-programmning-cookbook.readthedocs.io/zh_CN/latest/index.html)
+
+[理解Python并发编程一篇就够了 - 线程篇](http://www.dongwm.com/archives/%E4%BD%BF%E7%94%A8Python%E8%BF%9B%E8%A1%8C%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-%E7%BA%BF%E7%A8%8B%E7%AF%87/)
+
+[理解Python并发编程一篇就够了 - 进程篇](http://www.dongwm.com/archives/%E4%BD%BF%E7%94%A8Python%E8%BF%9B%E8%A1%8C%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B-%E8%BF%9B%E7%A8%8B%E7%AF%87/)

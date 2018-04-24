@@ -190,7 +190,7 @@ print "m.span(2):", m.span(2)
 
 ![re_complex](images/re_complex.png)
 
-## 贪婪与懒惰
+### 贪婪与懒惰
 
 正则表达式默认是贪婪模式，即匹配尽可能多的字符，如 `+` 匹配一个到无穷多个，就匹配尽可能多的到不匹配为止，如果采用懒惰模式，则就刚好匹配一个，不再多了。
 
@@ -221,3 +221,7 @@ print m.group()
 <html><body><title>this is title</title></body></html>>
 <html>
 ```
+
+## 参考链接
+
+[正则表达式30分钟入门教程](http://deerchao.net/tutorials/regex/regex.htm)
