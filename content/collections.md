@@ -75,6 +75,8 @@ print(line_count)
 
 一般的字典进行赋值操作时，需要先检查键是否存在，`defaultdict` 则不需要
 
+> 使用 defaultdict 的时候需注意，初始化的时候需要填入想要的值的类型。
+
 ```
 # coding=utf-8
 

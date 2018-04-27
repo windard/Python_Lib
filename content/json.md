@@ -2,6 +2,8 @@
 
 python这么强大的语言当然也可以用来处理json，两个主要的函数是`json.dumps()`和`json.loads()`分别用来将dist字典格式的Python数据编码为json数据格式，和将json数据格式解码为Python的数据格式。
 
+> 还有 ujson 更快，simplejson 兼容性更强
+
 分别有四个主要的函数
 
 ```
