@@ -34,7 +34,7 @@ class TransferFile(object):
 
     @property
     def exists(self):
-        return os.path.exists(self.fullname)
+        return os.path.exists(self.fullname) and os.path.isfile(self.fullname)
 
     @property
     def md5(self):

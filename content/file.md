@@ -9,11 +9,14 @@ f.open('file'[,'mode'])
 |r		|以读方式打开文件，可读取文件信息。|
 |w		|以写方式打开文件，可向文件写入信息。如文件存在，则清空该文件，再写入新内容；如果文件不存在则创建。|
 |a	    |以追加模式打开文件（即一打开文件，文件指针自动移到文件末尾），如果文件不存在则创建。|
-|r+ 	|以读写方式打开文件，可对文件进行读和写操作。|
-|w+		|消除文件内容，然后以读写方式打开文件。|
+|r+ 	|以读写方式打开文件，可对文件进行读和写操作,写入只能在文件的开头或者结尾，不能从中间开始写。|
+|w+		|以读写方式打开文件,如文件存在，则清空该文件，再写入新内容；如果文件不存在则创建。|
 |a+		|以读写方式打开文件，并把文件指针移到文件尾。|
 |b		|以二进制模式打开文件，而不是以文本模式。该模式只对Windows或Dos有效，类Unix的文件是用二进制模式进行操作的。|
 
+在 unix 系统下文件的读写是线程安全的,甚至文件在一个线程中等待读写都不会受到其他线程的干扰。
+
+print 则不是线程安全的，sys.stdout.write 则要好一点，但是在线程内等待则会受到其他线程的干扰。
 #### 打开文件的方法
 
 |方法		|描述			|
@@ -137,4 +140,67 @@ $filename=iconv('utf-8','gb2312',$filename);
 
 ```
 file_get_contents(mb_convert_encoding($filename, 'gbk', 'utf-8'));
+```
+
+#### 读取文件的最后一行的办法
+
+```
+# -*- coding: utf-8 -*-
+
+import time
+
+
+def follow(filename, s=1):
+    with open(filename) as f:
+        f.seek(0, 2)
+        while True:
+            line = f.readline()
+            if not line:
+                time.sleep(s)
+            else:
+                print 'line', len(line), repr(line)
+
+
+if __name__ == '__main__':
+    follow('/var/log/system.log')
+
+```
+
+有的人是再次 seek 一遍，但是实测不用也可以。
+
+```
+    def follow(self, s=1):
+        ''' Do a tail follow. If a callback function is registered it is called with every new line.
+        Else printed to standard out.
+
+        Arguments:
+            s - Number of seconds to wait between each iteration; Defaults to 1. '''
+
+        with open(self.tailed_file) as file_:
+            # Go to the end of file
+            file_.seek(0,2)
+            while not self._stop:
+                curr_position = file_.tell()
+                line = file_.readline()
+                if not line:
+                    file_.seek(curr_position)
+                    time.sleep(s)
+                else:
+                    self.callback(line)
+```
+
+
+或者使用 subprocess
+
+```
+    def follow(self):
+        popen = subprocess.Popen(['tail', '-n0', '-f', self.filename],
+                                 stdout=subprocess.PIPE,
+                                 stderr=subprocess.PIPE)
+        while True:
+            if self._stop:
+                popen.kill()
+                return
+            line = popen.stdout.readline()
+            self.callback(line)
 ```

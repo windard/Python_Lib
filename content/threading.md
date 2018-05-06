@@ -482,3 +482,33 @@ if __name__ == '__main__':
 
 如何在单线程中使每个请求都获得一份局部变量。
 - 将局部变量变成实例属性。
+
+#### 线程数量
+
+获得仍然存活的线程数量，其中包括主线程
+
+```
+# -*- coding: utf-8 -*-
+
+import os
+import time
+import random
+import threading
+
+def long_time_task(name):
+    print 'Running task %s (%s)' % (name, os.getpid())
+    start = time.time()
+    time.sleep(random.random() * 5)
+    end = time.time()
+    print 'Task %s run %0.2f econds.' % (name, end - start)
+
+
+if __name__ == '__main__':
+    for i in xrange(10):
+        threading.Thread(target=long_time_task, args=(str(i))).start()
+
+    for i in xrange(10):
+        print threading.enumerate(), len(threading.enumerate())
+        time.sleep(1)
+
+```

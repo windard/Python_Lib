@@ -13,7 +13,7 @@ from __future__ import division
 import math
 import time
 import sys
- 
+
 def progressbar(cur, total):
     percent = '{:.2%}'.format(cur / total)
     sys.stdout.write('\r')
@@ -45,7 +45,7 @@ print
 # coding=utf-8
 
 from __future__ import division
- 
+
 import sys,time
 j = '#'
 if __name__ == '__main__':
@@ -71,7 +71,7 @@ print
 # coding=utf-8
 
 from __future__ import division
- 
+
 import sys,time
 if __name__ == '__main__':
     for i in range(1,61):
@@ -94,7 +94,7 @@ print
 ```
 # coding=utf-8
 
-class progressbarClass: 
+class progressbarClass:
   def __init__(self, finalcount, progresschar=None):
     import sys
     self.finalcount=finalcount
@@ -118,7 +118,7 @@ class progressbarClass:
     if not self.finalcount : return
     self.f.write('\n------------------- % Progress -------------------\n')
     return
- 
+
   def progress(self, count):
     #
     # Make sure I don't try to go off the end (e.g. >100%)
@@ -132,7 +132,7 @@ class progressbarClass:
       if percentcomplete < 1: percentcomplete=1
     else:
       percentcomplete=100
-      
+
     #print "percentcomplete=",percentcomplete
     blockcount=int(percentcomplete/2)
     #print "blockcount=",blockcount
@@ -140,11 +140,11 @@ class progressbarClass:
       for i in range(self.blockcount,blockcount):
         self.f.write(self.block)
         self.f.flush()
-        
+
     if percentcomplete == 100: self.f.write("\n")
     self.blockcount=blockcount
     return
-  
+
 if __name__ == "__main__":
   from time import sleep
   # pb=progressbarClass(8,"*")
@@ -165,28 +165,56 @@ if __name__ == "__main__":
 ##################################################
 ```
 
+但是这样的最好看
+
+```
+# -*- coding: utf-8 -*-
+from __future__ import division
+import sys
+import time
+
+def progress():
+    for i in range(100):
+        sys.stdout.write("\r[%s%s] %2d%%" % ('█' * i, ' ' * (99 - i), (i / 99) * 100))
+        sys.stdout.flush()
+        time.sleep(0.1)
+    sys.stdout.write('\n')
+
+
+if __name__ == '__main__':
+    progress()
+
+```
+
+效果是这样
+
+```
+# python download_progress_demo.py
+[███████████████████████████████████████████████████████████████████████████████████████████████████] 100%
+```
+
 ## progressbar
 
 ```
 # coding=utf-8
 
 from __future__ import division
- 
+
 import sys,time
 import progressbar
 total = 1000
- 
+
 # 基本用法
 progress = progressbar.ProgressBar()
 for i in progress(range(total)):
   time.sleep(0.01)
- 
+
 pbar = progressbar.ProgressBar().start()
 for i in range(1,1000):
     pbar.update(int((i/(total-1))*100))
     time.sleep(0.01)
 pbar.finish()
- 
+
 # 高级用法
 widgets = ['Progress: ', progressbar.Percentage(), ' ', Bar(marker=progressbar.RotatingMarker('>-=')),
            ' ', progressbar.ETA(), ' ', progressbar.FileTransferSpeed()]
@@ -200,7 +228,7 @@ pbar = progressbar.ProgressBar(maxval=100,widgets=[progressbar.Bar('=', '[', ']'
 for i in xrange(100):
     time.sleep(0.01)
     pbar.update(i+1)
- 
+
 pbar.finish()
 ```
 
