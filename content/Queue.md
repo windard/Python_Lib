@@ -36,6 +36,124 @@ Queue.PriorityQueue(maxsize=0)            优先级别队列
 8. Queue.join()                                     将队列加入主线程
 >将队列加入主线程之后，即主线程等该任务结束之后再进行下一个任务，阻塞线程的继续。
 
+#### Queue
+
+因为 Queue 是线程安全的，所以在多线程中用来同步数据。
+- Queue.not_empty 和 Queue.empty() 严格来说是不一样的，前者是 `_threading.Condition` ，后者是计算 `Queue._qsize` 不过两者都可以用来判断队列是否已满，两者都是原子操作，线程安全的，not_empty 还是一个上下文管理器，可以作为一个线程锁来使用。
+- Queue.task_done 在完成一项工作后，给队列计数器减一，如果不进行这项操作，从队列中取出数据队列仍不知，使用 join 则会永久阻塞进程，常用消费者线程中使用
+- Queue.join 阻塞主线程，在队列结束后再继续执行。task_done 和 join 是一起使用的，只有使用 task_done 表示从队列中取出数据成功之后，join 阻塞主线程才知道结束，否则会一直阻塞不会结束。
+
+```
+# -*- coding: utf-8 -*-
+
+import time
+import Queue
+import threading
+
+
+def write(q):
+    for i in range(10):
+        q.put(i)
+        print 'put', i
+
+
+def read(q):
+    while 1:
+        time.sleep(0.5)
+        print 'get', q.get()
+        # q.task_done()
+
+
+if __name__ == '__main__':
+    q = Queue.Queue()
+    threads = []
+    threads.append(threading.Thread(target=write, args=(q, )))
+    threads.append(threading.Thread(target=read, args=(q, )))
+    for t in threads:
+        t.setDaemon(True)
+        t.start()
+    q.join()
+    print 'queue done. '
+```
+
+- 将消费者和生产者都设置为守护线程，为了消费者进程阻塞主进程结束
+- 将消费者时间设置长一些，为了保证消费者不会提前导致队列为空，程序结束。
+
+这样就可以看到 task_done 可以引导队列结束并终止主流程。
+
+为什么不用
+
+```
+    while 1:
+        time.sleep(0.5)
+        if q.empty():
+            break
+        print 'get', q.get()
+        # q.task_done()
+```
+
+或者
+
+```
+    while q.not_empty:
+        time.sleep(0.5)
+        print 'get', q.get()
+        # q.task_done()
+
+```
+
+之类的结束消费者进程,因为消费者和生产者之间的耗时不一定，且 empty 的判断也不一定准确，可能在消费者快于生产者的情况下，队列有可能为空。
+
+在消费者快于生产者的情况下，队列随时可能为空，如何准确的识别程序结束
+
+1. 判断线程数，如果生产者线程全部结束，即可认为程序已经结束，或者几近结束 (不准确，忽略了消费者耗时)
+2. 从队列中取数据设置超时时间，阻塞消费者。
+3. 在消费者完成的最后添加一个特殊标志，不过需注意数量要匹配上消费者的数目
+
+在以上三种方式中，都不再需要 task_done 和 join ，线程也最好是非守护线程。不过如果有这种需求，可以考虑使用消息队列的发布订阅模型，而不是队列的生产者消费者模型。
+
+```
+# -*- coding: utf-8 -*-
+
+import time
+import Queue
+import threading
+
+
+def write(q):
+    for i in range(10):
+        q.put(i)
+        print 'put', i
+        time.sleep(1)
+
+    q.put(None)
+
+
+def read(q):
+    while 1:
+    # while q.not_empty:
+        time.sleep(0.5)
+        # if q.empty():
+        #     break
+        item = q.get()
+        print 'get', item
+        if item == None:
+            break
+        # q.task_done()
+
+
+if __name__ == '__main__':
+    q = Queue.Queue()
+    threads = []
+    threads.append(threading.Thread(target=write, args=(q, )))
+    threads.append(threading.Thread(target=read, args=(q, )))
+    for t in threads:
+        # t.setDaemon(True)
+        t.start()
+    # q.join()
+
+```
+
 #### 一个小例子
 
 ```python
@@ -197,3 +315,7 @@ if __name__ == '__main__':
 
 ```
 
+
+### 参考链接
+
+[使用 Python 进行线程编程](https://www.ibm.com/developerworks/cn/aix/library/au-threadingpython/)

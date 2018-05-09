@@ -24,7 +24,8 @@
 9. 判断一个文件是否存在或这否为文件-- os.path.isfile("file")
 10. 判断一个路径（目录或文件）是否存在——os.path.exists()
 11. 判断一个路径是否是绝对路径-- os.path.isabs()
-12. 获得一个绝对路径 -- os.path.abspath()
+12. 获得一个绝对路径 -- os.path.abspath() 或者 os.path.realpath()
+    > 获得当前文件所在的文件夹 `os.path.abspath(os.path.dirname(__file__))` 或者 `os.path.dirname(os.path.abspath(__file__))` 或者 `os.path.abspath(os.curdir)`
 13. 获得一个相对路径 -- os.path.relpath(path, start)
 9. 读取和设置环境变量-- os.getenv() 与os.putenv()
 1o. 使用家环境-- os.path.expanduser('~')
