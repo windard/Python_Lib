@@ -80,11 +80,11 @@ import MySQLdb
 conn = MySQLdb.Connection(host='127.0.0.1', user='root', passwd='123456', db='test', port=3306, charset='utf8')
 
 with conn as cur:
-    
+
     cur.execute('SELECT * FROM user')
 
     print 'sum:', cur.rowcount
-    
+
     for row in cur.fetchall():
         print row
 
@@ -216,7 +216,7 @@ with conn as cur:
     cur.execute('SELECT * FROM user WHERE id=%s AND name=%s', ["0 or 1=1; # -- ", 'windard'])
 
     print 'sum:', cur.rowcount
-    
+
     for row in cur.fetchall():
         print row
 
@@ -224,7 +224,7 @@ with conn as cur:
     cur.execute('SELECT * FROM user WHERE id=%s AND name=%s'%("0 or 1=1; # -- ", 'windard'))
 
     print 'sum:', cur.rowcount
-    
+
     for row in cur.fetchall():
         print row
 
@@ -244,7 +244,7 @@ print conn.literal(["0 or 1=1; # -- ", 'windard'])
 print conn.literal("0' or 1=1; # -- ")
 ```
 
-转义结果为 
+转义结果为
 
 ```
 ("'0 or 1=1; # -- '", "'windard'")
@@ -350,15 +350,17 @@ except MySQLdb.Error,e:
 #### 实用的 MySQL 数据库类
 
 ```
-
+# -*- coding: utf-8 -*-
 
 import chardet
 import MySQLdb
 
+
 class Database(object):
     """Database Control For Beginner"""
-    def __init__(self, host='127.0.0.1', user='root', password='', db='', port=3306, charset='utf8', \
-                use_unicode=True, debug=False):
+
+    def __init__(self, host='127.0.0.1', user='root', password='', db='',
+                 port=3306, charset='utf8', debug=False):
         self.host = host
         self.user = user
         self.password = password
@@ -367,18 +369,20 @@ class Database(object):
         self.db = db
         self._debug = debug
         try:
-            self._conn = MySQLdb.Connection(host=self.host, user=self.user, passwd=self.password, \
-                db=self.db, port=self.port, charset=self.charset)
+            self._conn = MySQLdb.Connection(host=self.host, user=self.user,
+                                            passwd=self.password,
+                                            db=self.db, port=self.port,
+                                            charset=self.charset)
             self._conn.set_character_set('utf8')
             self._cur = self._conn.cursor()
             self._cur.execute('SET NAMES utf8;')
             self._cur.execute('SET CHARACTER SET utf8;')
-            self._cur.execute('SET character_set_connection=utf8;')        
+            self._cur.execute('SET character_set_connection=utf8;')
         except Exception, e:
             if self._debug:
                 print tuple(e)
 
-    def exec_(self, query, paras=''):
+    def exec_(self, query, paras=None):
         try:
             if self._debug:
                 print query
@@ -386,12 +390,12 @@ class Database(object):
                 self._cur.execute(query, paras)
             else:
                 self._cur.execute(query)
-            result = {'code':1000}
+            result = {'code': 1000}
             result['content'] = self._cur.fetchall()
             return result
-        except Exception,e:
+        except Exception, e:
             self._conn.rollback()
-            result = {'code':1001,'content':tuple(e)}
+            result = {'code': 1001, 'content': tuple(e)}
             return result
 
     def get(self, table, filed=['*'], options={}):
@@ -402,20 +406,21 @@ class Database(object):
             else:
                 select = ','.join(filed)
             if options.get('where', None):
-                for key,value in options['where'].items():
+                for key, value in options['where'].items():
                     if type(value) == str:
                         value = value.decode(chardet.detect(value)['encoding'])
-                    conds.append("%s %%s"%key)
+                    conds.append("%s %%s" % key)
                     paras.append(value)
                 where = 'WHERE '
                 where += ' AND '.join(conds)
             if options.get('order', None):
-                order = ' ORDER BY '+ options['order']
+                order = ' ORDER BY ' + options['order']
             if options.get('limit', None):
                 limit = ' LIMIT ' + ','.join(map(str, options['limit']))
-            return self.exec_("SELECT %s FROM %s %s %s %s"%(select, table, where, order, limit), paras)
-        except Exception,e:
-            return {'code':1002, 'content':tuple(e)}
+            return self.exec_("SELECT %s FROM %s %s %s %s"
+                              % (select, table, where, order, limit), paras)
+        except Exception, e:
+            return {'code': 1002, 'content': tuple(e)}
 
     def set(self, table, values, options={}):
         try:
@@ -423,19 +428,20 @@ class Database(object):
             for key, value in values.items():
                 if type(value) == str:
                     value = value.decode(chardet.detect(value)['encoding'])
-                conds.append("%s %%s"%key)
+                conds.append("%s %%s" % key)
                 paras.append(value)
             if options:
                 for key, value in options.items():
                     if type(value) == str:
                         value = value.decode(chardet.detect(value)['encoding'])
-                    stats.append("%s %%s"%key)
+                    stats.append("%s %%s" % key)
                     paras.append(value)
                 where = 'WHERE '
                 where += ' AND '.join(stats)
-            return self.exec_('UPDATE %s SET %s %s'%(table, ' AND '.join(conds), where), paras)
-        except Exception,e:
-            return {'code':1003, 'content':tuple(e)}
+            return self.exec_('UPDATE %s SET %s %s'
+                              % (table, ' AND '.join(conds), where), paras)
+        except Exception, e:
+            return {'code': 1003, 'content': tuple(e)}
 
     def new(self, table, values, options=[]):
         try:
@@ -447,9 +453,10 @@ class Database(object):
                 paras.append(value)
             if options:
                 stats += '(' + ','.join(options) + ')'
-            return self.exec_('INSERT INTO %s%s VALUES(%s)'%(table, stats, ','.join(conds)), paras)
-        except Exception,e:
-            return {'code':1004,'content':tuple(e)}
+            return self.exec_('INSERT INTO %s%s VALUES(%s)'
+                              % (table, stats, ','.join(conds)), paras)
+        except Exception, e:
+            return {'code': 1004, 'content': tuple(e)}
 
     def del_(self, table, options={}):
         try:
@@ -458,19 +465,19 @@ class Database(object):
                 for key, value in options.items():
                     if type(value) == str:
                         value = value.decode(chardet.detect(value)['encoding'])
-                    stats.append("%s %%s"%key)
+                    stats.append("%s %%s" % key)
                     paras.append(value)
                 where = 'WHERE '
                 where += ' AND '.join(stats)
-            return self.exec_('DELETE FROM %s %s'%(table, where), paras)
-        except Exception,e:
-            return {'code':1005,'content':tuple(e)}
+            return self.exec_('DELETE FROM %s %s' % (table, where), paras)
+        except Exception, e:
+            return {'code': 1005, 'content': tuple(e)}
 
     def __del__(self):
         try:
             try:
                 self._conn.commit()
-            except Exception,e:
+            except Exception, e:
                 if self._debug:
                     print tuple(e)
                 self._conn.rollback()
@@ -479,6 +486,7 @@ class Database(object):
         except Exception, e:
             if self._debug:
                 print tuple(e)
+
 
 """
 
@@ -503,6 +511,7 @@ print conn.get("user", options={'where':{'id >':1, 'name like':'%m%'}, "limit":[
 print conn.get('user')
 
 """
+
 ```
 
 

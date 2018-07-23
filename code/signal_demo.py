@@ -1,18 +1,24 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
-import time
 import signal
+import os
+import time
 
-def handle(signo, frame):
-	print "Got Signal",signo
 
-signal.signal(signal.SIGINT, handle)
+def receive_signal(signum, stack):
+    print 'Received:', signum
 
-# Unix Only
-signal.alarm(2)
 
-now = time.now()
+if __name__ == '__main__':
 
-time.sleep(200)
+    # Register signal handlers
+    signal.signal(signal.SIGUSR1, receive_signal)
+    signal.signal(signal.SIGUSR2, receive_signal)
 
-print "sleep for",time.time() - now," seconds "
+    # Print the process ID so it can be used with 'kill'
+    # to send this program signals.
+    print 'My PID is:', os.getpid()
+
+    while True:
+        print 'Waiting...'
+        time.sleep(3)

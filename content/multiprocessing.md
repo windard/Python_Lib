@@ -333,6 +333,69 @@ if __name__ == '__main__':
 
 ```
 
+multiprocess.Pool 和 multiprocess.ThreadPool 的执行都是无序的，线程或进程并发执行，但是返回的结果，map 是有序的，apply 是无序的，后缀加 async 是异步的，不加是同步的，不是异步的时候效果和单线程一样，是否加 async 就决定了在线程池启动后是否需要使用 join，使用 async 的话，一定需要使用线程池的 join 函数，来让主线程等待子线程的完成，而没有使用 async 的话，可以不用线程池的 join ，因为已经阻塞的主进程的继续进行。
+
+线程池的线程都是守护线程，不使用 async 后缀相当于给线程添加了 join 方法，否则就需要线程池的 join 方法，来让主线程 main 等待线程池执行完毕。
+
+apply 和 map 的区别，在使用 for 循环填入参数的时候,两者都是一样的，填入参数为子线程所需参数，且必须为序列。
+
+```
+    for i in range(10):
+        p.map_async(long_time_task, (i, ))
+```
+
+> 好吧，这是刚好只有一个参数的时候，所以显得大家都一样，在有两个参数的时候就不一样了，map(func, (x, y)), apply(func, ((x, y), ))
+
+但是直接传入所有参数的时候，apply 只是是传入单个参数，不能将所有的参数聚合传入。
+
+```
+p.apply_async(long_time_task, list(range(10)))
+```
+
+map 可以将参数聚合传入
+
+```
+p.map_async(long_time_task, list(range(10)))
+```
+
+可以看出 map 的参数传入方式是
+
+```
+def apply(func, args):
+    for arg in args:
+        func(arg)
+```
+
+而 apply 的参数传入方式是
+
+```
+def apply(func, args):
+    func(*args)
+```
+
+所以实际的使用效果是这样的
+
+```
+# map
+results = pool.map(worker, [1, 2, 3])
+
+# apply
+for x, y in [[1, 1], [2, 2]]:
+    results.append(pool.apply(worker, (x, y)))
+
+def collect_result(result):
+    results.append(result)
+
+# map_async
+pool.map_async(worker, jobs, callback=collect_result)
+
+# apply_async
+for x, y in [[1, 1], [2, 2]]:
+    pool.apply_async(worker, (x, y), callback=collect_result)
+```
+
+> map and map_async are called for a list of jobs in one time, but apply and apply_async  can only called for one job
+
 ### threadpool
 
 最简易的 threadpool 实现
@@ -443,6 +506,8 @@ if __name__ == '__main__':
 
 然而连 `callback` 都用不了，返回的也不知道是什么，只知道还算能够使用。
 
+> 其实已经不能用了， 看 github 上写的 [https://github.com/SpotlightKid/threadpool](https://github.com/SpotlightKid/threadpool) <br>
+> An obsolete Python package for threadpool management
 ### Queue
 
 进程间通信一般采用 Queue 或 Pipes 等库来实现。

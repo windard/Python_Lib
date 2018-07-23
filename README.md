@@ -183,7 +183,7 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [csv](content/csv.md)
 
-## [] [signal](content/signal.md)
+## [signal](content/signal.md)
 
 ## [asyncore](content/asyncore.md)
 

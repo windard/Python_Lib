@@ -19,7 +19,8 @@ UserAgent = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko
 
 # Cookie = {'wctf_think_language':'zh-CN','PHPSESSID':'h3l8403ppo6pkjfu0mohv8a370','Hm_lvt_184d7dcce9f76d1f5ab23d66e447d9a8':'1462670777,1462670945','Hm_lpvt_184d7dcce9f76d1f5ab23d66e447d9a8':'1462671596'}
 
-headers = {'Accept':Accept,'Accept-Encoding':AcceptEncoding, 'Accept-Language':AcceptLanguage,'Cache-Control':CacheControl,'Connection':Connection,'Upgrade-Insecure-Requests':1,'User-Agent':UserAgent,}
+headers = {'Accept':Accept,
+            'Accept-Encoding':AcceptEncoding, 'Accept-Language':AcceptLanguage,'Cache-Control':CacheControl,'Connection':Connection,'Upgrade-Insecure-Requests':1,'User-Agent':UserAgent,}
 page = s.get(url=url,headers=headers)
 html = page.content
 

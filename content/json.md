@@ -157,3 +157,8 @@ JSONDecoder().decode('{"foo": ["bar", "baz"]}') # 将 json 字符串转换为字
 json 和 dict 还有两个地方不一样
 - dict 在所有的键值对之后还可以有逗号，json 在所有的键值对最后没有逗号
 - dict 的键可以是数字，json 的键不能是数字，只能是字符串
+
+2018-06-21
+
+- `` 能够对格式化对象进行一个简单的压缩，取消空格
+- `json.dumps(obj, separators=(',',':'), ensure_ascii=False)` 能够输出 utf-8 格式的中文即可见的中文，而非 Unicode 格式的中文 `\uXXXX`

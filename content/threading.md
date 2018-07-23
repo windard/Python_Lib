@@ -532,3 +532,76 @@ if __name__ == '__main__':
 - 多个生产者的执行结果传入队列，单个消费者从队列中取出数据，但是如果消费者的速度大于生产者的速度，可能造成队列为空，消费者自行结束的情况
 - 将函数放入线程池中执行，从线程池中取结果，对结果顺序要求不大的可以采用线程池
 - 多个生产者的执行结果发布至消息队列，消费者从消息队列中监听数据。
+
+
+#### 多线程的结束
+
+在多线程中,使用 `Ctrl + C` 一般不能结束子线程，因为发出的 kill signal 只能够被主线程 main 接收到，而不能够被子线程接收到，在 Mac 上可以使用 `Ctrl + \` 结束子线程，强行 quit 掉
+
+这样也可以结束,但是感觉很奇怪
+
+```
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import sys, time, threading, abc
+from optparse import OptionParser
+
+def parse_options():
+    parser = OptionParser()
+    parser.add_option("-t", action="store", type="int", dest="threadNum", default=1,
+                      help="thread count [1]")
+    (options, args) = parser.parse_args()
+    return options
+
+class thread_sample(threading.Thread):
+    def __init__(self, name):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.kill_received = False
+
+    def run(self):
+
+        while not self.kill_received:
+            # your code
+            print self.name, "is active"
+            time.sleep(1)
+
+def has_live_threads(threads):
+    return True in [t.isAlive() for t in threads]
+
+def main():
+    options = parse_options()
+    threads = []
+
+    for i in range(options.threadNum):
+            thread = thread_sample("thread#" + str(i))
+            thread.start()
+            threads.append(thread)
+
+    while has_live_threads(threads):
+        try:
+            # synchronization timeout of threads kill
+            [t.join(1) for t in threads
+             if t is not None and t.isAlive()]
+        except KeyboardInterrupt:
+            # Ctrl-C handling and send kill to threads
+            print "Sending kill to threads..."
+            for t in threads:
+                t.kill_received = True
+
+    print "Exited"
+
+if __name__ == '__main__':
+   main()
+```
+
+
+#### 多线程的异常输出
+
+多线程中虽然是与主线程共享变量，但是有自己的堆栈，而子线程异常信息是保存在堆栈上，主线程无法输出。
+
+所以在某些多线程中子线程异常是无法察觉到的，没有报错信息，悄无声息的就死掉了。
+
+需要借助一些子线程和主线程数据沟通的方式将子线程的异常输出。
+
