@@ -19,7 +19,7 @@ print r.zrange('name', 0, -1)
 print r.zrank('name', 'lily')
 
 # 查看所有元素，并显示分数
-print r.zrange('name', 0, -1, True)
+print r.zrange('name', 0, -1, withscores=True)
 
 # 查看分数在 2-4 之间的元素
 print r.zrangebyscore('name', 2, 4)
