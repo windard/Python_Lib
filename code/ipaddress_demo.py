@@ -1,8 +1,3 @@
-## ipaddress
-
-IP Address 解析库
-
-```
 # -*- coding: utf-8 -*-
 
 import struct
@@ -139,5 +134,3 @@ if __name__ == '__main__':
     # print struct.unpack('>I', struct.pack('>BBBB', 127, 12, 13, 14))
     print struct.pack('>I', 2131496206).encode('hex')
     print struct.unpack('>I', '7f0c0d0e'.decode('hex'))[0]
-
-```

@@ -1,6 +1,6 @@
 ## itertools
 
-### 迭代器 
+### 迭代器
 
 迭代器 (iterator) 是可迭代对象的一种。
 
@@ -164,3 +164,5 @@ StopIteration
 - permutations(q[,r=1]) q 做 r 位的全排列 如 permutations('abcde',3) 得到 ('a', 'b', 'c'),('a', 'b', 'd')...('c','d','e') |共 60 组
 - combinations(q,r=1) q 做 r 位的全组合 如 combinations('abcde',3) 得到 ('a', 'b', 'c'),('a', 'b', 'd')...('c','d','e') |共 10 组
 - combinations_with_replacement(p,r) 与 combinations 类似 ，但是允许元素重复出现，如 combinations_with_replacement('abcde',3) 得到 ('a', 'a', 'a'),('a', 'a', 'b'),...('e','e','e') | 共 125 组
+
+

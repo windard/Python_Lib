@@ -264,6 +264,8 @@ False
 - `redis.Redis.zrangebyscore(self, name, min, max, start=None, num=None, withscores=False, score_cast_func=<type 'float'>)`
 - `redis.Redis.zremrangebyrank(self, name, min, max)`
 
+> 关于 zadd 需要注意一点，如果使用 `redis.Redis` 那么参数顺序是 `value score` ，但是实际的 redis 命令与之相反，即 `redis.StrictRedis` 的 add 顺序是 `value score`.
+
 ```
 # coding=utf-8
 
@@ -278,6 +280,7 @@ r.delete('name')
 # john 的分数是 2.2
 # heny 的分数是 4.4
 r.zadd('name', 'mary', 1.1, 'lily', 3.3, john=2.2, heny=4.4)
+# 实际的 redis 命令，value 在后，score 在前
 
 # 查看所有元素
 print r.zrange('name', 0, -1)

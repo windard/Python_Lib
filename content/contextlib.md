@@ -182,6 +182,20 @@ with reckon_time():
     print countsum(100000)
 ```
 
+或者是用来忽略异常
+
+```
+@contextlib.contextmanager
+def ignore_errors(*errors):
+    if not errors:
+        errors = Exception
+    try:
+        yield
+    except errors:
+        pass
+
+```
+
 如果有多个上下文嵌套的话，可以使用双重 with 语句，或者 with 语句并列。如果 Python 版本小于 2.7 则需要使用 `contextlib.nested` 来减少 with 的嵌套
 
 ```

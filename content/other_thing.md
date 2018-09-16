@@ -76,6 +76,10 @@ npm install http-server -g
 - urllib.quote <-> urllib.unquote
 - urlparse.urlparse <-> urlparse.urlunparse
 
+7. 转义
+
+- re.escape 转义非法字符串
+
 ```
 # -*- coding: utf-8 -*-
 

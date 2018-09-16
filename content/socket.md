@@ -585,6 +585,57 @@ while 1:
 udpsock.close()
 ```
 
+udp 的端口不但可以监听，还可以指定 Client 端口，使用 bind 命令。不知道 tcp 能否如此。
+
+```
+# -*- coding: utf-8 -*-
+
+import sys
+import socket
+import threading
+
+host = '127.0.0.1'
+port = 1234
+bufsize = 1024
+
+
+def server(udpsock):
+    print "Waiting for message ... "
+    while 1:
+        data, addr = udpsock.recvfrom(bufsize)
+        print '[%s:%s]: %s' % (addr[0], addr[1], data)
+
+
+def main(host, port):
+
+    udpsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    udpsock.bind((host, port))
+    threading.Thread(target=server, args=(udpsock,)).start()
+
+    import pdb
+    pdb.set_trace()
+
+    # while 1:
+    #     data = raw_input(">")
+    #     if not data:
+    #         break
+    #     udpsock.sendto(data, (host, port))
+    #     data, addr = udpsock.recvfrom(bufsize)
+    #     if not data:
+    #         break
+    #     print data
+
+    udpsock.close()
+
+
+if __name__ == '__main__':
+    if len(sys.argv) > 2:
+        host = sys.argv[1]
+        port = int(sys.argv[2])
+    main(host, port)
+
+```
+
 #### socket + select 聊天室
 
 聊天服务器用到了一个新的库，select,用于动态的监听所有的io网络，并返回可用的io。这里涉及到一些同步异步，阻塞非阻塞的内容，但是只能在 Linux 下运行。

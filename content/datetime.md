@@ -308,3 +308,24 @@ def datetime_next_day(datetime_obj):
     return datetime_obj + timedelta(days=1)
 
 ```
+
+### 获得当天剩余时间
+
+```
+# -*- coding: utf-8 -*-
+import datetime
+
+
+def get_today_seconds_left():
+    now = datetime.datetime.now()
+    end = now.date() + datetime.timedelta(days=1)
+    return int(time.mktime(end.timetuple()) - time.mktime(now.timetuple()))
+
+
+def get_daily_left_seconds():
+    now = datetime.datetime.now()
+    last_second = datetime.datetime.combine(datetime.date.today(),
+                                            datetime.time.max)
+    return int((last_second - now).total_seconds())
+
+```

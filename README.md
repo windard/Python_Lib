@@ -255,6 +255,10 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [cProfile](content/cProfile.md)
 
+## [ping](content/ping.md)
+
+## [six](content/six.md)
+
 ## [tools](content/tools.md)
 
 ## [Other_thing](content/other_thing.md)
