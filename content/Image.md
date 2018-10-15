@@ -2,6 +2,12 @@
 
 这个是专门用来处理图片的，只要你在上面了安装了pil图像处理库，就会自带这个库的。
 
+在开始图片之前，我们先来认识一下三原色和三基色。
+- 三原色一般是指颜料三原色红黄蓝，组合颜色是黑色
+- 三基色一般是指光学三原色红绿蓝，组合颜色是白色, RGB
+
+![source_color](images/source_color.png)
+
 #### 基本操作
 
 ```python
@@ -139,5 +145,48 @@ im1 = Image.open('image1.png')
 im2 = Image.open('image2.png')
 im3 = ImageChops.invert(im2)
 Image.blend(im1,im3,0.5).show()
+
+```
+
+### 高斯模糊
+
+```
+# -*- coding: utf-8 -*-
+
+from PIL import Image, ImageFilter
+
+
+img = Image.open("card.jpeg")
+im = img.filter(ImageFilter.GaussianBlur(25))
+
+im.show()
+
+```
+
+### 切换证件照背景色
+
+```
+# -*- coding: utf-8 -*-
+# coding=utf-8
+
+from PIL import Image
+
+im = Image.open('card.jpeg')
+r, g, b = im.split()
+h,w = im.size
+print h,w
+
+# 创建一个新的 r 通道分量, 注意 mode 值为 'L'
+# 255 是白
+# 0 是黑
+n = Image.new('L', (h, w), color=0)
+
+for i in range(h):
+    for j in range(w):
+        pixel = im.getpixel((i, j))
+        if all(map(lambda x:x>210, pixel)):
+            im.putpixel((i, j), (0, 0, 255))
+# im = Image.merge('RGB', (n, n, b))
+im.show()
 
 ```

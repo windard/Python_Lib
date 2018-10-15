@@ -104,3 +104,7 @@ sys.stdout.write("hello,world")
 保存为sys_std.py，运行，看一下结果。
 
 ![sys_std.jpg](images/sys_std.jpg)
+
+
+19. `sys.getrecursionlimit()` 获得 python 最大递归深度
+20. `sys.setrecursionlimit(15000)` 在 Mac 上默认为 1000

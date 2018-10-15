@@ -610,20 +610,18 @@ def main(host, port):
 
     udpsock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     udpsock.bind((host, port))
-    threading.Thread(target=server, args=(udpsock,)).start()
+    thread = threading.Thread(target=server, args=(udpsock,))
+    thread.setDaemon(True)
+    thread.start()
 
     import pdb
     pdb.set_trace()
 
-    # while 1:
-    #     data = raw_input(">")
-    #     if not data:
-    #         break
-    #     udpsock.sendto(data, (host, port))
-    #     data, addr = udpsock.recvfrom(bufsize)
-    #     if not data:
-    #         break
-    #     print data
+    while 1:
+        data = raw_input(">")
+        if not data:
+            break
+        udpsock.sendto(data, (host, port))
 
     udpsock.close()
 

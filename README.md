@@ -259,6 +259,10 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [six](content/six.md)
 
+## [traceback](content/traceback.md)
+
+## [code](content/code.md)
+
 ## [tools](content/tools.md)
 
 ## [Other_thing](content/other_thing.md)
