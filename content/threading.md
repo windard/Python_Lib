@@ -605,3 +605,32 @@ if __name__ == '__main__':
 
 需要借助一些子线程和主线程数据沟通的方式将子线程的异常输出。
 
+
+#### 线程定时器
+
+多线程中自带一个异步的定时器，可以指定线程定时执行，甚至可以间隔执行。
+
+默认定时器只执行一次，如果需要间隔执行，需要多次调用。
+
+```
+# -*- coding: utf-8 -*-
+import time
+import threading
+
+
+def on_timer():
+    print time.time()
+    set_timer()
+
+
+def set_timer():
+    _timer = threading.Timer(10, on_timer)
+    _timer.start()
+
+
+set_timer()
+while 1:
+    time.sleep(5)
+    print 'sleep', time.time()
+
+```

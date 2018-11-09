@@ -18,6 +18,10 @@ def hex2ip(ip):
     return str(ipaddress.ip_address(int(ip, 16)))
 
 
+def hex2ip(ip):
+    return socket.inet_ntoa(ip.decode("hex"))
+
+
 def int2ip(ip):
     return str(ipaddress.ip_address(ip))
 
@@ -39,6 +43,10 @@ def hex2ip_old(ip):
     return ".".join(map(str, map(lambda x: int(x, 16),
                                  [ip[i:i + 2] for i in
                                   xrange(0, len(ip), 2)])))
+
+
+def ip2hex(ip):
+    return socket.inet_aton(ip).encode('hex')
 
 
 def ip2hex_old(ip):

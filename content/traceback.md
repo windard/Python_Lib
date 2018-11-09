@@ -154,3 +154,42 @@ if __name__ == '__main__':
 ```
 
 但是这基本上没什么用，比如以上代码中，第12行的代码可以执行，但是到改函数执行的时候会报错，使用 pdb 侵入也无法改变；第20行的代码可以使用pdb导入json库来正常执行，但是第20行的错误无法通过编译，执行即报错，需使用 `python -m pdb ` 的方式来启动。
+
+
+使用真正的 backdoor , 由 gevent 提供。看源码可知，使用的是 `code.InteractiveConsole` 来作为交互式命令行，取所有的环境中变量，并不能算作是侵入已经运行的进程，只能算是重启一个命令行，获得当前进程的所有数据。只有当前数据，没有后续增量数据。
+
+```
+# -*- coding: utf-8 -*-
+import signal
+import time
+from flask import Flask
+from gevent import monkey
+from gevent.backdoor import BackdoorServer
+
+
+monkey.patch_all()
+
+app = Flask(__name__)
+def handle_backdoor(num, stack):
+    server = BackdoorServer(('127.0.0.1', 4998))
+    server.start()
+
+
+signal.signal(signal.SIGUSR2, handle_backdoor)
+now = time.ctime()
+
+@app.route('/')
+def index():
+    global now
+    now = time.ctime()
+    return now
+
+
+def main():
+    app.run()
+
+
+if __name__ == '__main__':
+    main()
+
+```

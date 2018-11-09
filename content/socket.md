@@ -486,49 +486,38 @@ while 1:
 ```
 # coding=utf-8
 
-import socket, sys, select
+import socket
+import select
 
-port = 8081
-host = 'localhost'
+s = socket.socket()
 
-spinsize = 10
-spinpos  = 0
-spindir  = 1
+host = socket.gethostname()
+port = 1234
+s.bind((host, port))
 
-def spin():
-    global spinsize, spinpos, spindir
-    spinstr = '.'*spinpos + '|' +'.'*(spinsize -spinpos -1)
-    sys.stdout.write('\r' + spinstr + ' ')
-    sys.stdout.flush()
+s.listen(5)
+inputs = [s]
 
-    spinpos += spindir
+while True:
+    rs, ws, es = select.select(inputs, [], [])
+    for r in rs:
+        if r is s:
+            c, addr = s.accept()
+            print('Got connection from', addr)
+            inputs.append(c)
+        else:
+            try:
+                data = r.recv(1024)
+                disconnected = not data
+            except socket.error:
+                disconnected = True
 
-    if spinpos < 0:
-        spindir = 1
-        spinpos = 1
-    elif spinpos >= spinsize:
-        spinpos -= 2
-        spindir = -1
+            if disconnected:
+                print r.getpeername(), 'disconnected .'
+                inputs.remove(r)
+            else:
+                print(data)
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect((host, port))
-
-while 1:
-    infds, outfds, errfds = select.select([s], [], [s], 0.05)
-    if len(infds):
-        data = s.recv(4096)
-        if not len(data):
-            print "\rRemote end closed connection:exiting."
-            break
-
-        sys.stdout.write('\rReceived: '+data)
-        sys.stdout.flush()
-
-    if len(errfds):
-        print "\rProblem occured;exiting."
-        sys.exit(0)
-
-    spin()
 ```
 
 #### UDP 连接
@@ -1165,6 +1154,82 @@ if __name__ == '__main__':
     main()
 
 ```
+
+#### 异步 select 的使用
+
+select_sender.py
+
+```
+# -*- coding: utf-8 -*-
+import sys
+import time
+import random
+import socket
+
+host = '127.0.0.1'
+port = 8760
+
+
+def handle_serve(host, port):
+
+    server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server.bind((host,port))
+    server.listen(5)
+
+    print "Server is running on %s:%s Press Ctrl-C to stop" % (host, port)
+
+    while 1:
+        clientsock,clientaddr = server.accept()
+        print "Welcome from %s : %s"%(clientaddr[0],clientaddr[1])
+        while 1:
+            time.sleep(random.randint(2, 7))
+            clientsock.sendall(str(time.time())+"\n")
+
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        port = int(sys.argv[1])
+    handle_serve(host, port)
+
+```
+
+
+select_receiver.py
+
+```
+# -*- coding: utf-8 -*-
+import select
+import socket
+
+
+host = '127.0.0.1'
+soa_port = 8760
+sob_port = 8761
+
+
+def handle_client(soa, sob):
+    fdset = [soa, sob]
+    while True:
+        r, w, e = select.select(fdset, [], [])
+        for sock in r:
+            data = sock.recv(1024)
+            print sock.getsockname(), data,
+
+
+if __name__ == '__main__':
+    soa = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    soa.connect((host, soa_port))
+
+    sob = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sob.connect((host, sob_port))
+
+    print dir(soa)
+    handle_client(soa, sob)
+
+```
+
+
 
 ## socket 常见错误标志
 
