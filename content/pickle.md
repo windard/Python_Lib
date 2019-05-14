@@ -80,3 +80,9 @@ My name is Mary and I'm 21 years old
                 'num': 30000},
  'year': 68}
 ```
+
+### 重点
+
+pickle 与 json 的区别，json 的 dumps 和 loads 的返回都是字典，而 pickle 可以是对象，将对象 dumps 然后 loads 出来。
+
+pickle 返回的对象是 完全的重现传入的对象，不仅仅是构造参数，类属性和实例属性。还有私有变量和挂载的的变量方法。

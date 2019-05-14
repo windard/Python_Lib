@@ -321,7 +321,7 @@ if __name__ == '__main__':
 ```
 {
 "announce"="http://btfans.3322.org:8000/announce"   ;tracker 服务器的URL(字符串)
-"announce-list"=["http://..","http://.."]           ;备用tracker服务器列表(列表)
+"announce-list"=[["http://.."],["http://.."]]           ;备用tracker服务器列表(列表)，会覆盖 announce 字段
 "creation date"=1175204110                          ;种子创建的时间，Unix标准时间格式
 "encoding"="utf-8"                                  ;编码
 "comment"="备注"
