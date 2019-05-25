@@ -3,7 +3,7 @@
 标准的输出日志库，比每次用 print 输出不知道高到哪里去了。
 
 ```python
-
+#coding=utf-8
 
 import logging
 import sys
@@ -24,18 +24,19 @@ logging.info('This is an info message')
 logging.warning('This is a warning message')
 logging.error('This is an error message')
 logging.critical('This is a critical error message')
+
 ```
 
 logging 共分五个 log 等级，默认输出的 Level 为 warning 等级，可以设定为其他等级就可以将代码中的每一个等级大于等于 Level 的问题都输出。
 
 ```python
-
+#coding=utf-8
 
 import sys
 import logging
-
+    
 logger = logging.getLogger("Test Logging")
-formatter = logging.Formatter('%(name)-12s %(asctime)s %(levelname)-8s %(lineno)-4d %(message)s', '%Y%b%d %a %H:%M:%S',)
+formatter = logging.Formatter('%(name)-12s %(asctime)s %(levelname)-8s %(lineno)-4d %(message)s', '%Y%b%d %a %H:%M:%S')
 file_handler = logging.FileHandler("test.log")
 file_handler.setFormatter(formatter)
 file_handler.setLevel(logging.DEBUG)
@@ -46,7 +47,7 @@ stream_handler.setLevel(logging.WARNING)
 
 logger.addHandler(file_handler)
 logger.addHandler(stream_handler)
-# logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 logger.debug('This is a debug message')
 logger.info('This is an info message')
@@ -105,6 +106,7 @@ logger.setLevel(logging.DEBUG)
 也可以这样配置日志
 
 ```
+# coding=utf-8
 import logging
 
 def main():
@@ -130,4 +132,58 @@ def main():
 
 if __name__ == '__main__':
     main()
+```
+
+关于 logger 输出异常堆栈，无论使用 `logger.info` 或者 `logger.error` 输出格式都是一样的，只是日志等级不一样，但是有时在输出异常的时候，我们不只是需要知道异常名称，还需要知道异常的上下文，堆栈信息等，特别是在多线程中，子线程的异常不会被主线程捕获输出，只能通过日志打印出来。
+
+所以可以使用 `logger.exception` 代替 `logger.error` ，日志等级也是 `error`, 但是会打印出异常的堆栈信息。
+
+
+示例代码
+
+```
+# coding=utf-8
+
+import sys
+import logging
+
+logger = logging.getLogger(__name__)
+formatter = logging.Formatter('%(name)-12s %(asctime)s %(levelname)-8s %(lineno)-4d %(message)s', '%Y %b %d %a %H:%M:%S',)
+
+stream_handler = logging.StreamHandler(sys.stderr)
+stream_handler.setFormatter(formatter)
+
+logger.addHandler(stream_handler)
+logger.setLevel(logging.DEBUG)
+
+if __name__ == '__main__':
+    logger.info("main start...")
+    try:
+        1 / 0
+    except Exception as e:
+        logger.exception("error %s", e)
+    logger.info("main end.")
+
+```
+
+对比一下输出的日志即可看出。
+
+使用 `logger.error` 的效果
+
+```
+__main__     2019 May 25 Sat 22:23:36 INFO     16   main start...
+__main__     2019 May 25 Sat 22:23:36 ERROR    20   error integer division or modulo by zero
+__main__     2019 May 25 Sat 22:23:36 INFO     21   main end.
+```
+
+使用 `logger.exception` 的效果
+
+```
+__main__     2019 May 25 Sat 22:23:52 INFO     16   main start...
+__main__     2019 May 25 Sat 22:23:52 ERROR    20   error integer division or modulo by zero
+Traceback (most recent call last):
+  File "code/logging_exception.py", line 18, in <module>
+    1 / 0
+ZeroDivisionError: integer division or modulo by zero
+__main__     2019 May 25 Sat 22:23:52 INFO     21   main end.
 ```

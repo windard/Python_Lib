@@ -2,7 +2,7 @@
 
 将 py 文件编译为 pyc 文件，在前两年还说是别人都无法反编译出源文件，但是现在连[在线反编译网站](https://tool.lu/pyc/)都有了。
 
-源代码保护还是需要再想想别的法子.
+源代码保护还是需要再想想别的法子. 比如使用 cython 编译成 so 链接库。
 
 py_compile 是 python 自带的官方库，在单个 python 文件中边解释边运行，在 python 类库里引用运行的时候就会自动编译出 pyc 文件。
 
@@ -24,6 +24,16 @@ py_compile.compile("test.py")
 ```
 $ python -m py_compile test.py
 ```
+
+还可以使用 py_compile 编译为 `pyo` 文件，是优化后的二进制文件
+
+```
+$ python -O -m py_compile test.py
+```
+
+不过好像没差吖。。。
+
+确实没什么差别，可以看到[现有的编译器并没有太大的优化](https://docs.pythontab.com/python/python2.7/modules.html#python)
 
 ### 高级用法
 
@@ -55,4 +65,13 @@ Listing home ...
 Compiling home/__init__.py ...
 Compiling home/index.py ...
 1
+```
+
+也可以使用命令行
+
+```
+$ python -m compileall home
+Listing home ...
+Compiling home/__init__.py ...
+Compiling home/index.py ...
 ```
