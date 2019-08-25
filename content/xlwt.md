@@ -32,3 +32,11 @@ excel.save('test.xls')
 保存为xlwt_demo.py，运行，看一下结果。   
 
 ![xlwt_demo.jpg](images/xlwt_demo.jpg)   
+
+还有一个问题是最多只支持 65535 行写入，再多就会报错。
+
+```
+row index was 65535, not allowed by .xls format
+```
+
+推荐使用 [openpyxl](./openpyxl.md)

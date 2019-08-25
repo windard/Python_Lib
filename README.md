@@ -63,6 +63,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [xlwt](content/xlwt.md)
 
+## [openpyxl](content/openpyxl.md)
+
 ## [xlrd](content/xlrd.md)
 
 ## [xlutils](content/xlutils.md)
@@ -100,6 +102,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 ## [threading](content/threading.md)
 
 ## [Queue](content/Queue.md)
+
+## [heapq](content/heapq.md)
 
 ## [subprocess](content/subprocess.md)
 

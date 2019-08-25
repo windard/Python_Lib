@@ -33,7 +33,7 @@ socket抽象层是在TCP与UDP协议的运输层之上的与应用层连接的�
 
 所以socket的使用是非常简单的，如下图所示。
 
-![socket _connection.jpg](images/socket _connection.jpg)
+![socket_connection.jpg](images/socket_connection.jpg)
 
 网络通信之间都是至少需要一个服务器端和一个客户端的，我们的socket就先从简单的客户端开始。
 
@@ -152,6 +152,7 @@ client是一个socket对象和socket信息的元组。
 3. socketobject.getpeername()
 4. socketobject.getsockname()
 5. socketobject.getsockopt()
+6. socketobject.setblocking() 设置是否阻塞，默认为阻塞，阻塞模式下，recv 接口会阻塞住直至收到数据，非阻塞模式下没有数据会直接报错,异常是 `Resource temporarily unavailable`.
 
 ```python
 

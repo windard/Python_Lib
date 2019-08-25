@@ -52,3 +52,16 @@ print random.sample(p,3)
 保存为random_demo.py，运行，看一下结果。
 
 ![random_demo.jpg](images/random_demo.jpg)
+
+## random 高阶
+
+- random.betavariate 		β 北塔分布
+- random.gammavariate 		γ 伽马分别
+- random.triangular 		三角分布
+- random.normalvariate 		正态分布
+- random.lognormvariate 	对数正态分布
+- random.expovariate 		指数分布
+- random.vonmisesvariate    冯·米塞斯分布
+- random.gauss 				高斯分布，即正态分布，速度较快
+- random.paretovariate 		帕累托分布
+- random.weibullvariate 	韦布尔分布
