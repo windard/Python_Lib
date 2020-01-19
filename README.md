@@ -19,6 +19,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 > Python无所不能
 
+## [this](content/this.md)
+
 ## [MySQLdb](content/MySQLdb.md)
 
 ## [os](content/os.md)
@@ -278,6 +280,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 ## [uncompyle6](content/uncompyle6.md)
 
 ## [pyrasite](content/pyrasite.md)
+
+## [weakref](content/weakref.md)
 
 ## [tools](content/tools.md)
 

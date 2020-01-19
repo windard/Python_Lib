@@ -138,6 +138,7 @@ if __name__ == '__main__':
 
 所以可以使用 `logger.exception` 代替 `logger.error` ，日志等级也是 `error`, 但是会打印出异常的堆栈信息。
 
+logging 如果不配置是没有数据输出的，但是如果不想写这么长的配置怎么办呢？直接使用 `logging.basicConfig()` 进行一个简单的基础配置。
 
 示例代码
 
