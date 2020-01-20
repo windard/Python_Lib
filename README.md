@@ -131,6 +131,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [re](content/re.md)
 
+## [regex](content/regex.md)
+
 ## [colorama](content/colorama.md)
 
 ## [termcolor](content/termcolor.md)

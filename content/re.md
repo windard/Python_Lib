@@ -69,7 +69,8 @@ match是从字符串开头做匹配，search是从字符串中做任意匹配，
 >>> e = re.findall(r"\w","hello , world")
 >>> e
 ['h', 'e', 'l', 'l', 'o', 'w', 'o', 'r', 'l', 'd']
-
+>>> re.findall(r"\d+", "2333abc3uio890da123")
+['2333', '3', '890', '123']
 ```
 
 除了查找之外，正则表达式还有两个很重要的功能就是分割与替换，在这里分别是sub和split，用法是`sub(pattern, repl, string, count=0, flags=0)`和`split(pattern, string, maxsplit=0, flags=0)`,返回改变之后的字符串，传入值保持不变。
@@ -95,6 +96,8 @@ match是从字符串开头做匹配，search是从字符串中做任意匹配，
 'hello , world'
 >>> '%s , %s' % (re.match(r'(hello) , (world)', a).group(2), re.match(r'(hello) , (world)', a).group(1))
 'world , hello'
+>>> re.search(r"(.+?)\1+", 'dxabcabcyyyydxycxcxz').group()
+'abcabc'
 ```
 
 关于sub函数，还有一个subn函数，用法与sub一致，但是返回一个元组，由改变之后的字符串和改变的个数组成
@@ -106,6 +109,16 @@ match是从字符串开头做匹配，search是从字符串中做任意匹配，
 ('hell0 , w0rld', 2)
 >>> a
 'hello , world'
+```
+
+找到连续的重复字符, `\1` 可以用来指代已经匹配到的分组
+
+```
+In [4]: re.search(r"(.+?)\1+", 'dxabcabcyyyydxycxcxz').group()
+Out[4]: 'abcabc'
+
+In [5]: re.search(r"(.+?)\1+", 'dxabcabcyyyydxycxcxz').groups()
+Out[5]: ('abc',)
 ```
 
 ## 总结
@@ -221,6 +234,35 @@ print m.group()
 <html><body><title>this is title</title></body></html>>
 <html>
 ```
+
+## 分组于捕获
+
+|代码 / 语法 		|匹配说明|
+|--         		 |---         |
+|(?:)        		 | 只做匹配分组，不做结果展示，否则会有很多无用的分组结果           |
+|(?P<name>)          | 对分组结果结果命令，使用命获取	    |
+
+```
+In [1]: import re
+
+In [2]: re.match(r"(?P<key>\w+):(?P<value>\d+)", "haha:1").groups()
+Out[2]: ('haha', '1')
+
+In [3]: re.match(r"(?P<key>\w+):(?P<value>\d+)", "haha:1").groupdict()
+Out[3]: {'key': 'haha', 'value': '1'}
+
+In [4]: re.search(r"((?P<key>\w+):(?P<value>\d+);)*", "haha:1;laal:2;").groups()
+Out[4]: ('laal:2;', 'laal', '2')
+
+In [5]: re.search(r"((?P<key>\w+):(?P<value>\d+);)*", "haha:1;laal:2;").groupdict()
+Out[5]: {'key': 'laal', 'value': '2'}
+
+In [6]: re.search(r"(?:(?P<key>\w+):(?P<value>\d+);)*", "haha:1;laal:2;").groups()
+Out[6]: ('laal', '2')
+```
+
+但是有个问题就是匹配到的子串，只会出现一次，不能返回重复的结果，只会返回最终匹配的结果，需要使用 regex 来得到所有的匹配结果。
+
 
 ## 参考链接
 
