@@ -285,6 +285,10 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [weakref](content/weakref.md)
 
+## [ast](content/ast.md)
+
+## [inspect](content/inspect.md)
+
 ## [tools](content/tools.md)
 
 ## [Other_thing](content/other_thing.md)

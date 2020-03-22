@@ -36,10 +36,12 @@ if __name__ == '__main__':
 
 常见的信号比如
 
+```
 SIGINT  - `Ctrl` + `C` 就是 KeyboardInterrupt     # 2
 SIGQUIT - `Ctrl` + `\`                           # 3
 SIGSTOP - `Ctrl` + `Z`                           # 17
 SIGKILL - None                                   # 9
+```
 
 可以使用 `kill -2 xx` 或者 `kill -INT xx` 或者 `Ctrl` + `C` 来传输信号量
 

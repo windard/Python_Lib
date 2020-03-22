@@ -89,3 +89,17 @@ if __name__ == '__main__':
 
 基本上是一个思路，然后再加了一些捕获异常和类型转换，更容易的转换为其他的数据结构。
 
+
+还可以这样
+
+```
+class Namespace(dict):
+    def __getattr__(self, name):
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError(name)
+
+    def __setattr__(self, name, value):
+        self[name] = value
+```
