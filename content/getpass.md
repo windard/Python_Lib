@@ -2,6 +2,8 @@
 
 这个库的功能很简单，也很有用，就是在输入的时候输入字符不回显出来。它只有两个函数，`getpass`和`getuser`,功能分别是输入不进行回显和获得当前系统登录用户名。
 
+> getuser 有时候很有用，比如创建文件放到当前登陆用户的家目录下 `"/home/{}/".format(getpass.getuser())`。
+
 ```python
 
 import getpass
