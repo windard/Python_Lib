@@ -668,12 +668,14 @@ def runserver(host, port):
                     for output in outputs:
                         output.sendall("Welcome " + clientname + " Come In \n")
                     outputs.append(clientsock)
-                # server 说话
+                # server 输入
                 elif sock == 0 or isinstance(sock, file):
                     message = sys.stdin.readline()
+                    # 关闭聊天室
                     if message.startswith("QUIT"):
                         print "Server is close ... "
                         sys.exit(0)
+                    # server 入场说话
                     for output in outputs:
                         output.sendall("Server : " + message)
                 # server 接收数据
@@ -723,6 +725,7 @@ def runclient(host, port, name=None):
         try:
             readable, writeable, exceptional = select.select([0, s], [], [])
             for sock in readable:
+                # 有人说话
                 if sock == s:
                     data = sock.recv(1024)
                     if not data:
@@ -730,8 +733,10 @@ def runclient(host, port, name=None):
                         sys.exit(0)
                     sys.stdout.write(data)
                     sys.stdout.flush()
+                # 键盘输入
                 else:
                     data = sys.stdin.readline()
+                    # 离开
                     if data.startswith("QUIT"):
                         print "Client is closed"
                         sys.exit(0)
