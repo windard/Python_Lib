@@ -22,6 +22,7 @@ def runserver(host, port):
         try:
             readable, writeable, exceptional = select.select(inputs, outputs, [])
             for sock in readable:
+                # client 连接
                 if sock == s:
                     clientsock, clientaddr = sock.accept()
                     recvname = clientsock.recv(1024)
@@ -36,15 +37,18 @@ def runserver(host, port):
                     for output in outputs:
                         output.sendall("Welcome " + clientname + " Come In \n")
                     outputs.append(clientsock)
-                elif sock == 0:
+                # server 说话
+                elif sock == 0 or isinstance(sock, file):
                     message = sys.stdin.readline()
                     if message.startswith("QUIT"):
                         print "Server is close ... "
                         sys.exit(0)
                     for output in outputs:
                         output.sendall("Server : " + message)
+                # server 接收数据
                 else:
                     data = sock.recv(1024)
+                    # 接收到数据就是有人说话
                     if data:
                         if data.startswith("SECRECT"):
                             print "SECRECT " + clients[sock][0] + " : " + data,
@@ -58,6 +62,7 @@ def runserver(host, port):
                             for output in outputs:
                                 if output != sock:
                                     output.sendall(clients[sock][0] + " : " + data)
+                    # 没接收到数据就是有人离开
                     else:
                         name = clients[sock][0]
                         print name + " leaved "

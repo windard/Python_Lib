@@ -329,3 +329,12 @@ def get_daily_left_seconds():
     return int((last_second - now).total_seconds())
 
 ```
+
+
+### 获取今天的第一秒和最后一秒
+
+```
+first_second = datetime.datetime.combine(datetime.date.today(), datetime.time.min)
+last_second = datetime.datetime.combine(datetime.date.today(), datetime.time.max)
+```
+
