@@ -30,7 +30,7 @@ print "HTT Content-Length:", resp.info().get("Content-Length")
 
 ### 实战
 
-urllib 和 urllib2 用起来差不多，深入源码可以发现，其实 urllib 和 urllib2 底层使用的都是 http 库的连接 connection 然后 send 请求。
+urllib 和 urllib2 用起来差不多，深入源码可以发现，其实 urllib 和 urllib2 底层使用的都是 http 库，只不过 urllib 用的 HTTP ，urllib2 用的 HTTPConnection 。
 
 但是请求中最关键的 `opener` 和 `request` 在 urllib2 中可以被定制，传入自定义实现，而 urllib 中则不行。
 
