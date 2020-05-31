@@ -79,6 +79,7 @@ npm install http-server -g
 7. 转义
 
 - re.escape 转义非法字符串
+- cgi.escape XSS 转义
 
 ```
 # -*- coding: utf-8 -*-

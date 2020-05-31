@@ -3,6 +3,6 @@
 %}
 
 %%
-[0-9]+						printf("NUMBER")
-[a-zA-Z][a-zA-Z0-9]*		printf("WORD")
+[0-9]+						printf("NUMBER\n");
+[a-zA-Z][a-zA-Z0-9]*		printf("WORD\n");
 %%

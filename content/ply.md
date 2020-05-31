@@ -48,7 +48,7 @@ start printf("Start command reveived");
 
 使用 `lex lex_start.lt` 对其进行编译，将会生成 `lex.yy.c` 的 C 语言文件，然后使用 `cc lex.yy.c -o lex_start -ll` 生成可执行文件 `lex_start`
 
-执行结果，当遇到 `start` 时，输出 `Start command reveived`,当遇到 `stop` 时，输出 `Stop command received`, 这里区分大小写，遇到其他值，则原样输出。
+执行结果，当遇到 `start` 时，输出 `Start command reveived`,当遇到 `stop` 时，输出 `Stop command received`, 这里区分大小写，遇到其他值，则原样输出。输入多少，输出多少，只有大小写完全匹配 `start` 和 `stop` 的时候才会有不同的回应。
 
 ```
 $ ./lex_start
@@ -77,5 +77,62 @@ no
 [a-z] 				# 表示单个a-z的字母
 [a-z]* 				# 表示0个或多个字母
 ```
+
+所以我们的正则匹配就开始了
+
+lex_regex.lt
+
+```
+%{
+#include <stdio.h>	
+%}
+
+%%
+[0-9]+						printf("NUMBER\n");
+[a-zA-Z][a-zA-Z0-9]*		printf("WORD\n");
+%%
+
+```
+
+同样的编译运行查看结果。
+
+```
+$ lex lex_regex.lt
+$ cc lex.yy.c -o lex_regex -ll
+$ ./lex_regex
+2334
+NUMBER
+
+dervr
+WORD
+
+str1
+WORD
+
+123avc
+NUMBER
+WORD
+
+-12
+-NUMBER
+
+12.43
+NUMBER
+.NUMBER
+
+a@a
+WORD
+@WORD
+
+^C
+```
+
+看起来一切都很正常，数字和变量的定义都没问题.但是后面几个怎么看起来就不正常了，包括负数，小数，异常值。
+
+#### 语法解析
+
+虽然上面👆的词法解析有点小瑕疵，但是不影响，我们继续进行下一步语法解析。
+
+
 
 [如何使用Lex/YACC](https://segmentfault.com/a/1190000000396608#articleHeader24)
