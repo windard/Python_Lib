@@ -140,6 +140,14 @@ if __name__ == '__main__':
 
 logging 如果不配置是没有数据输出的，但是如果不想写这么长的配置怎么办呢？直接使用 `logging.basicConfig()` 进行一个简单的基础配置。
 
+```
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(name)-25s %(asctime)s %(levelname)-8s %(lineno)-4d %(message)s',
+    datefmt='[%Y %b %d %a %H:%M:%S]'
+)
+```
+
 示例代码
 
 ```

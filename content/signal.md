@@ -105,6 +105,52 @@ if __name__ == '__main__':
 
 ```
 
+看一看常见的信号量
+
+```
+# -*- coding: utf-8 -*-
+
+import os
+import time
+import logging
+import signal
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(name)-25s %(asctime)s %(levelname)-8s %(lineno)-4d %(message)s',
+    datefmt='[%Y %b %d %a %H:%M:%S]',
+)
+
+
+def receive_signal(signum, stack):
+    logger.info('Received: %s', signum)
+
+
+if __name__ == '__main__':
+
+    # Register signal handlers
+    signal.signal(signal.SIGHUP, receive_signal)
+    signal.signal(signal.SIGINT, receive_signal)
+    signal.signal(signal.SIGQUIT, receive_signal)
+    # signal.signal(signal.SIGKILL, receive_signal)
+    signal.signal(signal.SIGTERM, receive_signal)
+    signal.signal(signal.SIGTSTP, receive_signal)
+    signal.signal(signal.SIGCONT, receive_signal)
+
+    signal.signal(signal.SIGUSR1, receive_signal)
+    signal.signal(signal.SIGUSR2, receive_signal)
+
+    # Print the process ID so it can be used with 'kill'
+    # to send this program signals.
+    logger.info('My PID is: %s', os.getpid())
+
+    for i in range(20):
+        logger.info('Waiting...')
+        time.sleep(30)
+
+```
+
 ### 所有信号
 
 ```
@@ -308,3 +354,63 @@ if __name__ == '__main__':
     print request("http://127.0.0.1:5000/")
 
 ```
+
+### kill
+
+kill，发送信号到进程，默认发送 -15 SIGTERM 的信号到指定进程
+
+选项
+
+```
+-s sig    信号名称。
+-n sig    信号名称对应的数字。
+-l        列出信号名称。如果在该选项后提供了数字那么假设它是信号名称对应的数字。
+-L        等价于 -l 选项。
+-x        x为信号数字，即发送指定信号到进程
+``` 
+
+常用的 信号量
+
+| 信号量名称 | 信号量数字    |信号量行为        |
+|-----------|-------------|-----------------|
+|HUP        |1            |终端挂断，也用于进程 reload                 |
+|INT        |2            |中断（同 Ctrl + C）           |
+|QUIT       |3            |退出（同 Ctrl + \）           |
+|KILL       |9            |强制终止，不能接受信号，必须停下                       |
+|TERM       |15           |终止，正常终止，可以接受信号，然后不停                          |
+|CONT       |18           |继续（与STOP相反，fg/bg命令） （在 Mac 上 Ctrl + Z）  |
+|STOP       |19           |暂停（同 Ctrl + Z）           |
+
+查看信号表
+
+```
+$ kill -l
+ 1) SIGHUP   2) SIGINT   3) SIGQUIT  4) SIGILL   5) SIGTRAP
+ 6) SIGABRT  7) SIGBUS   8) SIGFPE   9) SIGKILL 10) SIGUSR1
+11) SIGSEGV 12) SIGUSR2 13) SIGPIPE 14) SIGALRM 15) SIGTERM
+16) SIGSTKFLT   17) SIGCHLD 18) SIGCONT 19) SIGSTOP 20) SIGTSTP
+21) SIGTTIN 22) SIGTTOU 23) SIGURG  24) SIGXCPU 25) SIGXFSZ
+26) SIGVTALRM   27) SIGPROF 28) SIGWINCH    29) SIGIO   30) SIGPWR
+31) SIGSYS  34) SIGRTMIN    35) SIGRTMIN+1  36) SIGRTMIN+2  37) SIGRTMIN+3
+38) SIGRTMIN+4  39) SIGRTMIN+5  40) SIGRTMIN+6  41) SIGRTMIN+7  42) SIGRTMIN+8
+43) SIGRTMIN+9  44) SIGRTMIN+10 45) SIGRTMIN+11 46) SIGRTMIN+12 47) SIGRTMIN+13
+48) SIGRTMIN+14 49) SIGRTMIN+15 50) SIGRTMAX-14 51) SIGRTMAX-13 52) SIGRTMAX-12
+53) SIGRTMAX-11 54) SIGRTMAX-10 55) SIGRTMAX-9  56) SIGRTMAX-8  57) SIGRTMAX-7
+58) SIGRTMAX-6  59) SIGRTMAX-5  60) SIGRTMAX-4  61) SIGRTMAX-3  62) SIGRTMAX-2
+63) SIGRTMAX-1  64) SIGRTMAX
+```
+
+发送的进程号 PID：每一个PID可以是以下四种情况之一：
+
+
+|状态 | 说明|
+|----|------------------------|
+|n   |当n大于0时，PID为n的进程接收信号。|
+|0   |当前进程组中的所有进程均接收信号。|
+|-1  |PID大于1的所有进程均接收信号。|
+|-n  |当n大于1时，进程组n中的所有进程接收信号。当给出了一个参数的形式为“-n”，想要让它表示一个进程组，那么必须首先指定一个信号，或参数前必须有一个“--”选项，否则它将被视为发送的信号。|
+
+
+### 参考链接
+
+[kill](https://wangchujiang.com/linux-command/c/kill.html)

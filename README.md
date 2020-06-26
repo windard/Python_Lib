@@ -2,6 +2,8 @@
 
 -----
 
+![visitors](https://visitor-badge.glitch.me/badge?page_id=github.windard.python_lib)
+
 python的强大之处有很大的一方面在于它有各种各样非常强大的库，那么，这篇博客就是记录我学习各种的库的经历吧。
 >声明：
 >本人使用的Python版本为 Python2.7.10，Windows 10 操作系统环境下，或者是 Python2.7.10，Ubuntu15 下。
