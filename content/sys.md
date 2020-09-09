@@ -31,7 +31,7 @@ print num
 2. `sys.platform()` 获得当前终端是Windows下还是Linux下。
 3. `sys.exit(n)` 退出程序，它有一个可选的整数参数，当n为0是是正常退出，其他为不正常，可抛异常事件捕获，默认为0。
 >注意，此处的`sys.exit()`和`os._exit()`和`exit()/quit()`都能够退出Python程序，但是`sys.exit()`一般用在主线程中退出整个Python进程，因为在子线程中其无法结束主线程，而`os._exit()`不抛出异常，不执行清理工作，能够退出主线程，`exit()/quit()`一般在交互式shell中使用。
-4. `sys.path` 系统的环境变量，返回列表。
+4. `sys.path` 系统的环境变量，返回列表，还可以用 `python -m site` 查看
 
 ```python
 

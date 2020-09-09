@@ -29,9 +29,12 @@ Deserializing，将一个 dict 或者 string 转化为对象，使用方法 `loa
 - error_messages 自定义错误信息
 - many 转化为 list
 - attribute 别名，这个就很神奇。在 `load` 中表示 `load_to`, 在 `dump` 中表示 `dump_from`
+- 在 python3 中 ，marshmallow 统一去除了 `load_from` 和 `dump_to` 字段，用 `data_key` 来表述
 - load_only 或者 `dump_only` 字面意思
 
 除了基本数据类型，如 Str, Int, Float, Dict, List 等，还有组合结构类型 Nested 和函数转化 Function 等。
+
+在 Function 中，deserialize 函数的参数是当前字段的值，serialize 的参数却是整个结构体的值。
 
 ### 实例
 

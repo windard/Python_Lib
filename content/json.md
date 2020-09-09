@@ -1,16 +1,20 @@
 ## json
 
-python这么强大的语言当然也可以用来处理json，两个主要的函数是`json.dumps()`和`json.loads()`分别用来将dist字典格式的Python数据编码为json数据格式，和将json数据格式解码为Python的数据格式。
+python这么强大的语言当然也可以用来处理json，两个主要的函数是`json.dumps()`和`json.loads()`分别用来将dist字典格式的Python数据编码为json数据格式字符串，和将json数据格式字符串解码为Python的数据格式。
 
 > 还有 ujson 更快，simplejson 兼容性更强
 
 分别有四个主要的函数
 
 ```
-dump(obj, fp, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=None, encoding='utf-8', default=None, sort_keys=False, **kw) # 将 json 转换为字符串并存储到文件中
-dumps(obj, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=None, encoding='utf-8', default=None, sort_keys=False, **kw) # 将 json 转换为字符串
-load(fp, encoding=None, cls=None, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, object_pairs_hook=None, **kw) # 从文件中读取字符串并转换为 json
-loads(s, encoding=None, cls=None, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, object_pairs_hook=None, **kw) # 将字符串转换为 json
+# 将 python 的数据格式转换为 json 字符串并存储到文件中
+dump(obj, fp, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=None, encoding='utf-8', default=None, sort_keys=False, **kw) 
+# 将 python 的数据格式转换为 json 字符串
+dumps(obj, skipkeys=False, ensure_ascii=True, check_circular=True, allow_nan=True, cls=None, indent=None, separators=None, encoding='utf-8', default=None, sort_keys=False, **kw) 
+# 从文件中读取 json 字符串并转换为python 的数据格式
+load(fp, encoding=None, cls=None, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, object_pairs_hook=None, **kw) 
+# 将 json 字符串转换为 python 的数据格式
+loads(s, encoding=None, cls=None, object_hook=None, parse_float=None, parse_int=None, parse_constant=None, object_pairs_hook=None, **kw) 
 ```
 
 ```python
@@ -160,5 +164,122 @@ json 和 dict 还有两个地方不一样
 
 2018-06-21
 
-- `` 能够对格式化对象进行一个简单的压缩，取消空格
-- `json.dumps(obj, separators=(',',':'), ensure_ascii=False)` 能够输出 utf-8 格式的中文即可见的中文，而非 Unicode 格式的中文 `\uXXXX`
+- `json.dumps(obj, indent=4)` 能够输出一个格式化的字符串，有换行有缩进。
+- `json.dumps(obj, separators=(',',':'))` 能够对输出字符串进行一个简单的压缩，取消空格.因为默认是 `(', ', ': ')`
+- `json.dumps(obj, ensure_ascii=False)` 能够输出 utf-8 格式的中文即可见的中文，而非 Unicode 格式的中文 `\uXXXX`
+
+2020-09-09
+
+正常的 json 字符串像这样 `{"price": 542.23, "name": "ACME", "shares": 100, "others": ["first thing", "second thing", "third thing"]}` 都是没问题的，但是如果在 json 对象中，key 或者 value 里存在控制字符，就会出现 `Invalid Control Character` 的 `ValueError`。
+
+**什么是控制字符？**  
+ACSII 码表，排名前三十二位和最后一位的字符就是控制字符，包括 `\t`, `\n`, `\r` 等。
+
+[ASCII码一览表](http://c.biancheng.net/c/ascii/)
+
+**出现控制字符怎么办？**  
+
+比如这样的 json 字符串 `'{"price": 542.23, "name": "ACME", "sh\rares": 100, "others": ["first thing", "second\t thing", "third\n thing"]}'`
+
+不要惊慌，在解析的时候，传入参数 `strict=False` 即可。
+
+```
+In [28]: s = '{"price": 542.23, "name": "ACME", "shares": 100, "others": ["first thing", "second thing", "third thing"]}'
+
+In [29]: json.loads(s)
+Out[29]:
+{u'name': u'ACME',
+ u'others': [u'first thing', u'second thing', u'third thing'],
+ u'price': 542.23,
+ u'shares': 100}
+
+In [30]: s = '{"price": 542.23, "name": "ACME", "sh\rares": 100, "others": ["first thing", "second\t thing", "third\n thing"]}'
+
+In [31]: json.loads(s)
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+<ipython-input-31-48280973ea66> in <module>()
+----> 1 json.loads(s)
+
+/Users/bytedance/miniconda/envs/byted/lib/python2.7/json/__init__.pyc in loads(s, encoding, cls, object_hook, parse_float, parse_int, parse_constant, object_pairs_hook, **kw)
+    337             parse_int is None and parse_float is None and
+    338             parse_constant is None and object_pairs_hook is None and not kw):
+--> 339         return _default_decoder.decode(s)
+    340     if cls is None:
+    341         cls = JSONDecoder
+
+/Users/bytedance/miniconda/envs/byted/lib/python2.7/json/decoder.pyc in decode(self, s, _w)
+    362
+    363         """
+--> 364         obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+    365         end = _w(s, end).end()
+    366         if end != len(s):
+
+/Users/bytedance/miniconda/envs/byted/lib/python2.7/json/decoder.pyc in raw_decode(self, s, idx)
+    378         """
+    379         try:
+--> 380             obj, end = self.scan_once(s, idx)
+    381         except StopIteration:
+    382             raise ValueError("No JSON object could be decoded")
+
+ValueError: Invalid control character at: line 1 column 38 (char 37)
+
+In [32]: json.loads(s, strict=False)
+Out[32]:
+{u'name': u'ACME',
+ u'others': [u'first thing', u'second\t thing', u'third\n thing'],
+ u'price': 542.23,
+ u'sh\rares': 100}
+```
+
+**还需要注意两点**  
+1. 如果不是在 json 字符串的字符串类型中有控制字符，是可以正常解析的，在 json 的两个 key 之间是可以有正常的换行符，比如这样的字符串 `'\n{"price": 542.23,\n "name": "ACME", \t"shares": 100, "others": ["first thing", "second thing",\n "third thing"]}'`
+2. 如果不是手动换行符，而是出现了换行，也是一样的换行符，主要是在 json 的每个元素里，不能有换行符。
+
+```
+In [34]: s = '\n{"price": 542.23,\n "name": "ACME", \t"shares": 100, "others": ["first thing", "second thing",\n "third thing"]}'
+
+In [35]: json.loads(s)
+Out[35]:
+{u'name': u'ACME',
+ u'others': [u'first thing', u'second thing', u'third thing'],
+ u'price': 542.23,
+ u'shares': 100}
+
+In [37]: s= """{"price": 542.23, "name": "ACME", "shares": 100, "others": ["first thing", "second
+    ...: thing", "third thing"]}"""
+
+In [38]: s
+Out[38]: '{"price": 542.23, "name": "ACME", "shares": 100, "others": ["first thing", "second \nthing", "third thing"]}'
+
+In [39]: json.loads(s)
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+<ipython-input-39-48280973ea66> in <module>()
+----> 1 json.loads(s)
+
+/Users/bytedance/miniconda/envs/byted/lib/python2.7/json/__init__.pyc in loads(s, encoding, cls, object_hook, parse_float, parse_int, parse_constant, object_pairs_hook, **kw)
+    337             parse_int is None and parse_float is None and
+    338             parse_constant is None and object_pairs_hook is None and not kw):
+--> 339         return _default_decoder.decode(s)
+    340     if cls is None:
+    341         cls = JSONDecoder
+
+/Users/bytedance/miniconda/envs/byted/lib/python2.7/json/decoder.pyc in decode(self, s, _w)
+    362
+    363         """
+--> 364         obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+    365         end = _w(s, end).end()
+    366         if end != len(s):
+
+/Users/bytedance/miniconda/envs/byted/lib/python2.7/json/decoder.pyc in raw_decode(self, s, idx)
+    378         """
+    379         try:
+--> 380             obj, end = self.scan_once(s, idx)
+    381         except StopIteration:
+    382             raise ValueError("No JSON object could be decoded")
+
+ValueError: Invalid control character at: line 1 column 84 (char 83)
+
+```
+

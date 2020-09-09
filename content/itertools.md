@@ -154,7 +154,7 @@ StopIteration
 - islice(seq, [start,] stop [, step]) 类似于 slice 函数，即接片操作，返回 seq[start:stop:step] ，如 islice('abcdefg',2,8,2) ，得到 c,e,g
 - imap(func, p, q, ...) 类似于 map 函数，返回 func(p0,q0,...),func(p1,q1,...),... 如 imap(lambda x,y:x+y,[1,2,3,4],[7,8,9,0]) ，得到 8,10,12,4
 - starmap(func,q) 类似与 imap 函数，返回 func(q[0]),func(q[1]),... 如 starmap(lambda x,y:x+y,zip([1,2,3,4],[7,8,9,0])) 得到 8,10,12,4
-- tee(p,n=1) 由 p 生成 n 个序列，返回这 n 个序列的数组，n 个序列值相同，地址不同
+- tee(p,n=1) 由 p 生成 n 个序列，返回这 n 个序列的数组，n 个序列值相同，地址不同,就是将 p 重复输出 n 遍，得到n个迭代器。
 - izip(p,q,...) 类似于 zip ，返回 (p0,q0,...),(p1,q1,...),... 如 izip([1,2,3],[4,5,6],[7,8,9]) 得到 (1,4,7),(2,5,8),(3,6,9)
 - izip_longest() 类似与 izip ，应该是可以使用数据比 izip 更大一点的吧。
 

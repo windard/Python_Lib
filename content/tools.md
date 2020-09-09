@@ -20,6 +20,11 @@ index-url = http://pypi.douban.com/simple
 
 有一些库在 Windows 下可能不好安装，需要自行编译，可以下载别人已经编译好的可执行文件 whl 安装，Python 第三方库网站 [http://www.lfd.uci.edu/~gohlke/pythonlibs/](http://www.lfd.uci.edu/~gohlke/pythonlibs/) ，下载好之后 `pip install XXX.whl` 即可。
 
+当一些库已经下载的时候，可以用 `--ignore-installed` 忽略已安装的库。
+
+当一些依赖库其实不需要的时候，可以用 `--no-deps`, `--no-dependencies` 来忽略库中的依赖。
+
+
 ## virtualenv
 
 创建虚拟环境

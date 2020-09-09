@@ -91,3 +91,18 @@ def monetize(decimal_num):
             decimal.Decimal('0.01'))
 
 ```
+
+### 指定精度
+
+一般的需求是 越精确越好，但是有的时候，过于精确反而会带来误差，还是适度比较好。
+
+```
+>>> from decimal import Decimal, getcontext
+>>> Decimal(10042.3)*100000
+Decimal('1004229999.999999927240423858')
+>>> int(Decimal(10042.3)*100000)
+1004229999
+>>> getcontext().prec = 12
+>>> int(Decimal(10042.3)*100000)
+1004230000
+```
