@@ -96,7 +96,7 @@ print python_str.others[1]
 
 在解码json的时候可以采用`pprint`来获得一个比较漂亮的输出，在编码json的时候也可以在`dumps()`函数里加上参数`indent=X`来缩进从而获得一个比较漂亮的输出。
 
-2016-01-13 更新
+### 2016-01-13 更新
 
 在 Python 中 eval 和 str(unicode) 的功能也可以做 json 数据格式的转化
 
@@ -127,7 +127,7 @@ NameError: name 'false' is not defined
 
 对于 json 数据格式的操作还是让专业的库来干吧。
 
-2017-03-18 更新
+### 2017-03-18 更新
 
 json 格式数据与 Python 中的 字典(dict) 并不完全一致，json 只能是双引号包围的字符串，而 Python 中的字符串可以用双引号也可以用单引号。
 
@@ -156,21 +156,21 @@ JSONEncoder().encode({"foo": ["bar", "baz"]}) # 将字典格式转换为 json �
 JSONDecoder().decode('{"foo": ["bar", "baz"]}') # 将 json 字符串转换为字典格式
 ```
 
-2017-10-22 更新
+### 2017-10-22 更新
 
 json 和 dict 还有两个地方不一样
 - dict 在所有的键值对之后还可以有逗号，json 在所有的键值对最后没有逗号
 - dict 的键可以是数字，json 的键不能是数字，只能是字符串
 
-2018-06-21
+### 2018-06-21
 
 - `json.dumps(obj, indent=4)` 能够输出一个格式化的字符串，有换行有缩进。
 - `json.dumps(obj, separators=(',',':'))` 能够对输出字符串进行一个简单的压缩，取消空格.因为默认是 `(', ', ': ')`
 - `json.dumps(obj, ensure_ascii=False)` 能够输出 utf-8 格式的中文即可见的中文，而非 Unicode 格式的中文 `\uXXXX`
 
-2020-09-09
+### 2020-09-09
 
-正常的 json 字符串像这样 `{"price": 542.23, "name": "ACME", "shares": 100, "others": ["first thing", "second thing", "third thing"]}` 都是没问题的，但是如果在 json 对象中，key 或者 value 里存在控制字符，就会出现 `Invalid Control Character` 的 `ValueError`。
+正常的 json 字符串像这样 `'{"price": 542.23, "name": "ACME", "shares": 100, "others": ["first thing", "second thing", "third thing"]}'` 都是没问题的，但是如果在 json 对象中，key 或者 value 里存在控制字符，就会出现 `Invalid Control Character` 的 `ValueError`。
 
 **什么是控制字符？**  
 ACSII 码表，排名前三十二位和最后一位的字符就是控制字符，包括 `\t`, `\n`, `\r` 等。
