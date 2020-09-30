@@ -155,4 +155,99 @@ print astor.to_source(module)
 
 ```
 
-有一个好消息是 3.9 开始支持 `ast.unparse` 反解析函数。
+有一个好消息是 Python 3.9 开始支持 `ast.unparse` 反解析函数。
+
+### 安全的执行
+
+在 Python 中有 `eval` 方法,但是一般如果直接调用 `eval` 执行的话，会有安全风险，可以试下 `ast.literal_eval` 进行安全的代码执行。
+
+这个代码执行可以厉害了`୧(๑•̀◡•́๑)૭ `， 只能含有 Python 基本数据类型，数字，字符串，列表，字典，元组，布尔值，`None` 和复数。
+> 😂，复数？是不是突然觉得很突然，为什么会有复数？你是不是已经把复数是啥给忘了？`1+2j` 就是复数。
+
+```python
+def literal_eval(node_or_string):
+    """
+    Safely evaluate an expression node or a string containing a Python
+    expression.  The string or node provided may only consist of the following
+    Python literal structures: strings, numbers, tuples, lists, dicts, booleans,
+    and None.
+    """
+    _safe_names = {'None': None, 'True': True, 'False': False}
+    if isinstance(node_or_string, basestring):
+        node_or_string = parse(node_or_string, mode='eval')
+    if isinstance(node_or_string, Expression):
+        node_or_string = node_or_string.body
+    def _convert(node):
+        if isinstance(node, Str):
+            return node.s
+        elif isinstance(node, Num):
+            return node.n
+        elif isinstance(node, Tuple):
+            return tuple(map(_convert, node.elts))
+        elif isinstance(node, List):
+            return list(map(_convert, node.elts))
+        elif isinstance(node, Dict):
+            return dict((_convert(k), _convert(v)) for k, v
+                        in zip(node.keys, node.values))
+        elif isinstance(node, Name):
+            if node.id in _safe_names:
+                return _safe_names[node.id]
+        elif isinstance(node, BinOp) and \
+             isinstance(node.op, (Add, Sub)) and \
+             isinstance(node.right, Num) and \
+             isinstance(node.right.n, complex) and \
+             isinstance(node.left, Num) and \
+             isinstance(node.left.n, (int, long, float)):
+            left = node.left.n
+            right = node.right.n
+            if isinstance(node.op, Add):
+                return left + right
+            else:
+                return left - right
+        raise ValueError('malformed string')
+    return _convert(node_or_string)
+```
+
+源码很简单，可以直接看代码，或者手动测试。
+
+赋值操作不能用，加减乘除不能用，比较运算不能用，连集合都不能用。复数可以用，负数也可以，但是正数就不行。
+> 好消息是从 Python 3.2 开始支持集合。
+
+```python
+# -*- coding: utf-8 -*-
+
+import ast
+
+
+if __name__ == '__main__':
+    # 赋值操作不能有
+    # print ast.literal_eval("a=1")
+    # print eval("a=1")
+    # a = 1
+    # 加减乘除都不能有
+    # print ast.literal_eval("1+1")
+    # print eval("1+1")
+    # print ast.literal_eval("1==1")
+    print eval("1==1")
+    print ast.literal_eval("1")
+    print ast.literal_eval("None")
+    # 连集合都不能有
+    # print ast.literal_eval("{1,2,4}")
+    # print ast.literal_eval("set([1])")
+    # print ast.literal_eval("[1,2,{'1', 2, '2,3,4'}, [4,5,'6']]")
+    # print [1,2,{'1', 2, '2,3,4'}, [4,5,'6']]
+    print ast.literal_eval("[1,2,3,{2:3}]")
+    # 连最终结果是一个list也不行
+    # print ast.literal_eval("list([1,2,3])")
+    print list([1, 2, 3])
+    # print ast.literal_eval("[1,2+3]")
+    # 复数可以有，负数也可以有
+    print ast.literal_eval("1+2j")
+    print ast.literal_eval("-2")
+    # print ast.literal_eval("--2")
+    # 正数就不行
+    # print ast.literal_eval("+2")
+    # print ast.literal_eval("++2")
+
+```
+

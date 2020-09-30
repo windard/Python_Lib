@@ -25,6 +25,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [MySQLdb](content/MySQLdb.md)
 
+## [pymysql](content/pymysql.md)
+
 ## [os](content/os.md)
 
 ## [shutil](content/shutil.md)
@@ -301,7 +303,17 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [urllib2](content/urllib2.md)
 
+## [ ] [urllib3](content/urllib3.md)
+
+## [tempfile](content/tempfile.md)
+
 ## [httplib](content/httplib.md)
+
+## [turtle](content/turtle.md)
+
+## [py-spy](content/py-spy.md)
+
+## [tqdm](content/tqdm.md)
 
 ## [tools](content/tools.md)
 

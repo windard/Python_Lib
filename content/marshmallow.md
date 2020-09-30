@@ -27,10 +27,11 @@ Deserializing，将一个 dict 或者 string 转化为对象，使用方法 `loa
 - exclude 排除部分字段
 - strict 参数无效时，是否报错
 - error_messages 自定义错误信息
-- many 转化为 list
+- many 可以将转化为在 nested 中传入 object list
+- `load_only` 或者 `dump_only` 都是字面意思
 - attribute 别名，这个就很神奇。在 `load` 中表示 `load_to`, 在 `dump` 中表示 `dump_from`
-- 在 python3 中 ，marshmallow 统一去除了 `load_from` 和 `dump_to` 字段，用 `data_key` 来表述
-- load_only 或者 `dump_only` 字面意思
+- 在 python3 中，marshmallow 统一去除了 `load_from` 和 `dump_to` 字段，用 `data_key` 来表述
+- 在 python3 中，missing 和 default 的作用时间发生了改变，传入`missing={}` load 的结果就是`{}` 而不是会继续 deserialize
 
 除了基本数据类型，如 Str, Int, Float, Dict, List 等，还有组合结构类型 Nested 和函数转化 Function 等。
 

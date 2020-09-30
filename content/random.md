@@ -1,5 +1,6 @@
 ## random
 
+### 常用功能
 功能非常简单，就是生成随机数了。
 1. random.random()用于生成一个0到1之间的随机浮点数：0<=n<=1 。
  > random 生成的是伪随机数，种子一致的话，随机数生成序列也会一致
@@ -13,6 +14,7 @@
 5. random.choice(sequence)用来生成参数中的一个随机元素，参数的类型可以是列表，元组或者字符串，字典等。
 6. random.shuffle(list)用来将一个列表中的元素打乱，返回原来的数组。
 7. random.sample(sequence, k)用来从指定序列中获得指定长度的片段，参数类型不定。
+ > 这个很重要的吖，就不用自己写了，可以用 `''.join(random.sample(string.ascii_letters + string.digits, 11))` 来生成随机字符串
 8. random.seed([n]) 用来指定随机种子，默认为时间戳。即使是在不同的电脑上，同样的种子生成的随机数是一致的。
 
 ```python
@@ -53,7 +55,7 @@ print random.sample(p,3)
 
 ![random_demo.jpg](images/random_demo.jpg)
 
-## random 高阶
+### random 高阶
 
 - random.betavariate 		β 北塔分布
 - random.gammavariate 		γ 伽马分别
