@@ -31,7 +31,12 @@ Deserializing，将一个 dict 或者 string 转化为对象，使用方法 `loa
 - `load_only` 或者 `dump_only` 都是字面意思
 - attribute 别名，这个就很神奇。在 `load` 中表示 `load_to`, 在 `dump` 中表示 `dump_from`
 - 在 python3 中，marshmallow 统一去除了 `load_from` 和 `dump_to` 字段，用 `data_key` 来表述
-- 在 python3 中，missing 和 default 的作用时间发生了改变，传入`missing={}` load 的结果就是`{}` 而不是会继续 deserialize
+- 在 python3 中，missing 和 default 的作用时间发生了改变，传入`missing={}` load 的结果就是`{}` 而不是会继续 `deserialize`
+- 且不说在 python3 中默认有多的参数就会报错，需要设置 `unknown=EXCLUDE` 这种问题
+- 还有 webargs 在 python3 中 location 只能从一个地方去取，不能从 fields 中定义这种问题
+- 真的是想做好开源产品么？为什么觉得越改问题越多呢？真想把版本直接回滚到从前
+- missing 的问题，很严重，改变执行时机的问题，举两个具体的例子，nested 的 missing={}. 不会去继续解析参数的 missing，Datetime 的 missing，不会去继续解析参数,而是直接返回 Datetime 类型，如此重重，不兼容的地方太多了。
+- 又发现 marshmallow 的一个坑，`fields.URL` 的 URL 域名不支持下划线(underscore), 就是`ww_w.baidu.com` 是不允许的，但是实际上 URL 现在已经可以使用下划线了。不过 DNS name 已经明确不支持下划线了，就不要再浪费时间在这上面。
 
 除了基本数据类型，如 Str, Int, Float, Dict, List 等，还有组合结构类型 Nested 和函数转化 Function 等。
 

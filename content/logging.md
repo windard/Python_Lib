@@ -144,7 +144,7 @@ logging 如果不配置是没有数据输出的，但是如果不想写这么长
 logging.basicConfig(
     level=logging.INFO,
     format='%(name)-25s %(asctime)s %(levelname)-8s %(lineno)-4d %(message)s',
-    datefmt='[%Y %b %d %a %H:%M:%S]'
+    datefmt='[%Y-%m-%d %H:%M:%S]'
 )
 ```
 

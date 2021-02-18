@@ -7,6 +7,7 @@
 2. 创建一个目录-- os.mkdir()
 3. 创建多级目录-- os.makedirs()
 4. 删除一个目录,只能删除空目录-- os.rmdir("path")
+	> 如果想删除非空目录，可以用 `shutil.rmtree`
 5. 删除多个目录,删除目录及其下内容-- os.removedirs（"path）
 1. 获取目录中的文件及子目录的列表-- os.listdir("path")		隐藏文件也会显示出来
 3. 删除一个文件-- os.remove()

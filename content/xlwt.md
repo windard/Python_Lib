@@ -39,4 +39,8 @@ excel.save('test.xls')
 row index was 65535, not allowed by .xls format
 ```
 
+> 2020-10-13  
+> 65535 的限制，😂，不是 python 的问题，是 xls 的问题   
+> xlsx 就能有 104 万行   
+
 推荐使用 [openpyxl](./openpyxl.md)

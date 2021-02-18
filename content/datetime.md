@@ -8,7 +8,7 @@ datetime 和 timestamp(int) 的相互转换，在时间处理的时候，见到�
 
 UTC (Coordinated Universal Time) 是一种时间标准，以 1970年1月1日0时0分0秒的格林尼治时间为起点的时间计量标准，这一时间点也被称为 普朗克时间 (epoch time)。该标准将全世界分为 24 个时区，中国位于 UTC+8 的时区之内。现在全世界的计算机时间也都是采用这一标准。
 
-常用的时区 GMT(Greenwich Mean Time) 格林尼治时间， CST(China Standard Time) 中国标准时间。
+常见的时区 `GMT(Greenwich Mean Time)` 格林尼治时间， `CST(China Standard Time)` 中国标准时间。
 
 #### ISO 8601
 
@@ -24,6 +24,9 @@ ISO 8601的标准格式是：`YYYY-MM-DDTHH:mm:ss.sssZ`
 - `ss`：秒，00 ~ 59
 - `.sss`：毫秒
 - `Z`：时区，可以是：Z(格林尼治时间)、+HH:mm、-HH:mm
+
+> `T` 只是日期和时间的间隔符  
+> `Z` 表示标准时间 `UTC`
 
 这是最常见的时间写法,如 `2017-08-27T15:18:47.364Z`，一般也简写为 `YYYY-MM-DD HH:mm:ss` 如 `2017-08-27 10:23:21`
 
@@ -276,24 +279,156 @@ In [19]: datetime.datetime.now(ut)
 Out[19]: datetime.datetime(2017, 9, 7, 6, 23, 38, 608467, tzinfo=<UTC>)
 ```
 
-转换时区的时候即可以使用 datetime.datetime 的 `astimezone` 函数即可修改时区
+#### 原生时间
+
+在正常使用 `datetime` 库的时候，默认使用的是带时区偏移的原生时间，或者叫 `naive`。
+
+如何查看,对比 `datetime.datetime.now()` 和 `datetime.datetime.utcnow()` 是否一致就知道了。
+
+datetime 是有时区的，时间戳是没有时区的。所以查看 `datetime.datetime.fromtimestamp(0)` 和 `datetime.datetime.utcfromtimestamp(0)` 是否一致也可以判断。
 
 ```
-In [25]: t
-Out[25]: datetime.datetime(2017, 9, 7, 6, 26, 24, 857174, tzinfo=<UTC>)
+In [119]: datetime.datetime.now()
+Out[119]: datetime.datetime(2020, 10, 21, 14, 18, 32, 502615)
 
-In [26]: t.astimezone(pytz.timezone('Asia/Shanghai'))
-Out[26]: datetime.datetime(2017, 9, 7, 14, 26, 24, 857174, tzinfo=<DstTzInfo 'Asia/Shanghai' CST+8:00:00 STD>)
+In [120]: datetime.datetime.utcnow()
+Out[120]: datetime.datetime(2020, 10, 21, 6, 18, 36, 778644)
 
-In [27]: t
-Out[27]: datetime.datetime(2017, 9, 7, 6, 26, 24, 857174, tzinfo=<UTC>)
+In [121]: datetime.datetime.fromtimestamp(0)
+Out[121]: datetime.datetime(1970, 1, 1, 8, 0)
+
+In [122]: datetime.datetime.utcfromtimestamp(0)
+Out[122]: datetime.datetime(1970, 1, 1, 0, 0)
 ```
 
-在 python 3 中还可以使用 timezone 来做时区转换
+#### 时区时间
+
+正常使用 datetime 一点问题没有，但是如果想要做时区转换的时候，就会有问题，因为没有指定时区，也就不能转换时区。
+
+一般常见的时区库有 `pytz` 和 `dateutil.tz`
+
+本人当前在上海，也就是东八区，是格林尼治时间加八个小时，时区一般表示为 `Asia/Shanghai`
+
+所以可以使用精确的时区时间，就是指定时区的原生时间，或者叫 `aware`。
+
+```
+In [130]: from dateutil import tz
+
+In [131]: datetime.datetime.now()
+Out[131]: datetime.datetime(2020, 10, 21, 14, 25, 52, 296661)
+
+In [132]: datetime.datetime.now(pytz.timezone('Asia/Shanghai'))
+Out[132]: datetime.datetime(2020, 10, 21, 14, 26, 23, 897680, tzinfo=<DstTzInfo 'Asia/Shanghai' CST+8:00:00 STD>)
+
+In [133]: datetime.datetime.now().tzname()
+
+In [134]: datetime.datetime.now().tzinfo
+
+In [135]: datetime.datetime.now(pytz.timezone('Asia/Shanghai')).tzinfo
+Out[135]: <DstTzInfo 'Asia/Shanghai' CST+8:00:00 STD>
+
+In [136]: datetime.datetime.now(pytz.timezone('Asia/Shanghai')).tzname()
+Out[136]: 'CST'
+
+In [137]: datetime.datetime.now(tz.tzlocal())
+Out[137]: datetime.datetime(2020, 10, 21, 14, 27, 35, 106503, tzinfo=tzlocal())
+
+In [138]: datetime.datetime.now(tz.tzlocal()).tzname()
+Out[138]: 'CST'
+
+In [139]: datetime.datetime.now(tz.tzlocal()).tzinfo
+Out[139]: tzlocal()
+```
+
+转换时区的时候即可以使用 datetime.datetime 的 `astimezone` 函数即可修改时区, 如果是原生时间则无法转化时区
 
 ```
 
+In [140]: t = datetime.datetime.now(tz.tzlocal())
+
+In [141]: t.astimezone(pytz.timezone('Asia/Shanghai'))
+Out[141]: datetime.datetime(2020, 10, 21, 14, 28, 12, 598259, tzinfo=<DstTzInfo 'Asia/Shanghai' CST+8:00:00 STD>)
+
+In [142]: t.astimezone(pytz.timezone('UTC'))
+Out[142]: datetime.datetime(2020, 10, 21, 6, 28, 12, 598259, tzinfo=<UTC>)
+
+In [143]: t.astimezone(tzutc())
+Out[143]: datetime.datetime(2020, 10, 21, 6, 28, 12, 598259, tzinfo=tzutc())
 ```
+
+所以，一些 utc 的操作也可以转化一下
+
+```
+In [144]: datetime.datetime.now()
+Out[144]: datetime.datetime(2020, 10, 21, 14, 31, 0, 66343)
+
+In [145]: datetime.datetime.utcnow()
+Out[145]: datetime.datetime(2020, 10, 21, 6, 31, 2, 295432)
+
+In [149]: datetime.datetime.now(tz.tzutc())
+Out[149]: datetime.datetime(2020, 10, 21, 6, 32, 54, 761768, tzinfo=tzutc())
+
+In [150]: datetime.datetime.now(pytz.utc)
+Out[150]: datetime.datetime(2020, 10, 21, 6, 33, 42, 768778, tzinfo=<UTC>)
+
+In [168]: datetime.datetime.fromtimestamp(0)
+Out[168]: datetime.datetime(1970, 1, 1, 8, 0)
+
+In [170]: datetime.datetime.fromtimestamp(0, tz=tz.tzutc())
+Out[170]: datetime.datetime(1970, 1, 1, 0, 0, tzinfo=tzutc())
+
+In [171]: datetime.datetime.fromtimestamp(0, tz=pytz.timezone('UTC'))
+Out[171]: datetime.datetime(1970, 1, 1, 0, 0, tzinfo=<UTC>)
+
+In [173]: datetime.datetime.utcfromtimestamp(0)
+Out[173]: datetime.datetime(1970, 1, 1, 0, 0)
+```
+
+#### 时区转化
+
+如果你已经有一个原生时间，现在想做时区转化，比如你在北京时间下午三点，你想看下你在洛杉矶的朋友现在几点。
+
+那么首先需要将原生时间转化为时区时间，然后再做时区转化。
+
+```
+In [3]: d = datetime.datetime.now()
+
+In [4]: timezone = pytz.timezone('Asia/Shanghai')
+
+In [5]: d_aware = timezone.localize(d)
+
+In [6]: d
+Out[6]: datetime.datetime(2020, 10, 21, 15, 37, 23, 397858)
+
+In [7]: d_aware
+Out[7]: datetime.datetime(2020, 10, 21, 15, 37, 23, 397858, tzinfo=<DstTzInfo 'Asia/Shanghai' CST+8:00:00 STD>)
+
+In [8]: d_aware.astimezone(pytz.timezone("America/Los_Angeles"))
+Out[8]: datetime.datetime(2020, 10, 21, 0, 37, 23, 397858, tzinfo=<DstTzInfo 'America/Los_Angeles' PDT-1 day, 17:00:00 DST>)
+
+In [9]: d_aware.astimezone(pytz.utc)
+Out[9]: datetime.datetime(2020, 10, 21, 7, 37, 23, 397858, tzinfo=<UTC>)
+```
+
+那你的洛杉矶朋友应该是今天早上零点，或者说昨天晚上十二点。
+
+#### 所有时区
+
+获取时区
+
+```
+In [174]: pytz.timezone('Asia/Shanghai')
+Out[174]: <DstTzInfo 'Asia/Shanghai' LMT+8:06:00 STD>
+
+In [175]:
+
+In [175]: pytz.country_timezones('cn')
+Out[175]: [u'Asia/Shanghai', u'Asia/Urumqi']
+```
+
+使用 `pytz.country_names` 查看所有的支持的国家和地区简写
+
+使用 `pytz.all_timezones` 或者 `common_timezones` 查看所有支持的时区
 
 ### 更好的时间转换
 
