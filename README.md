@@ -61,6 +61,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [json](content/json.md)
 
+## [yaml](content/yaml.md)
+
 ## [time](content/time.md)
 
 ## [datetime](content/datetime.md)
