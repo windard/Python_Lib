@@ -6,7 +6,7 @@ collections 一个重要的 类 就是计数器，妈妈再也不用担心我不
 
 小时候我们数数是这样数的
 
-```
+```python
 # coding=utf-8
 
 words = ['a', 'b', 'c', 'b', 'a', 'a', 'b', 'c']
@@ -25,7 +25,7 @@ print cnt
 
 现在我们可这样数数
 
-```
+```python
 # coding=utf-8
 
 words = ['a', 'b', 'c', 'b', 'a', 'a', 'b', 'c']
@@ -43,7 +43,7 @@ print cnt.most_common(2)
 
 其实使用原生列表也是可以的，像这样
 
-```
+```python
 # coding=utf-8
 
 words = ['a', 'b', 'c', 'b', 'a', 'a', 'b', 'c']
@@ -59,7 +59,7 @@ print count
 
 还可以使用其进行统计文件
 
-```
+```python
 # coding=utf-8
 
 
@@ -71,13 +71,40 @@ print(line_count)
 
 ```
 
+2021-03-28
+
+一般在获取默认值的时候都比较烦，需要使用 `.get` 去获取。
+
+在对于默认是列表的字典，我们常用 `defaultdict` 去创建，那么对于默认为零的字典，就可以使用 `Counter` 去创建
+
+```python
+# -*- coding: utf-8 -*-
+
+from collections import defaultdict, Counter
+
+
+if __name__ == '__main__':
+    default_list = defaultdict(list)
+    default_list["a"].append(1)
+    default_list["a"].append(2)
+    default_list["a"].append(3)
+    print(default_list)
+
+    default_zero = Counter()
+    default_zero["b"] += 1
+    default_zero["b"] += 2
+    default_zero["b"] += 3
+    print(default_zero)
+
+```
+
 ### 字典
 
 一般的字典进行赋值操作时，需要先检查键是否存在，`defaultdict` 则不需要
 
 > 使用 defaultdict 的时候需注意，初始化的时候需要填入想要的值的类型。
 
-```
+```python
 # coding=utf-8
 
 from collections import defaultdict
@@ -111,7 +138,7 @@ some_dict['colours']['favourite'] = "yellow"
 
 直接进行嵌套赋值
 
-```
+```python
 import collections
 tree = lambda: collections.defaultdict(tree)
 some_dict = tree()
@@ -122,7 +149,7 @@ some_dict['colours']['favourite'] = "yellow"
 
 在 Python 内置函数库 Queue 中已经提供了队列和栈， 在这里提供了双端队列 deque ,可以两边插入，两边取出。
 
-```
+```python
 # coding=utf-8
 
 from collections import deque
@@ -156,7 +183,7 @@ deque([4, 3, 1, 2])
 
 还可以限制队列长度，超出长度的数据会被另一端挤出, 还可以进行队列的循环移位，左移或右移
 
-```
+```python
 # coding=utf-8
 
 from collections import deque
@@ -195,7 +222,7 @@ deque([6, 3, 2, 1, 0], maxlen=5)
 
 字典是无序的，输入与输出的顺序都不一定一样, collections 中的 OrderedDict 能保证输出输入顺序绝对一致
 
-```
+```python
 # coding=utf-8
 
 from collections import OrderedDict
@@ -223,7 +250,7 @@ print o
 
 namedtuple 是一个字典类型的元组，同样是不可变的，但是它又和字典一样存在键值对。
 
-```
+```python
 # coding=utf-8
 
 from collections import namedtuple
@@ -249,7 +276,7 @@ print perry._asdict
 
 但是在 collections 库中，只有在 Python 3.4 及以上才能够使用 Enum 枚举类型
 
-```
+```python
 # coding=utf-8
 
 from collections import namedtuple
