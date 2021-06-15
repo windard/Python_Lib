@@ -65,6 +65,8 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 
 ## [time](content/time.md)
 
+## [timeit](content/timeit.md)
+
 ## [datetime](content/datetime.md)
 
 ## [random](content/random.md)
@@ -324,6 +326,14 @@ python的强大之处有很大的一方面在于它有各种各样非常强大�
 ## [funcy](content/funcy.md)
 
 ## [select](content/select.md)
+
+## [memory_profiler](content/memory_profiler.md)
+
+## [guppy](content/guppy.md)
+
+## [tracemalloc](content/tracemalloc.md)
+
+## [pytest](content/pytest.md)
 
 ## [tools](content/tools.md)
 
