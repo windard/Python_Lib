@@ -20,11 +20,17 @@
 
 下面使用的 openCV 若未特殊强调，都是使用 `2.4.13` 的版本
 
+最新版的已经可以使用 `pip` 安装了，非常简单，当前版本是 `4.5.3` 。
+
+```
+pip install opencv-python
+```
+
 ### 图片处理
 
 #### 打开图片
 
-```
+```python
 # coding=utf-8
 
 import cv2   
@@ -52,7 +58,7 @@ elif key == ord('s'):
 
 还可以使用 matplotlib 显示图片
 
-```
+```python
 # coding=utf-8
 
 import cv2
@@ -66,7 +72,7 @@ plt.show()
 
 但是在 openCV 中三原色的显示是 BGR 顺序，而 matplotlib 是 RGB 顺序，所以在显示中颜色会有一些差异，我们需要调整一下颜色。
 
-```
+```python
 # coding=utf-8
 
 import numpy as np
@@ -92,13 +98,77 @@ plt.imshow(img4)
 plt.show()
 ```
 
+#### 图片拼接
+
+主要就是有两个方法
+- `cv2.hconcat` 水平拼接
+- `cv2.vconcat` 垂直拼接
+
+
+```python
+# -*- coding: utf-8 -*-
+
+import cv2
+
+if __name__ == '__main__':
+    file_path = [
+        "NationalHoliday/10-01.png",
+        "NationalHoliday/10-02.png",
+        "NationalHoliday/10-03.png",
+        "NationalHoliday/10-04.png",
+        "NationalHoliday/10-05.png",
+        "NationalHoliday/10-06.png",
+        "NationalHoliday/10-07.png",
+    ]
+    img = cv2.hconcat(list(map(cv2.imread, file_path)))
+    cv2.imshow("Joint Image", img)
+    key = cv2.waitKey(0)
+
+    # 按 q 键则直接退出
+    if key == 27:
+        cv2.destroyAllWindows()
+    # 按 s 键则保存退出
+    elif key == ord('s'):
+        cv2.imwrite("horizontal_joint.png", img)
+        cv2.destroyAllWindows()
+
+```
+
+#### 边缘扩充
+
+这个其实也比较简单，在拼接的时候可能需要
+- `cv2.copyMakeBorder(src, top, bottom, left, right, borderType, dst=None, value=None)`
+
+参数分别是上下左右四周需要扩充的宽度，以及扩充的颜色，只能使用同一种颜色填充。
+
+```python
+# -*- coding: utf-8 -*-
+
+import cv2
+
+if __name__ == '__main__':
+    img = cv2.imread("NationalHoliday/10-01.png")
+    img = cv2.copyMakeBorder(img, 10, 10, 10, 10, cv2.BORDER_CONSTANT, value=[255, 255, 255])
+    cv2.imshow("Extend Border Image", img)
+
+    key = cv2.waitKey(0)
+    # 按 q 键则直接退出
+    if key == 27:
+        cv2.destroyAllWindows()
+    # 按 s 键则保存退出
+    elif key == ord('s'):
+        cv2.imwrite("extend_border.png", img)
+        cv2.destroyAllWindows()
+
+```
+
 ### 视频处理
 
-### 打开视频
+#### 打开视频
 
 不知为何，使用 openCV 打开视频的颜色都不对，还会视频对半分开错位。
 
-```
+```python
 import numpy as np
 import cv2
 
@@ -117,7 +187,7 @@ cap.release()
 cv2.destroyAllWindows()
 ```
 
-```
+```python
 # coding=utf-8
 
 import cv2.cv as cv
@@ -147,7 +217,7 @@ for f in xrange( nbFrames ):
 
 ```
 
-```
+```python
 # coding=utf-8
 
 import cv2
@@ -173,11 +243,11 @@ while success :
     success, frame = videoCapture.read() #获取下一帧
 ```
 
-### 打开摄像头
+#### 打开摄像头
 
 `s` 键保存图像，`q` 键退出 
 
-```
+```python
 # coding=utf-8
 
 import cv2
@@ -205,7 +275,7 @@ while(True):
 
 用 `openCV 3.0.0` 的话，是这样
 
-```
+```python
 coding=utf-8
 
 import cv2.cv as cv
@@ -227,7 +297,7 @@ while 1:
         break
 ```
 
-### 录视频
+#### 录视频
 
 其中最主要的函数为 `CreateVideoWriter`，`fourcc` 为编码格式，fps (frame per second) 每秒帧数
 
@@ -251,7 +321,7 @@ CV_FOURCC('F', 'L', 'V', '1') = FLV1 codec
 
 一般当 fps 大于 24 时，人眼无法区分，这也是电影的播放率，当 fps 低于 10 时，人眼会觉得略卡顿。
 
-```
+```python
 # coding=utf-8
 
 import cv2.cv as cv
@@ -271,7 +341,7 @@ while count < 500:
 
 这是以 25 fps 记录 500 帧的视频，即 25 秒，也可以自定义记录，手动按 `q` 停止。
 
-```
+```python
 # coding=utf-8
 
 import cv2
@@ -292,7 +362,7 @@ while 1:
 
 使用 `openCV 3.0.0` 进行视频拍摄
 
-```
+```python
 # coding=utf-8
 
 import numpy as np
